@@ -12,7 +12,7 @@ void Eventful::fireEvent(Event& e) {
 
 void Eventful::addHandler(void (*fn)(Event&),
                            uint16_t eventMask /* = E_ALL */) {
-  EventHandler handler;
+  ezEventHandler handler;
   handler.fn = fn;
   handler.eventMask = eventMask;
   _eventHandlers.push_back(handler);

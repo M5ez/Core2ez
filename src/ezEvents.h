@@ -40,7 +40,7 @@ class Event {
   ezGesture* gesture = nullptr;
 };
 
-struct EventHandler {
+struct ezEventHandler {
   uint16_t eventMask;
   void (*fn)(Event&);
 };
@@ -54,7 +54,7 @@ class Eventful {
 
  protected:
   void fireEvent(Event& e);
-  std::vector<EventHandler> _eventHandlers;
+  std::vector<ezEventHandler> _eventHandlers;
 
 };
 
