@@ -90,6 +90,7 @@ void ezRoot::update() {
   // So we interpret next coordinate as an E_TOUCH again.
   if (e == E_RELEASE) _previous[_finger] = Point();
 
+  fireEvent(e);
 
 //   if (e) {
 //     Serial.print((long)e.widget);
