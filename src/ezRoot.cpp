@@ -48,6 +48,7 @@ void ezRoot::update() {
   if (!_widgets.size()) {
     Screen.focus();
     draw();
+    Screen.push();
   }
 
   Sound.update();

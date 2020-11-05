@@ -3,6 +3,7 @@
 
 ezSynth s(SINE, 1000);
 
+//            x   y    w   h     label
 ezButton btn(50, 80, 220, 80, "1000 Hz");
 
 void setup() {

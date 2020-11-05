@@ -67,6 +67,31 @@ void ezDisplayZone::ezFont(const GFXfont* gfxFont) {
 	setTextSize(size);
 }
 
+void ezDisplayZone::drawRect(uint32_t color) {
+  drawRect(0, 0, w, h, color);
+}
+
+void ezDisplayZone::fillRect(uint32_t color) {
+  fillRect(0, 0, w, h, color);
+}
+
+void ezDisplayZone::drawRoundRect(int32_t radius, uint32_t color) {
+  drawRoundRect(0, 0, w, h, radius, color);
+}
+
+void ezDisplayZone::fillRoundRect(int32_t radius, uint32_t color) {
+  fillRoundRect(0, 0, w, h, radius, color);
+}
+
+void ezDisplayZone::drawCircle(Point p, int32_t r, uint32_t color) {
+  if (p) drawCircle(p.x, p.y, r, color);
+}
+
+void ezDisplayZone::fillCircle(Point p, int32_t r, uint32_t color) {
+  if (p) fillCircle(p.x, p.y, r, color);
+}
+
+
 void ezDisplayZone::drawPixel(int32_t x_, int32_t y_, uint32_t color) {
   if      (sprite ) sprite ->drawPixel(x_, y_, color);
   else if (_parent) _parent ->drawPixel(x + x_, y + y_, color);
@@ -101,10 +126,6 @@ void ezDisplayZone::fillRect(int32_t x_, int32_t y_, int32_t w_, int32_t h_, uin
   if      (sprite ) sprite ->fillRect(x_, y_, w_, h_, color);
   else if (_parent) _parent ->fillRect(x + x_, y + y_, w_, h_, color);
   else              DISPLAY .fillRect(x + x_, y + y_, w_, h_, color);
-}
-
-void ezDisplayZone::fillRect(uint32_t color) {
-  fillRect(0, 0, w, h, color);
 }
 
 int16_t ezDisplayZone::drawChar(uint16_t uniCode, int32_t x_, int32_t y_, uint8_t font) {
@@ -143,28 +164,16 @@ void ezDisplayZone::drawRect(int32_t x_, int32_t y_, int32_t w_, int32_t h_, uin
   else              DISPLAY .drawRect(x + x_, y + y_, w_, h_, color);
 }
 
-void ezDisplayZone::drawRect(uint32_t color) {
-  drawRect(0, 0, w, h, color);
-}
-
 void ezDisplayZone::drawRoundRect(int32_t x0, int32_t y0, int32_t w_, int32_t h_, int32_t radius, uint32_t color) {
   if      (sprite ) sprite ->drawRoundRect(x0, y0, w_, h_, radius, color);
   else if (_parent) _parent ->drawRoundRect(x + x0, y + y0, w_, h_, radius, color);
   else              DISPLAY .drawRoundRect(x + x0, y + y0, w_, h_, radius, color);
 }
 
-void ezDisplayZone::drawRoundRect(int32_t radius, uint32_t color) {
-  drawRoundRect(0, 0, w, h, radius, color);
-}
-
 void ezDisplayZone::fillRoundRect(int32_t x0, int32_t y0, int32_t w_, int32_t h_, int32_t radius, uint32_t color) {
   if      (sprite ) sprite ->fillRoundRect(x0, y0, w_, h_, radius, color);
   else if (_parent) _parent ->fillRoundRect(x + x0, y + y0, w_, h_, radius, color);
   else              DISPLAY .fillRoundRect(x + x0, y + y0, w_, h_, radius, color);
-}
-
-void ezDisplayZone::fillRoundRect(int32_t radius, uint32_t color) {
-  fillRoundRect(0, 0, w, h, radius, color);
 }
 
 void ezDisplayZone::setRotation(uint8_t r) {
@@ -484,3 +493,4 @@ size_t  ezDisplayZone::write(uint8_t utf8) {
   else if (_parent) return _parent ->write(utf8);
   else              return DISPLAY .write(utf8);
 }
+

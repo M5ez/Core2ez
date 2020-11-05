@@ -176,9 +176,18 @@ void ezWidget::eventProcess(Event& e) {
 
 /* virtual */ void ezWidget::eventPost(Event& e) { };
 
+/* virtual */ void ezWidget::clear() {
+  if (sprite) {
+    // faster, uses memset if possible
+    sprite->fillSprite(colors.fill);
+  } else {
+    fillRect(colors.fill);
+  }
+}
+
 /* virtual */ void ezWidget::draw() {
   if (!*this) return;
-  if (colors.fill    != NODRAW) fillRect(colors.fill);
+  if (colors.fill    != NODRAW) clear();
   drawChildren();
   if (colors.outline != NODRAW && !(w == 320 && h == 240)) {
     drawRect(colors.outline);

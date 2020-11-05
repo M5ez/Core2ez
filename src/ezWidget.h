@@ -32,6 +32,7 @@ class ezWidget : public ezDisplayZone, public Eventful {
   virtual void            add(ezGesture& g);
   virtual void            remove(ezGesture& g);
   void                    event(Event& e);
+  virtual void            clear();
   virtual void            draw();
   void                    drawChildren();
   void                    spriteBuffer(int16_t w_ = -1, int16_t h_ = -1);
