@@ -31,7 +31,6 @@ class ezLabel : public ezWidget {
   virtual void    draw();
   String          text       = "";
   uint16_t        color      = TFT_WHITE;
-  uint8_t         textSize   = 1;
   align_t         align      = CENTER;
   valign_t        valign     = MIDDLE;
   uint8_t         padding    = 0;

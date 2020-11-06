@@ -31,6 +31,7 @@ class ezWidget : public ezDisplayZone, public Eventful {
   virtual void            remove(ezWidget& w);
   virtual void            add(ezGesture& g);
   virtual void            remove(ezGesture& g);
+  virtual void            push();
   void                    event(Event& e);
   virtual void            clear();
   virtual void            draw();
@@ -53,9 +54,13 @@ class ezWidget : public ezDisplayZone, public Eventful {
   uint16_t                repeatInterval  = 150;
   uint16_t                userData        =   0;
   bool                    glissando       = false;
+  bool                    scroll          = true;
+  bool                    showArrows      = true;
 
  protected:
-  void                    eventProcess(Event& e);
+  void                    _eventProcess(Event& e);
+  void                    _updateBox();
+  void                    _drawArrow(int16_t direction);
   std::vector<ezWidget*>  _widgets;
   std::vector<ezGesture*> _gestures;
   bool                    _state          = false;

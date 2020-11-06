@@ -103,6 +103,8 @@ class Point {
   Point(int16_t x_ = INVALID_VALUE, int16_t y_ = INVALID_VALUE);
   bool operator==(const Point& p);
   bool operator!=(const Point& p);
+//   operator+(const Point &p) const;
+//   operator-(const Point &p) const;
   explicit operator bool();
   operator char*();
   void set(int16_t x_ = INVALID_VALUE, int16_t y_ = INVALID_VALUE);

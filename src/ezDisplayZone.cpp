@@ -6,10 +6,10 @@ ezDisplayZone* ezDisplayZone::parent() {
 }
 
 // Push this object's own sprite
-void ezDisplayZone::push() {
+/* virtual */ void ezDisplayZone::push() {
   if (!sprite) return;
-  if (_parent)  _parent->push(sprite, offsetX, offsetY, w, h, x, y);
-  else         spriteToDisplay(sprite, offsetX, offsetY, w, h, x, y);
+  if (_parent)  _parent->push(sprite, offset.x, offset.y, w, h, x, y);
+  else         spriteToDisplay(sprite, offset.x, offset.y, w, h, x, y);
 }
 
 // Get handed a push for a sprite by a child
@@ -23,14 +23,12 @@ void ezDisplayZone::push(TFT_eSprite* s, int16_t ox, int16_t oy, int16_t w_, int
 
 void ezDisplayZone::spriteToDisplay(TFT_eSprite* s, int16_t ox, int16_t oy, int16_t w_, int16_t h_, int16_t x_, int16_t y_) {
   // Serial.printf("spriteToDisplay(%d, %d, %d, %d, %d, %d, %d)\n", (long)s, ox, oy, w_, h_, x_, y_);
-  if (s->width() - ox > w || s->height() - oy > h) {
-    TFT_eSprite* tmpspr = new TFT_eSprite(&DISPLAY);
-    Serial.printf("tmpspr = %d\n", (long)tmpspr);
-    tmpspr->createSprite(w_, h_);
-    tmpspr->pushInSprite(s, offsetX, offsetY, w_, h_, 0, 0);
-    tmpspr->pushSprite(x_, y_);
-    tmpspr->deleteSprite();
-    delete tmpspr;
+  if (ox || oy || s->width() > w_ || s->height() > h_) {
+    TFT_eSprite tmpspr(&DISPLAY);
+    tmpspr.createSprite(w_, h_);
+    tmpspr.pushInSprite(s, ox, oy, w_, h_, 0, 0);
+    tmpspr.pushSprite(x_, y_);
+    tmpspr.deleteSprite();
   } else {
     s->pushSprite(x_ , y_);
   }
@@ -40,8 +38,8 @@ void ezDisplayZone::spriteBuffer(int16_t w_ /* = -1 */, int16_t h_ /* = -1 */) {
   direct();
   sprite = new TFT_eSprite(&DISPLAY);
   sprite->createSprite(w_ == -1 ? w : w_, h_ == -1 ? h : h_);
-  offsetX = 0;
-  offsetY = 0;
+  offset.x = 0;
+  offset.y = 0;
 }
 
 void ezDisplayZone::direct() {
@@ -49,6 +47,8 @@ void ezDisplayZone::direct() {
     sprite->deleteSprite();
     delete sprite;
     sprite = nullptr;
+    offset.x = 0;
+    offset.y = 0;
   }
 }
 
@@ -91,6 +91,13 @@ void ezDisplayZone::fillCircle(Point p, int32_t r, uint32_t color) {
   if (p) fillCircle(p.x, p.y, r, color);
 }
 
+void ezDisplayZone::drawTriangle(Point p0, Point p1, Point p2, uint32_t color) {
+  if (p0 && p1 && p2) drawTriangle(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, color);
+}
+
+void ezDisplayZone::fillTriangle(Point p0, Point p1, Point p2, uint32_t color) {
+  if (p0 && p1 && p2) fillTriangle(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, color);
+}
 
 void ezDisplayZone::drawPixel(int32_t x_, int32_t y_, uint32_t color) {
   if      (sprite ) sprite ->drawPixel(x_, y_, color);

@@ -1,6 +1,7 @@
 #include <ezWidget.h>
 #include <ezRoot.h>
 #include <ezGesture.h>
+#include <ezValues.h>
 
 ezWidget* ezWidget::parent() {
   if (_parent) return static_cast<ezWidget*>(_parent);
@@ -37,6 +38,65 @@ ezWidget* ezWidget::parent() {
   }
 }
 
+/* virtual */ void ezWidget::push() {
+  if (!sprite) return;
+  bool ol = (colors.outline != NODRAW);
+  if (_parent)  _parent->push (sprite, offset.x + ol, offset.y + ol, w - (2 * ol), h - (2 * ol), x + ol, y + ol);
+  else         spriteToDisplay(sprite, offset.x + ol, offset.y + ol, w - (2 * ol), h - (2 * ol), x + ol, y + ol);
+  _updateBox();
+}
+
+void ezWidget::_updateBox() {
+  if (!parent()) return;
+  if (scroll && showArrows) {
+    if (offset.x)                        _drawArrow(EZ_LEFT );
+    if (offset.y)                        _drawArrow(EZ_UP   );
+    if (sprite->width()  - offset.x > w) _drawArrow(EZ_RIGHT);
+    if (sprite->height() - offset.y > h) _drawArrow(EZ_DOWN );
+  }
+  if (colors.outline != NODRAW) {
+    parent()->drawRect(x, y, w, h, colors.outline);
+  }
+}
+
+void ezWidget::_drawArrow(int16_t direction) {
+  if (!parent()) return;
+  Point tip, tail1, tail2;
+
+  if        (ez.Theme.arrowValign == EZ_TOP   ) {
+    tip.y = y + ez.Theme.arrowPadding + (ez.Theme.arrowWidth / 2);
+  } else if (ez.Theme.arrowValign == EZ_BOTTOM) {
+    tip.y = y + h - ez.Theme.arrowPadding - (ez.Theme.arrowWidth / 2);
+  } else {
+    tip.y = y + (h / 2);
+  }
+  tail1.y = tip.y - (ez.Theme.arrowWidth / 2);
+  tail2.y = tip.y + (ez.Theme.arrowWidth / 2);
+
+  if        (direction == EZ_LEFT) {
+    tip.x = x + ez.Theme.arrowPadding;
+    tail1.x = tail2.x = tip.x + ez.Theme.arrowLength;
+  } else if (direction == EZ_RIGHT) {
+    tip.x = x + w - ez.Theme.arrowPadding;
+    tail1.x = tail2.x = tip.x - ez.Theme.arrowLength;
+  } else if (direction == EZ_UP) {
+    tip.x = x + (w / 2);
+    tip.y = y + ez.Theme.arrowPadding;
+    tail1.y = tail2.y = tip.y + ez.Theme.arrowLength;
+    tail1.x = tip.x - (ez.Theme.arrowWidth / 2);
+    tail2.x = tip.x + (ez.Theme.arrowWidth / 2);
+  } else {
+    tip.x = x + (w / 2);
+    tip.y = y + h - ez.Theme.arrowPadding;
+    tail1.y = tail2.y = tip.y - ez.Theme.arrowLength;
+    tail1.x = tip.x - (ez.Theme.arrowWidth / 2);
+    tail2.x = tip.x + (ez.Theme.arrowWidth / 2);
+  }
+  parent()->fillTriangle(tip, tail1, tail2, ez.Theme.arrowFill);
+  parent()->drawTriangle(tip, tail1, tail2, ez.Theme.arrowOutline);
+}
+
+
 void ezWidget::event(Event& e) {
 
   // Translate parent coordinates to widget origin
@@ -54,7 +114,29 @@ void ezWidget::event(Event& e) {
   }
 
   eventPre(e);
-  eventProcess(e);
+  _eventProcess(e);
+
+  // Scroll if set
+  if (sprite && scroll && e.widget == this && e == E_MOVE) {
+    Point moveBy;
+    moveBy.x = e.from.x - e.to.x;
+    moveBy.y = e.from.y - e.to.y;
+    if (offset.x + moveBy.x < 0) moveBy.x = -offset.x;
+    if (offset.y + moveBy.y < 0) moveBy.y = -offset.y;
+    if (offset.x + moveBy.x > sprite->width()  - w)
+      moveBy.x = sprite->width()  - w - offset.x;
+    if (offset.y + moveBy.y > sprite->height() - h)
+      moveBy.y = sprite->height() - h - offset.y;
+
+    if (moveBy != Point(0,0)) {
+      offset.x += moveBy.x;
+      offset.y += moveBy.y;
+      e.to.x -= moveBy.x;
+      e.to.y -= moveBy.y;
+      push();
+    }
+  }
+
   eventPost(e);
   fireEvent(e);
 
@@ -66,7 +148,7 @@ void ezWidget::event(Event& e) {
 
 }
 
-void ezWidget::eventProcess(Event& e) {
+void ezWidget::_eventProcess(Event& e) {
 
   // Reset publicly shown last event for this widget
   lastEvent = Event();
@@ -189,11 +271,8 @@ void ezWidget::eventProcess(Event& e) {
   if (!*this) return;
   if (colors.fill    != NODRAW) clear();
   drawChildren();
-  if (colors.outline != NODRAW && !(w == 320 && h == 240)) {
-    drawRect(colors.outline);
-  }
+  if (colors.outline != NODRAW && !sprite) drawRect(colors.outline);
 }
-
 
 void ezWidget::drawChildren() {
   for (auto widget : _widgets) if (widget && *widget) widget->draw();

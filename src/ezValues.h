@@ -1,0 +1,11 @@
+#define EZ_INVALID            -32768
+#define EZ_LEFT               -32767
+#define EZ_RIGHT              -32766
+#define EZ_UP                 -32765
+#define EZ_DOWN               -32764
+#define EZ_TOP                -32763
+#define EZ_BOTTOM             -32762
+#define EZ_CENTER             -32761
+#define EZ_CENTRE             EZ_CENTER
+#define EZ_MIDDLE             EZ_CENTER
+#define EZ_ANYWHERE           -32760

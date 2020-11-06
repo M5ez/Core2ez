@@ -64,7 +64,6 @@ void ezLabel::draw() {
 
     // Actual drawing of text
     setTextColor(colors.text);
-    setTextSize(textSize);
     ezFont(font);
     setTextDatum(datum);
     setTextPadding(0);

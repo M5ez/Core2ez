@@ -29,7 +29,7 @@
 class ezDisplayZone : public Zone {
  public:
   ezDisplayZone* parent();
-  void     push();
+  virtual void push();
   void     push(TFT_eSprite* s, int16_t ox, int16_t oy, int16_t w_, int16_t h_, int16_t x_, int16_t y_);
   void     spriteToDisplay(TFT_eSprite* s, int16_t ox, int16_t oy, int16_t w_, int16_t h_, int16_t x_, int16_t y_);
   void     direct();
@@ -41,6 +41,8 @@ class ezDisplayZone : public Zone {
   void     fillRoundRect(int32_t radius, uint32_t color);
   void     drawCircle(Point p, int32_t r, uint32_t color);
   void     fillCircle(Point p, int32_t r, uint32_t color);
+  void     drawTriangle(Point p0, Point p1, Point p2, uint32_t color);
+  void     fillTriangle(Point p0, Point p1, Point p2, uint32_t color);
 
   void     drawPixel(int32_t x_, int32_t y_, uint32_t color);
   void     drawChar(int32_t x_, int32_t y_, uint16_t c, uint32_t color, uint32_t bg, uint8_t size);
@@ -110,10 +112,7 @@ class ezDisplayZone : public Zone {
   uint16_t decodeUTF8(uint8_t c);
   size_t   write(uint8_t utf8);
 
-  TFT_eSprite*      sprite    = nullptr;
-  int16_t           offsetX   = 0;
-  int16_t           offsetY   = 0;
-
-
+  TFT_eSprite*      sprite     = nullptr;
+  Point             offset     = Point(0, 0);
   ezDisplayZone*    _parent    = nullptr;
 };
