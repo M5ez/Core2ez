@@ -2,6 +2,7 @@
 #include <ezRoot.h>
 #include <ezGesture.h>
 #include <ezValues.h>
+#include <Arduino.h>
 
 ezWidget* ezWidget::parent() {
   if (_parent) return static_cast<ezWidget*>(_parent);
@@ -97,30 +98,34 @@ void ezWidget::_drawArrow(int16_t direction) {
 }
 
 
-void ezWidget::event(Event& e) {
+void ezWidget::event() {
+
+  // This will add one for each of a widget or a gesture pointer present
+  // on the event. See below
+  uint8_t claims = (!!ez.e.widget) + (!!ez.e.gesture);
 
   // Translate parent coordinates to widget origin
-  e.from.x -= x;
-  e.from.y -= y;
-  e.to.x -= x;
-  e.to.y -= y;
+  ez.e.from.x -= x;
+  ez.e.from.y -= y;
+  ez.e.to.x -= x;
+  ez.e.to.y -= y;
 
   // Pass event to all gestures for this widget
-  for (auto gesture : _gestures) gesture->event(e);
+  for (auto gesture : _gestures) gesture->event();
 
   // Pass event by all widgets in this widget
   for (int i = _widgets.size() - 1; i >= 0; --i) {
-    _widgets[i]->event(e);
+    _widgets[i]->event();
   }
 
-  eventPre(e);
-  _eventProcess(e);
+  eventPre();
+  _eventProcess();
 
   // Scroll if set
-  if (sprite && scroll && e.widget == this && e == E_MOVE) {
+  if (sprite && scroll && ez.e.widget == this && ez.e == E_MOVE) {
     Point moveBy;
-    moveBy.x = e.from.x - e.to.x;
-    moveBy.y = e.from.y - e.to.y;
+    moveBy.x = ez.e.from.x - ez.e.to.x;
+    moveBy.y = ez.e.from.y - ez.e.to.y;
     if (offset.x + moveBy.x < 0) moveBy.x = -offset.x;
     if (offset.y + moveBy.y < 0) moveBy.y = -offset.y;
     if (offset.x + moveBy.x > sprite->width()  - w)
@@ -131,51 +136,58 @@ void ezWidget::event(Event& e) {
     if (moveBy != Point(0,0)) {
       offset.x += moveBy.x;
       offset.y += moveBy.y;
-      e.to.x -= moveBy.x;
-      e.to.y -= moveBy.y;
+      ez.e.to.x -= moveBy.x;
+      ez.e.to.y -= moveBy.y;
       push();
     }
   }
 
-  eventPost(e);
-  fireEvent(e);
+  eventPost();
+  e = Event();
+  if (ez.e.widget == this) {
+    fireEvent();
+  } else if ((!!ez.e.widget) + (!!ez.e.gesture) > claims) {
+    // Something added a widget or gesture pointer, so one of our descendants
+    // must have claimed this event. So we fire it as a descendant event.
+    fireEvent(true);
+  }
 
   // Translate back to parent coordinates
-  e.from.x += x;
-  e.from.y += y;
-  e.to.x += x;
-  e.to.y += y;
+  ez.e.from.x += x;
+  ez.e.from.y += y;
+  ez.e.to.x += x;
+  ez.e.to.y += y;
 
 }
 
-void ezWidget::_eventProcess(Event& e) {
+void ezWidget::_eventProcess() {
 
-  // Reset publicly shown last event for this widget
-  lastEvent = Event();
+  // Reset last event for this widget
+  e = Event();
 
   // If E_NONE, check if we have anything that could ride in here
-  if (!e) {
+  if (!ez.e) {
     if (_changed) {
       _changed = false;
       if (!_state && !_cancelled) {
         // Post-releaase events
         if (!contains(_lastOffEvent.to, true)) {
-          e = _lastOffEvent;
-          e.type = E_DRAGGED;
+          ez.e = _lastOffEvent;
+          ez.e.type = E_DRAGGED;
         } else if (_lastOffEvent.duration < tapTime) {
           if (_tapWait) {
-            e = _lastOffEvent;
-            e.type = E_DBLTAP;
+            ez.e = _lastOffEvent;
+            ez.e.type = E_DBLTAP;
           } else {
             _tapWait = true;
             return;
           }
         } else if (_longPressing) {
-          e = _lastOffEvent;
-          e.type = E_LONGPRESSED;
+          ez.e = _lastOffEvent;
+          ez.e.type = E_LONGPRESSED;
         } else {
-          e = _lastOffEvent;
-          e.type = E_PRESSED;
+          ez.e = _lastOffEvent;
+          ez.e.type = E_PRESSED;
         }
         _tapWait = false;
         _pressing = false;
@@ -188,8 +200,8 @@ void ezWidget::_eventProcess(Event& e) {
         uint16_t duration = millis() - _lastOnTime;
         if (_tapWait && millis() - _lastOffTime >= dbltapTime) {
           _lastRepeat = millis();
-          e = _lastOffEvent;
-          e.type = E_TAP;
+          ez.e = _lastOffEvent;
+          ez.e.type = E_TAP;
           _pressing = false;
           _longPressing = false;
           _tapWait = false;
@@ -197,17 +209,17 @@ void ezWidget::_eventProcess(Event& e) {
           if (!_pressing && duration > tapTime ||
               (repeatDelay && duration > repeatDelay &&
               millis() - _lastRepeat > repeatInterval)) {
-            e = _lastOnEvent;
-            e.type = E_PRESSING;
-            e.duration = duration;
+            ez.e = _lastOnEvent;
+            ez.e.type = E_PRESSING;
+            ez.e.duration = duration;
             _pressing = true;
             _lastRepeat = millis();
           } else if (longPressTime && !_longPressing &&
                      duration > longPressTime) {
             _longPressing = true;
-            e = _lastOnEvent;
-            e.type = E_LONGPRESSING;
-            e.duration = duration;
+            ez.e = _lastOnEvent;
+            ez.e.type = E_LONGPRESSING;
+            ez.e.duration = duration;
           }
         }
       }
@@ -216,47 +228,47 @@ void ezWidget::_eventProcess(Event& e) {
   }
 
   // Some other widget is already dealing with this event or we're numb
-  if (e.widget || numb) return;
+  if (ez.e.widget || numb) return;
 
   bool parentGlissando = (parent() && parent()->glissando);
 
   // See if this is ours and tag it as such if it is
-  if      (e == E_TOUCH && contains(e.to, true)) {
-    e.widget = this;
-    _touched[e.finger] = true;
+  if      (ez.e == E_TOUCH && contains(ez.e.to, true)) {
+    ez.e.widget = this;
+    _touched[ez.e.finger] = true;
   }
-  else if (e == E_MOVE && _touched[e.finger]) {
-    e.widget = this;
-    if (glissando || (parentGlissando && !contains(e.to, true))) {
-      e.type = E_RELEASE;
+  else if (ez.e == E_MOVE && _touched[ez.e.finger]) {
+    ez.e.widget = this;
+    if (glissando || (parentGlissando && !contains(ez.e.to, true))) {
+      ez.e.type = E_RELEASE;
     }
   }
-  if (e == E_RELEASE && _touched[e.finger]) {
-    e.widget = this;
-    if (e.gesture) _cancelled = true;
-    _touched[e.finger] = false;
+  if (ez.e == E_RELEASE && _touched[ez.e.finger]) {
+    ez.e.widget = this;
+    if (ez.e.gesture) _cancelled = true;
+    _touched[ez.e.finger] = false;
   }
 
-  if (e.widget != this) return;
+  if (ez.e.widget != this) return;
 
   // Did the _state change?
   if      (_state && !_touched[0] && !_touched[1]) {
     _state   = false;
     _changed = true;
     _lastOffTime = millis();
-    _lastOffEvent = e;
+    _lastOffEvent = ez.e;
   }
   else if (!_state && (_touched[0] || _touched[1])) {
     _state   = true;
     _changed = true;
     _lastOnTime = millis();
-    _lastOnEvent = e;
+    _lastOnEvent = ez.e;
   }
 }
 
-/* virtual */ void ezWidget::eventPre(Event& e) { };
+/* virtual */ void ezWidget::eventPre() { };
 
-/* virtual */ void ezWidget::eventPost(Event& e) { };
+/* virtual */ void ezWidget::eventPost() { };
 
 /* virtual */ void ezWidget::clear() {
   if (sprite) {
@@ -283,7 +295,7 @@ void ezWidget::spriteBuffer(int16_t w_ /* = -1 */, int16_t h_ /* = -1 */) {
   if (parent()) {
     sprite->fillSprite(parent()->colors.fill);
   } else {
-    sprite->fillSprite(ez.Theme.ezWindow_colors.fill);
+    sprite->fillSprite(colors.fill);
   }
 }
 

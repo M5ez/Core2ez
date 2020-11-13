@@ -22,12 +22,11 @@ void setup() {
 	ez.begin();
   ez.Screen.colors.fill = BLACK;
 	ez.Screen.glissando = true;
-  for (uint8_t n = 0; n < 16; n++) ez.Screen.add(key[n]);
   M5.IMU.Init();
   row_gen.gain  = col_gen.gain   = 0.3;
   row_gen.decay = col_gen.decay = 50;   // min tone length
-  ez.Screen.addHandler(btnPressed , E_TOUCH);
-  ez.Screen.addHandler(btnReleased, E_RELEASE);
+  ez.addHandler(btnPressed , E_TOUCH);
+  ez.addHandler(btnReleased, E_RELEASE);
   doButtons();
 }
 
@@ -37,9 +36,9 @@ void loop() {
 }
 
 void doButtons() {
-  ez.Screen.set(0, 0, M5.Lcd.width(), M5.Lcd.height());
   uint16_t scr_w = M5.Lcd.width();
   uint16_t scr_h = M5.Lcd.height();
+  ez.Screen.set(0, 0, scr_w, scr_h);
   uint8_t  btn_w = (scr_w / columns) - MARGIN;
   uint8_t  btn_h = (scr_h / 4) - MARGIN;
 
@@ -71,9 +70,10 @@ void doButtons() {
   ez.draw();
 }
 
-void btnPressed(Event& e) {
-  if (!e.widget || !e.widget->userData) return;
-  uint8_t k = e.widget->userData - 1;
+void btnPressed() {
+  EVENTWIDGET(ezButton, b);
+  if (!b.userData) return;
+  uint8_t k = b.userData - 1;
   ez.Sound.waitForSilence();
   row_gen.freq = rowTones[k / 4];
   col_gen.freq = colTones[k % 4];
@@ -81,7 +81,7 @@ void btnPressed(Event& e) {
   col_gen.start();
 }
 
-void btnReleased(Event& e) {
+void btnReleased() {
   row_gen.stop();
   col_gen.stop();
 }

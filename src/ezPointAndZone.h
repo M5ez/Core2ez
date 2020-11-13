@@ -16,7 +16,7 @@
   Point(x, y)
 
     Holds a point on the screen. Has members x and y that hold the coordinates
-    of a touch. Values INVALID_VALUE for x and y indicate an invalid value,
+    of a touch. Values EZ_INVALID for x and y indicate an invalid value,
     and that's what a point starts out with if you declare it without
     parameters. The 'valid()' method tests if a point is valid. If you
     explicitly evaluate a Point as a boolean ("if (p) ..."), you also get
@@ -83,14 +83,14 @@
 
 #include <Arduino.h>
 
-#define INVALID_VALUE -32768
+#define EZ_INVALID -32768
 #define PLUSMINUS 45  // default value for isDirectionTo
 
 #define DIR_UP                 0
 #define DIR_RIGHT             90
 #define DIR_DOWN             180
 #define DIR_LEFT             270
-#define DIR_ANY    INVALID_VALUE
+#define DIR_ANY       EZ_INVALID
 
 #define HIGHEST_X 319         // Can't trust TFT_WIDTH, driver is portrait
 #define HIGHEST_Y 239
@@ -100,14 +100,14 @@ class Zone;
 
 class Point {
  public:
-  Point(int16_t x_ = INVALID_VALUE, int16_t y_ = INVALID_VALUE);
+  Point(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID);
   bool operator==(const Point& p);
   bool operator!=(const Point& p);
 //   operator+(const Point &p) const;
 //   operator-(const Point &p) const;
   explicit operator bool();
   operator char*();
-  void set(int16_t x_ = INVALID_VALUE, int16_t y_ = INVALID_VALUE);
+  void set(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID);
   bool valid();
   bool in(Zone& z, bool selfRef = false);
   bool Equals(const Point& p);
@@ -124,12 +124,12 @@ class Point {
 
 class Zone {
  public:
-  Zone(int16_t x_ = INVALID_VALUE, int16_t y_ = INVALID_VALUE, int16_t w_ = 0,
+  Zone(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID, int16_t w_ = 0,
        int16_t h_ = 0);
   explicit operator bool();
   bool valid();
-  void set(int16_t x_ = INVALID_VALUE, int16_t y_ = INVALID_VALUE,
-           int16_t w_ = 0 , int16_t h_ = 0);
+  virtual void set(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID,
+                   int16_t w_ = 0 , int16_t h_ = 0);
   bool contains(const Point& p, bool selfRef = false);
   bool contains(int16_t x, int16_t y, bool selfRef = false);
   void rotate(uint8_t m);

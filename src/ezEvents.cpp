@@ -1,24 +1,28 @@
 #include <ezEvents.h>
+#include <ezRoot.h>
 
-void Eventful::fireEvent(Event& e) {
-  lastEvent = e;
+void Eventful::fireEvent(bool descendant /* = false */) {
+  e = ez.e;
   if (e) {
     for (auto h : _eventHandlers) {
-      if (!(h.eventMask & e.type)) continue;
-      h.fn(e);
+      if (descendant && !h.includeDescendants) return;
+      if (h.eventMask & e.type) {
+        h.fn();
+      }
     }
   }
 }
 
-void Eventful::addHandler(void (*fn)(Event&),
-                           uint16_t eventMask /* = E_ALL */) {
+void Eventful::addHandler(void (*fn)(), uint16_t eventMask /* = E_ALL */,
+                          bool includeDescendants_ /* = false */) {
   ezEventHandler handler;
   handler.fn = fn;
+  handler.includeDescendants = includeDescendants_;
   handler.eventMask = eventMask;
   _eventHandlers.push_back(handler);
 }
 
-void Eventful::delHandlers(void (*fn)(Event&) /* = nullptr */) {
+void Eventful::delHandlers(void (*fn)() /* = nullptr */) {
   for (int i = _eventHandlers.size() - 1; i >= 0; --i) {
     if (fn && fn != _eventHandlers[i].fn) continue;
     _eventHandlers.erase(_eventHandlers.begin() + i);
@@ -34,12 +38,12 @@ Event::operator uint16_t() { return type; }
 const char* Event::typeName() {
   const char* unknown = "E_UNKNOWN";
   const char* none = "E_NONE";
-  const char* eventNames[NUM_EVENTS] = {
+  const char* eventNames[NUMEVENTS] = {
       "E_TOUCH",    "E_RELEASE",     "E_MOVE",        "E_GESTURE",
       "E_TAP",      "E_DBLTAP",      "E_DRAGGED",     "E_PRESSED",
-      "E_PRESSING", "E_LONGPRESSED", "E_LONGPRESSING"};
+      "E_PRESSING", "E_LONGPRESSED", "E_LONGPRESSING", "E_CHANGED"};
   if (!type) return none;
-  for (uint8_t i = 0; i < NUM_EVENTS; i++) {
+  for (uint8_t i = 0; i < NUMEVENTS; i++) {
     if ((type >> i) & 1) return eventNames[i];
   }
   return unknown;

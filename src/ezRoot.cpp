@@ -5,8 +5,8 @@
 
 ezRoot::ezRoot() {
   if (!instance) instance = this;
-  set(0, 0, 500, 500);
-  numb = true;
+  set(0, 0, 320, 280);
+  // numb = true;
 }
 
 void ezRoot::begin() {
@@ -54,7 +54,7 @@ void ezRoot::update() {
   Sound.update();
   Touch.update();
 
-  Event e;
+  e = Event();
 
   Point curr;
   curr = Touch.point[_finger];
@@ -85,19 +85,19 @@ void ezRoot::update() {
   prev = curr;
 
   // Pass event to top window on our window stack
-  if (_widgets.size()) _widgets[_widgets.size() - 1]->event(e);
+  if (_widgets.size()) _widgets.back()->event();
 
   // In case one of the widgets changed E_MOVE into E_RELEASE (glissando)
   // So we interpret next coordinate as an E_TOUCH again.
   if (e == E_RELEASE) _previous[_finger] = Point();
 
-  fireEvent(e);
+  fireEvent();
 
-//   if (e) {
-//     Serial.print((long)e.widget);
-//     Serial.print("  ");
-//     e.print();
-//   }
+  if (e) {
+    Serial.print((long)e.widget);
+    Serial.print("  ");
+    e.print();
+  }
 
   _finger = !_finger;
 }

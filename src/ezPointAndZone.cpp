@@ -4,8 +4,8 @@
 
 // Point class
 
-Point::Point(int16_t x_ /* = INVALID_VALUE */,
-             int16_t y_ /* = INVALID_VALUE */) {
+Point::Point(int16_t x_ /* = EZ_INVALID */,
+             int16_t y_ /* = EZ_INVALID */) {
   x = x_;
   y = y_;
 }
@@ -23,10 +23,10 @@ Point::operator char*() {
   return _text;
 }
 
-Point::operator bool() { return !(x == INVALID_VALUE && y == INVALID_VALUE); }
+Point::operator bool() { return !(x == EZ_INVALID && y == EZ_INVALID); }
 
-void Point::set(int16_t x_ /* = INVALID_VALUE */,
-                int16_t y_ /* = INVALID_VALUE */) {
+void Point::set(int16_t x_ /* = EZ_INVALID */,
+                int16_t y_ /* = EZ_INVALID */) {
   x = x_;
   y = y_;
 }
@@ -37,7 +37,7 @@ bool Point::in(Zone& z, bool selfRef /* = false */) {
   return (z.contains(x, y, selfRef));
 }
 
-bool Point::valid() { return !(x == INVALID_VALUE && y == INVALID_VALUE); }
+bool Point::valid() { return !(x == EZ_INVALID && y == EZ_INVALID); }
 
 uint16_t Point::distanceTo(const Point& p) {
   int16_t dx = x - p.x;
@@ -100,24 +100,24 @@ void Point::rotate(uint8_t m) {
 
 // Zone class
 
-Zone::Zone(int16_t x_ /* = INVALID_VALUE */, int16_t y_ /* = INVALID_VALUE */,
+Zone::Zone(int16_t x_ /* = EZ_INVALID */, int16_t y_ /* = EZ_INVALID */,
            int16_t w_ /* = 0 */, int16_t h_ /* = 0 */
 ) {
   set(x_, y_, w_, h_);
 }
 
-Zone::operator bool() { return !(x == INVALID_VALUE && y == INVALID_VALUE); }
+Zone::operator bool() { return !(x == EZ_INVALID && y == EZ_INVALID); }
 
-void Zone::set(int16_t x_ /* = INVALID_VALUE */,
-               int16_t y_ /* = INVALID_VALUE */,
-               int16_t w_ /* = 0 */, int16_t h_ /* = 0 */) {
+/*virtual */ void Zone::set(int16_t x_ /* = EZ_INVALID */,
+                            int16_t y_ /* = EZ_INVALID */,
+                            int16_t w_ /* = 0 */, int16_t h_ /* = 0 */) {
   x = x_;
   y = y_;
   w = w_;
   h = h_;
 }
 
-bool Zone::valid() { return !(x == INVALID_VALUE && y == INVALID_VALUE); }
+bool Zone::valid() { return !(x == EZ_INVALID && y == EZ_INVALID); }
 
 bool Zone::contains(const Point& p, bool selfRef /* = false */) {
   return contains(p.x, p.y, selfRef);

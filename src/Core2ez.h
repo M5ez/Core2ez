@@ -9,6 +9,8 @@
 #include <ezWidget.h>
 #include <ezGesture.h>
 #include <ezButton.h>
+#include <ezLabel.h>
+#include <ezInput.h>
 #include <ezTheme.h>
 #include <ezWindow.h>
 #include <ezRoot.h>

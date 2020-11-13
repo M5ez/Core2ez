@@ -40,7 +40,7 @@
   has members x and y and can be intialised as follows:
 
     Holds a point on the screen. Has members x and y that hold the coordinates
-    of a touch. Values INVALID_VALUE for x and y indicate an invalid value,
+    of a touch. Values EZ_INVALID for x and y indicate an invalid value,
     and that's what a point starts out with if you declare it without
     parameters. The 'valid()' method tests if a point is valid. If you
     explicitly evaluate a TouchPoint as a boolean ("if (p) ..."), you also get

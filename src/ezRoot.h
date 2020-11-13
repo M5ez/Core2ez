@@ -22,7 +22,7 @@ class ezRoot : public ezWidget {
   ezSound                     Sound;
   ezTouch                     Touch;
   ezTheme                     Theme;
-  ezWindow                    Screen;
+  ezWindow                    Screen     = ezWindow(0, 0, 320, 240);
 
  protected:
   uint8_t                     _finger           = 0;

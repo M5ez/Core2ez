@@ -31,18 +31,15 @@ void setup() {
   ez.begin();
 
   ez.Screen.colors.fill = BLACK;
-
   ez.Screen.spriteBuffer();      // Prevents flicker, buffer until push()
   ez.Screen.glissando = true;
 
   // Set up white keys
-
   for (uint8_t n = 0; n < 8; n++) {
     keys[n].set(n * WHITE_KEY_WIDTH, 0, WHITE_KEY_WIDTH, WHITE_KEY_HEIGHT);
     keys[n].colors   = WHITE_KEY_COLORS;
     keys[n].onColors = {NODRAW, NODRAW, NODRAW};
     keys[n].userData = n;
-    ez.Screen.add(keys[n]);
   }
 
   // Set up Black keys
@@ -53,7 +50,6 @@ void setup() {
     keys[n].colors   = BLACK_KEY_COLORS;
     keys[n].onColors = {NODRAW, NODRAW, NODRAW};
     keys[n].userData = n;
-    ez.Screen.add(keys[n]);
   }
 
   ez.Screen.focus();
@@ -66,19 +62,18 @@ void setup() {
                               NOTE_Bb4, NOTE_Db5, NOTE_Eb5, NOTE_Gb5 };
   for (uint8_t n = 0; n < 14; n++) synth[n].freq = notes[n];
 
-  ez.Screen.addHandler(keyHandler, E_TOUCH + E_RELEASE);
+  ez.addHandler(keyHandler, E_TOUCH + E_RELEASE);
 }
 
 void loop() {
   ez.update();
 }
 
-void keyHandler(Event& e) {
-  if (!e.widget) return;
-  uint8_t key = e.widget->userData;
-  if (e == E_TOUCH) {
-    synth[key].start();
+void keyHandler() {
+  EVENTWIDGET(ezButton, b);
+  if (ez.e == E_TOUCH) {
+    synth[b.userData].start();
   } else {
-    synth[key].stop();
+    synth[b.userData].stop();
   }
 }

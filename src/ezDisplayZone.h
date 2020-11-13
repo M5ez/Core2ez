@@ -5,7 +5,7 @@
 
 
 // Special fake font pointers to access the older non FreeFonts
-// in a unified way. Only valid if passed to font
+// in a unified way. Only valid if passed to ezFont
 #define MONO6x8				  (GFXfont*) 1
 #define SANS16				  (GFXfont*) 2
 #define SANS26				  (GFXfont*) 4
@@ -33,6 +33,7 @@ class ezDisplayZone : public Zone {
   void     push(TFT_eSprite* s, int16_t ox, int16_t oy, int16_t w_, int16_t h_, int16_t x_, int16_t y_);
   void     spriteToDisplay(TFT_eSprite* s, int16_t ox, int16_t oy, int16_t w_, int16_t h_, int16_t x_, int16_t y_);
   void     direct();
+  virtual void set(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID, int16_t w_ = 0, int16_t h_ = 0);
   virtual void spriteBuffer(int16_t w_ = -1, int16_t h_ = -1);
   void     ezFont(const GFXfont* gfxFont);
   void     drawRect(uint32_t color);

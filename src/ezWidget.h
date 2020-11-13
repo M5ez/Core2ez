@@ -32,13 +32,13 @@ class ezWidget : public ezDisplayZone, public Eventful {
   virtual void            add(ezGesture& g);
   virtual void            remove(ezGesture& g);
   virtual void            push();
-  void                    event(Event& e);
+  void                    event();
   virtual void            clear();
   virtual void            draw();
   void                    drawChildren();
   void                    spriteBuffer(int16_t w_ = -1, int16_t h_ = -1);
-  virtual void            eventPre(Event& e);
-  virtual void            eventPost(Event& e);
+  virtual void            eventPre();
+  virtual void            eventPost();
   virtual void            cancel();
   bool                    isPressed();
   bool                    isReleased();
@@ -58,7 +58,8 @@ class ezWidget : public ezDisplayZone, public Eventful {
   bool                    showArrows      = true;
 
  protected:
-  void                    _eventProcess(Event& e);
+  friend class ezWindow;
+  void                    _eventProcess();
   void                    _updateBox();
   void                    _drawArrow(int16_t direction);
   std::vector<ezWidget*>  _widgets;

@@ -6,20 +6,31 @@
 
 class ezButton : public ezWidget {
  public:
-                  ezButton();
-                  ezButton(ezWidget& parentWidget);
-                  ezButton(int16_t x_, int16_t y_, int16_t w_, int16_t h_,
-                           String text_ = "");
-                  ezButton(ezWidget& parentWidget,
-                           int16_t x_, int16_t y_, int16_t w_, int16_t h_,
-                           String text_ = "");
-  void            init(ezWidget* pwPtr,
-                       int16_t x_, int16_t y_, int16_t w_, int16_t h_,
-                       String text_);
+
+  ezButton(ezWidget& parentWidget,
+           int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID,
+           int16_t w_ = 0, int16_t h_ = 0,
+           String text_           = "",
+           WidgetColors colors_   = THEME_COLORS,
+           WidgetColors onColors_ = THEME_COLORS,
+           const GFXfont* font_   = THEME_FONT);
+
+  ezButton(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID,
+           int16_t w_ = 0, int16_t h_ = 0,
+           String text_           = "",
+           WidgetColors colors_   = THEME_COLORS,
+           WidgetColors onColors_ = THEME_COLORS,
+           const GFXfont* font_   = THEME_FONT);
+
+  void init(ezWidget* pwPtr,
+            int16_t x_, int16_t y_, int16_t w_, int16_t h_, String text_,
+            WidgetColors colors_, WidgetColors onColors_,
+            const GFXfont* font_);
+
                   operator bool();
   void            draw(WidgetColors wc);
   virtual void    draw();
-  virtual void    eventPost(Event& e);
+  virtual void    eventPost();
 
   WidgetColors    onColors        = { NODRAW, NODRAW, NODRAW };
   uint8_t         cornerRadius    = 0xFF;   // auto
