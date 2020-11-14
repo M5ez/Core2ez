@@ -5,6 +5,7 @@
 
 ezRoot::ezRoot() {
   if (!instance) instance = this;
+  type = W_ROOT;
   set(0, 0, 320, 280);
   // numb = true;
 }

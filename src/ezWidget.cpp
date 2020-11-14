@@ -47,6 +47,11 @@ ezWidget* ezWidget::parent() {
   _updateBox();
 }
 
+uint16_t ezWidget::parentFill() {
+  if (_parent) return static_cast<ezWidget*>(_parent)->colors.fill;
+  return TFT_WHITE;
+}
+
 void ezWidget::_updateBox() {
   if (!parent()) return;
   if (scroll && showArrows) {
@@ -105,10 +110,10 @@ void ezWidget::event() {
   uint8_t claims = (!!ez.e.widget) + (!!ez.e.gesture);
 
   // Translate parent coordinates to widget origin
-  ez.e.from.x -= x;
-  ez.e.from.y -= y;
-  ez.e.to.x -= x;
-  ez.e.to.y -= y;
+  ez.e.from.x -= x - offset.x;
+  ez.e.from.y -= y - offset.y;
+  ez.e.to.x -= x - offset.x;
+  ez.e.to.y -= y - offset.y;
 
   // Pass event to all gestures for this widget
   for (auto gesture : _gestures) gesture->event();
@@ -122,7 +127,7 @@ void ezWidget::event() {
   _eventProcess();
 
   // Scroll if set
-  if (sprite && scroll && ez.e.widget == this && ez.e == E_MOVE) {
+  if (sprite && scroll && ez.e == E_MOVE) {
     Point moveBy;
     moveBy.x = ez.e.from.x - ez.e.to.x;
     moveBy.y = ez.e.from.y - ez.e.to.y;
@@ -153,10 +158,10 @@ void ezWidget::event() {
   }
 
   // Translate back to parent coordinates
-  ez.e.from.x += x;
-  ez.e.from.y += y;
-  ez.e.to.x += x;
-  ez.e.to.y += y;
+  ez.e.from.x += x - offset.x;
+  ez.e.from.y += y - offset.y;
+  ez.e.to.x += x - offset.x;
+  ez.e.to.y += y - offset.y;
 
 }
 
@@ -296,6 +301,17 @@ void ezWidget::spriteBuffer(int16_t w_ /* = -1 */, int16_t h_ /* = -1 */) {
     sprite->fillSprite(parent()->colors.fill);
   } else {
     sprite->fillSprite(colors.fill);
+  }
+}
+
+void ezWidget::turnOffRadiobuttons() {
+  for (auto widget : _widgets) {
+    if (widget->type == W_RADIOBUTTON) {
+      ezRadiobutton* rb = static_cast<ezRadiobutton*>(widget);
+      rb->value = false;
+      rb->valueDraw();
+      rb->refresh();
+    }
   }
 }
 

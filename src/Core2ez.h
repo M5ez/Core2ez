@@ -11,6 +11,8 @@
 #include <ezButton.h>
 #include <ezLabel.h>
 #include <ezInput.h>
+#include <ezCheckbox.h>
+#include <ezRadiobutton.h>
 #include <ezTheme.h>
 #include <ezWindow.h>
 #include <ezRoot.h>

@@ -8,6 +8,17 @@
 // Special color value, meaning we don't draw anything
 #define NODRAW            0x0120
 
+enum widget_t {
+  W_WIDGET,
+  W_ROOT,
+  W_WINDOW,
+  W_BUTTON,
+  W_LABEL,
+  W_CHECKBOX,
+  W_RADIOBUTTON,
+  W_INPUT
+};
+
 
 struct WidgetColors {
   bool operator==(WidgetColors a) {
@@ -32,6 +43,8 @@ class ezWidget : public ezDisplayZone, public Eventful {
   virtual void            add(ezGesture& g);
   virtual void            remove(ezGesture& g);
   virtual void            push();
+  uint16_t                parentFill();
+  void                    turnOffRadiobuttons();
   void                    event();
   virtual void            clear();
   virtual void            draw();
@@ -45,6 +58,7 @@ class ezWidget : public ezDisplayZone, public Eventful {
   bool                    wasPressed();
   bool                    wasReleased();
 
+  widget_t                type            = W_WIDGET;
   WidgetColors            colors          = {TFT_WHITE, TFT_BLACK, TFT_BLACK};
   bool                    numb            = false;
   uint16_t                tapTime         = 200;

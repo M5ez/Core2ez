@@ -53,6 +53,11 @@ void ezDisplayZone::direct() {
   }
 }
 
+void ezDisplayZone::refresh() {
+  push();
+  if (_parent) _parent->refresh();
+}
+
 /* virtual */ void ezDisplayZone::set(int16_t x_ /* = EZ_INVALID */,
                                       int16_t y_ /* = EZ_INVALID */,
                                       int16_t w_ /* = 0 */,

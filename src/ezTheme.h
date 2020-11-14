@@ -20,6 +20,12 @@ struct ezTheme {
   WidgetColors    inp_colors    = {TFT_WHITE, TFT_BLACK, TFT_BLACK};
   const GFXfont*  inp_font      = FSSB9;
 
+  WidgetColors    chk_colors    = {TFT_WHITE, TFT_BLACK, TFT_BLACK};
+  const GFXfont*  chk_font      = FSS9;
+
+  WidgetColors    rdb_colors    = {TFT_WHITE, TFT_BLACK, TFT_BLACK};
+  const GFXfont*  rdb_font      = FSS9;
+
   WidgetColors    kb            = {TFT_BLACK, TFT_WHITE, NODRAW};
   const GFXfont*  kb_keyFont    = FSSB12;
   WidgetColors    kb_keys       = {TFT_WHITE, TFT_BLACK, TFT_BLACK};

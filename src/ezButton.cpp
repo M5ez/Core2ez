@@ -24,10 +24,11 @@ void ezButton::init(ezWidget* pwPtr,
                     int16_t x_, int16_t y_, int16_t w_, int16_t h_,
                     String text_, WidgetColors colors_, WidgetColors onColors_,
                     const GFXfont* font_) {
+  type       = W_BUTTON;
   set(x_, y_, w_, h_);
   colors     = ez.Theme.colors(colors_,   ez.Theme.btn_colors);
   onColors   = ez.Theme.colors(onColors_, ez.Theme.btn_onColors);
-  label.font = font_ ? font_ : ez.Theme.btn_font;
+  label.font = (font_ != THEME_FONT) ? font_ : ez.Theme.btn_font;
   label.text = text_;
   add(label);
   if (pwPtr) pwPtr->add(*this); else ez.Screen.add(*this);

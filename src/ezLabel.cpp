@@ -31,6 +31,7 @@ void ezLabel::init(ezWidget* pwPtr,
                    String text_, WidgetColors colors_, const GFXfont* font_,
                    int16_t align_, int16_t valign_, uint8_t padding_,
                    int16_t dx_, int16_t dy_) {
+  type    = W_LABEL;
   set(x_, y_, w_, h_);
   text    = text_;
   colors  = ez.Theme.colors(colors_, ez.Theme.lbl_colors);
@@ -103,5 +104,4 @@ void ezLabel::draw() {
 
   // Boilerplate draw() stuff
   drawChildren();
-
 }

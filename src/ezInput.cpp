@@ -33,6 +33,7 @@ void ezInput::init(ezWidget* pwPtr,
                    String text_,String prompt_, WidgetColors colors_,
                    const GFXfont* font_, int16_t align_, int16_t valign_,
                    uint8_t padding_, int16_t dx_, int16_t dy_) {
+  type    = W_INPUT;
   set(x_, y_, w_, h_);
   text    = text_;
   prompt  = prompt_;
@@ -48,11 +49,14 @@ void ezInput::init(ezWidget* pwPtr,
 }
 
 void ezInput::eventPost() {
-  if (ez.e.widget == this && (ez.e == E_TAP || ez.e == E_PRESSED)) {
+  if (ez.e.widget == this && ez.e == E_TAP) {
     String oldText = text;
     text = keyboardInput(prompt, text);
-    if (oldText != text) _changed = true;
-    draw();
+    if (oldText != text) {
+      draw();
+      refresh();
+      _changed = true;
+    }
   }
   if (!ez.e && _changed) {
     ez.e.type = E_CHANGED;

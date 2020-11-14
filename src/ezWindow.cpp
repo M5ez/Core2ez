@@ -18,6 +18,7 @@ ezWindow::ezWindow(int16_t x_ /* = 0 */, int16_t y_ /* = 0 */,
 void ezWindow::init(ezWidget* pwPtr,
                     int16_t x_, int16_t y_, int16_t w_, int16_t h_,
                     WidgetColors colors_) {
+  type = W_WINDOW;
   set(x_, y_, w_, h_);
   colors     = ez.Theme.colors(colors_,   ez.Theme.wdw_colors);
   if (pwPtr) pwPtr->add(*this);
@@ -25,12 +26,16 @@ void ezWindow::init(ezWidget* pwPtr,
 
 void ezWindow::focus() {
   ez.add(*this);
-  ez.draw();
+  draw();
+  push();
 }
 
 void ezWindow::blur() {
   ez.remove(*this);
-  ez.draw();
+  if (ez._widgets.size()) {
+    ez._widgets.back()->draw();
+    ez._widgets.back()->push();
+  }
 }
 
 bool ezWindow::focussed() {

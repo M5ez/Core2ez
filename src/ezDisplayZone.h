@@ -32,9 +32,10 @@ class ezDisplayZone : public Zone {
   virtual void push();
   void     push(TFT_eSprite* s, int16_t ox, int16_t oy, int16_t w_, int16_t h_, int16_t x_, int16_t y_);
   void     spriteToDisplay(TFT_eSprite* s, int16_t ox, int16_t oy, int16_t w_, int16_t h_, int16_t x_, int16_t y_);
+  virtual void spriteBuffer(int16_t w_ = -1, int16_t h_ = -1);
   void     direct();
   virtual void set(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID, int16_t w_ = 0, int16_t h_ = 0);
-  virtual void spriteBuffer(int16_t w_ = -1, int16_t h_ = -1);
+  void     refresh();
   void     ezFont(const GFXfont* gfxFont);
   void     drawRect(uint32_t color);
   void     fillRect(uint32_t color);
