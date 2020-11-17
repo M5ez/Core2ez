@@ -12,12 +12,15 @@
 #define BUFLEN            32
 #define TWO_PI             6.283185307179586
 
+// switches off amplifier chip after 1 sec. Set to 0 to keep amplifier on.
+#define AMP_STANDBY     1000
+
 
 // defaults
-#define ATTACK            10
+#define ATTACK            10      // prevents clicks
 #define DECAY              0
 #define SUSTAIN            1.0
-#define RELEASE           10
+#define RELEASE           10      // prevents clicks
 #define GAIN               0.5
 
 
@@ -97,6 +100,7 @@ class ezSound {
   int16_t _buf[BUFLEN * 2];
   int32_t _mixbuf[BUFLEN];
   size_t _bytes_left;
+  bool _amp_on;
 };
 
 class ezSynth {

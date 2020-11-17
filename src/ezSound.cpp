@@ -44,7 +44,7 @@ void ezSound::begin() {
   i2s_set_clk(I2S_NUM_0, SAMPLERATE, I2S_BITS_PER_SAMPLE_16BIT,
               I2S_CHANNEL_STEREO);
   // Turn on system speaker
-  M5.Axp.SetSpkEnable(true);
+  _amp_on = false;
   _silentSince = millis();
 }
 
@@ -71,14 +71,14 @@ bool ezSound::silence(uint16_t msec /* = 0 */) {
 
 
 void ezSound::update() {
+  bool silent = true;
   // If last packet is gone, make a new one
   if (!_bytes_left) {
     // Ask synths what they have and mix in 32-bit signed mix buffer
     memset(_mixbuf, 0, BUFLEN * 4);   // 32 bits
-    _silentSince = millis();
     for (auto synth : ezSynth::instances) {
       if (synth->fillSbuf()) {
-        _silentSince = 0;
+        silent = false;
         for (uint16_t i = 0; i < BUFLEN; i++) {
           _mixbuf[i] += synth->_sbuf[i];
         }
@@ -93,6 +93,22 @@ void ezSound::update() {
       _buf[(i * 2) + 1] = m;
     }
     _bytes_left = BUFLEN * 4;
+  }
+
+  if (!silent || !AMP_STANDBY) {
+    _silentSince = 0;
+    if (!_amp_on) {
+      Serial.println("Amp on");
+      M5.Axp.SetSpkEnable(true);
+      _amp_on = true;
+    }
+  }
+  if ( silent && !_silentSince) _silentSince = millis();
+  if (_amp_on && AMP_STANDBY && _silentSince &&
+      millis() - _silentSince > AMP_STANDBY) {
+    Serial.println("Amp off");
+    M5.Axp.SetSpkEnable(false);
+    _amp_on = false;
   }
 
   if (_bytes_left) {
