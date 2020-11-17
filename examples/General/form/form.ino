@@ -74,6 +74,8 @@ void submitHandler() {
 
   name.text = address.text = zip.text = city.text = "";
   name.colors.fill = address.colors.fill = zip.colors.fill = city.colors.fill = WHITE;
+  newsletter = true;
+  terms = false;
   thankyou.focus();
 }
 
