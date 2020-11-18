@@ -61,19 +61,20 @@ void setup() {
                               NOTE_D5, NOTE_E5, NOTE_F5, NOTE_Gb4, NOTE_Ab4,
                               NOTE_Bb4, NOTE_Db5, NOTE_Eb5, NOTE_Gb5 };
   for (uint8_t n = 0; n < 14; n++) synth[n].freq = notes[n];
-
-  ez.addHandler(keyHandler, E_TOUCH + E_RELEASE);
 }
 
 void loop() {
   ez.update();
 }
 
-void keyHandler() {
-  EVENTWIDGET(ezButton, b);
-  if (ez.e == E_TOUCH) {
+ON(ez, E_TOUCH) {
+  WITH(ezButton, b) {
     synth[b.userData].start();
-  } else {
+  }
+}
+
+ON(ez, E_RELEASE) {
+  WITH(ezButton, b) {
     synth[b.userData].stop();
   }
 }

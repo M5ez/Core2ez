@@ -9,6 +9,13 @@ ezWidget* ezWidget::parent() {
   return nullptr;
 }
 
+const char* ezWidget::typeName() {
+  const char* typeNames[8] = { "ezWidget", "ez", "ezWindow", "ezButton",
+                               "ezLabel", "ezCheckBox", "ezRadiobutton",
+                               "ezInput" };
+  return typeNames[type];
+}
+
 /* virtual */ void ezWidget::add(ezWidget& w) {
   if (w.parent()) w.parent()->remove(w);
   _widgets.push_back(&w);

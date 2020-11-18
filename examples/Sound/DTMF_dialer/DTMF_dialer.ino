@@ -25,8 +25,6 @@ void setup() {
   M5.IMU.Init();
   row_gen.gain  = col_gen.gain   = 0.3;
   row_gen.decay = col_gen.decay = 50;   // min tone length
-  ez.addHandler(btnPressed , E_TOUCH);
-  ez.addHandler(btnReleased, E_RELEASE);
   doButtons();
 }
 
@@ -70,18 +68,19 @@ void doButtons() {
   ez.draw();
 }
 
-void btnPressed() {
-  EVENTWIDGET(ezButton, b);
-  if (!b.userData) return;
-  uint8_t k = b.userData - 1;
-  ez.Sound.waitForSilence();
-  row_gen.freq = rowTones[k / 4];
-  col_gen.freq = colTones[k % 4];
-  row_gen.start();
-  col_gen.start();
+ON(ez, E_TOUCH) {
+  WITH(ezButton, b) {
+    if (!b.userData) return;
+    uint8_t k = b.userData - 1;
+    ez.Sound.waitForSilence();
+    row_gen.freq = rowTones[k / 4];
+    col_gen.freq = colTones[k % 4];
+    row_gen.start();
+    col_gen.start();
+  }
 }
 
-void btnReleased() {
+ON(ez, E_RELEASE) {
   row_gen.stop();
   col_gen.stop();
 }

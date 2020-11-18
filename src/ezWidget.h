@@ -38,6 +38,7 @@ struct WidgetColors {
 class ezWidget : public ezDisplayZone, public Eventful {
  public:
   ezWidget*               parent();
+  const char*             typeName();
   virtual void            add(ezWidget& w);
   virtual void            remove(ezWidget& w);
   virtual void            add(ezGesture& g);

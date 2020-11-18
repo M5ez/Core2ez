@@ -10,15 +10,13 @@ ezButton playButton(50, 80, 220, 80, "C major");
 
 void setup() {
   ez.begin();
-  playButton.setFont(FSSB24);
 }
 
 void loop() {
   ez.update();
-  if (playButton.wasPressed()) playChord();
 }
 
-void playChord() {
+ON(playButton, E_TAP + E_PRESSED) {
   c5.playFor(5000);
   ez.Sound.delay(1000);
   e5.playFor(4000);

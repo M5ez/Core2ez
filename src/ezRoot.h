@@ -22,13 +22,13 @@ class ezRoot : public ezWidget {
   ezSound                     Sound;
   ezTouch                     Touch;
   ezTheme                     Theme;
-  ezWindow                    Screen     = ezWindow(0, 0, 320, 240);
+  ezWindow                    Screen          = ezWindow(0, 0, 320, 240);
 
  protected:
-  uint8_t                     _finger           = 0;
-  Point                       _previous  [2]    = {Point(), Point()};
-  Point                       _startPoint[2]    = {Point(), Point()};
-  uint32_t                    _startTime [2]    = {0, 0};
+  uint8_t                     _finger         = 0;
+  Point                       _previous  [2]  = {Point(), Point()};
+  Point                       _startPoint[2]  = {Point(), Point()};
+  uint32_t                    _startTime [2]  = {0, 0};
 };
 
 extern ezRoot ez;

@@ -1,7 +1,13 @@
 #ifndef _EZEVENTS_H_
 #define _EZEVENTS_H_
 
-#define EVENTWIDGET(class, variable) if (!ez.e.widget) return; class& variable = *static_cast<class*>(ez.e.widget)
+#define EXP3(x, y) x ## y
+#define EXP2(x, y) EXP3(x, y)
+#define EXP(x) EXP2(x, __LINE__)
+#define ON(widget, event) ezEventAdd EXP(eventAdd) (EXP(ezHandler), widget, event); void EXP(ezHandler)()
+
+#define WITH(widget_type, variable) if (!ez.e.widget || #widget_type != ez.e.widget->typeName()) return; widget_type& variable = *static_cast<widget_type*>(ez.e.widget);
+
 
 
 #include <Arduino.h>
@@ -29,36 +35,45 @@ class ezGesture;
 
 class Event {
  public:
-                  operator uint16_t();
-  const char*     typeName();
-  void            print();
-  uint16_t        direction();
-  bool            isDirection(int16_t wanted, uint8_t plusminus = PLUSMINUS);
-  uint16_t        distance();
-  uint16_t        type            = E_NONE;
-  uint8_t         finger          = 0;
-  Point           from            = Point();
-  Point           to              = Point();
-  uint16_t        duration        = 0;
-  ezWidget*       widget          = nullptr;
-  ezGesture*      gesture         = nullptr;
+                operator uint16_t();
+  const char*   typeName();
+  char*         c_str();
+  uint16_t      direction();
+  bool          isDirection(int16_t wanted, uint8_t plusminus = PLUSMINUS);
+  uint16_t      distance();
+  uint16_t      type            = E_NONE;
+  uint8_t       finger          = 0;
+  Point         from            = Point();
+  Point         to              = Point();
+  uint16_t      duration        = 0;
+  ezWidget*     widget          = nullptr;
+  ezGesture*    gesture         = nullptr;
 };
 
 struct ezEventHandler {
-  uint16_t        eventMask;
-  void            (*fn)();
-  bool            includeDescendants;
+  uint16_t      eventMask;
+  void          (*fn)();
+  bool          includeDescendants;
 };
 
 class Eventful {
  public:
-  void            addHandler(void (*fn)(), uint16_t eventMask = E_ALL,
-                  bool includeDescendants_ = false);
-  void            delHandlers(void (*fn)());
-  Event           e = Event();
+  void          addHandler(void (*fn)(), uint16_t eventMask = E_ALL,
+                bool includeDescendants_ = false);
+  void          delHandlers(void (*fn)());
+  Event         e = Event();
  protected:
-  void            fireEvent(bool descendant = false);
+  void          fireEvent(bool descendant = false);
   std::vector<ezEventHandler> _eventHandlers;
+};
+
+
+// This is a dummy class that only uses its constructor to set up events
+// so that event handlers can be set up from outside functions.
+class ezEventAdd {
+ public:
+                ezEventAdd(void(*func)(), ezWidget&  widget,  uint16_t event);
+                ezEventAdd(void(*func)(), ezGesture& gesture, uint16_t event);
 };
 
 #endif /* _EZEVENTS_H_ */

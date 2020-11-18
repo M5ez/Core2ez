@@ -98,7 +98,7 @@ void ezSound::update() {
   if (!silent || !AMP_STANDBY) {
     _silentSince = 0;
     if (!_amp_on) {
-      Serial.println("Amp on");
+      log_d("%s", "Audio amplifier on");
       M5.Axp.SetSpkEnable(true);
       _amp_on = true;
     }
@@ -106,7 +106,7 @@ void ezSound::update() {
   if ( silent && !_silentSince) _silentSince = millis();
   if (_amp_on && AMP_STANDBY && _silentSince &&
       millis() - _silentSince > AMP_STANDBY) {
-    Serial.println("Amp off");
+    log_d("%s", "Audio amplifier off");
     M5.Axp.SetSpkEnable(false);
     _amp_on = false;
   }

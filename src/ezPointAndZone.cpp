@@ -16,9 +16,9 @@ bool Point::operator!=(const Point& p) { return (!Equals(p)); }
 
 Point::operator char*() {
   if (valid()) {
-    sprintf(_text, "(%d, %d)", x, y);
+    sprintf(_text, "(%3d, %3d)", x, y);
   } else {
-    strncpy(_text, "(invalid)", 12);
+    sprintf(_text, "(invalid )");
   }
   return _text;
 }

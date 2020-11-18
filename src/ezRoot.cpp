@@ -94,11 +94,7 @@ void ezRoot::update() {
 
   fireEvent();
 
-  if (e) {
-    Serial.print((long)e.widget);
-    Serial.print("  ");
-    e.print();
-  }
+  if (e) log_d("%s", e.c_str());
 
   _finger = !_finger;
 }

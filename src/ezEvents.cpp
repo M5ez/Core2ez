@@ -1,6 +1,9 @@
 #include <ezEvents.h>
 #include <ezRoot.h>
 
+
+// Eventful class
+
 void Eventful::fireEvent(bool descendant /* = false */) {
   e = ez.e;
   if (e) {
@@ -59,7 +62,21 @@ bool Event::isDirection(int16_t wanted, uint8_t plusminus /* = PLUSMINUS */) {
 
 uint16_t Event::distance() { return from.distanceTo(to); }
 
-void Event::print() {
-  Serial.printf("%-12s finger%d  (%3d, %3d) --> (%3d, %3d)  %4d ms\n",
-                typeName(), finger, from.x, from.y, to.x, to.y, duration);
+char* Event::c_str() {
+  static char r[80];
+  sprintf(r, "%-10d %-13s %-12s finger%d  %s .. %s %4d ms",
+                widget, widget ? widget->typeName() : "", typeName(), finger,
+                (char*)from, (char*)to, duration);
+  return r;
+}
+
+
+// ezEventAdd class
+
+ezEventAdd::ezEventAdd(void(*func)(), ezWidget&  widget,  uint16_t event) {
+  widget.addHandler(func, event);
+}
+
+ezEventAdd::ezEventAdd(void(*func)(), ezGesture& gesture, uint16_t event) {
+  gesture.addHandler(func, event);
 }
