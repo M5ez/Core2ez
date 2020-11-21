@@ -14,6 +14,32 @@ bool Point::operator==(const Point& p) { return (Equals(p)); }
 
 bool Point::operator!=(const Point& p) { return (!Equals(p)); }
 
+Point Point::operator+(const Point& p) {
+  Point r;
+  r.x = x += p.x;
+  r.y = y += p.y;
+  return r;
+}
+
+Point Point::operator-(const Point& p) {
+  Point r;
+  r.x = x -= p.x;
+  r.y = y -= p.y;
+  return r;
+}
+
+Point& Point::operator+=(const Point& p) {
+  x += p.x;
+  y += p.y;
+  return *this;
+}
+
+Point& Point::operator-=(const Point& p) {
+  x -= p.x;
+  y -= p.y;
+  return *this;
+}
+
 Point::operator char*() {
   if (valid()) {
     sprintf(_text, "(%3d, %3d)", x, y);
@@ -23,7 +49,7 @@ Point::operator char*() {
   return _text;
 }
 
-Point::operator bool() { return !(x == EZ_INVALID && y == EZ_INVALID); }
+Point::operator bool() { return valid(); }
 
 void Point::set(int16_t x_ /* = EZ_INVALID */,
                 int16_t y_ /* = EZ_INVALID */) {
@@ -33,11 +59,11 @@ void Point::set(int16_t x_ /* = EZ_INVALID */,
 
 bool Point::Equals(const Point& p) { return (x == p.x && y == p.y); }
 
-bool Point::in(Zone& z, bool selfRef /* = false */) {
-  return (z.contains(x, y, selfRef));
+bool Point::in(Zone& z) {
+  return (z.contains(x, y));
 }
 
-bool Point::valid() { return !(x == EZ_INVALID && y == EZ_INVALID); }
+bool Point::valid() { return !(x == EZ_INVALID || y == EZ_INVALID); }
 
 uint16_t Point::distanceTo(const Point& p) {
   int16_t dx = x - p.x;
@@ -54,6 +80,11 @@ uint16_t Point::directionTo(const Point& p) {
 
 bool Point::isDirectionTo(const Point& p, int16_t wanted,
                           uint8_t plusminus /* = PLUSMINUS */) {
+  if      (wanted == EZ_UP   ) wanted = 0;
+  else if (wanted == EZ_RIGHT) wanted = 90;
+  else if (wanted == EZ_DOWN ) wanted = 180;
+  else if (wanted == EZ_LEFT ) wanted = 270;
+
   uint16_t a = directionTo(p);
   return (min(abs(wanted - a), 360 - abs(wanted - a)) <= plusminus);
 }
@@ -119,16 +150,12 @@ Zone::operator bool() { return !(x == EZ_INVALID && y == EZ_INVALID); }
 
 bool Zone::valid() { return !(x == EZ_INVALID && y == EZ_INVALID); }
 
-bool Zone::contains(const Point& p, bool selfRef /* = false */) {
-  return contains(p.x, p.y, selfRef);
+bool Zone::contains(const Point& p) {
+  return contains(p.x, p.y);
 }
 
-bool Zone::contains(int16_t x_, int16_t y_, bool selfRef /* = false */) {
-  if (selfRef) {
-    return (y_ >= 0 && y_ < h && x_ >= 0 && x_ < w);
-  } else {
-    return (y_ >= y && y_ <= y + h && x_ >= x && x_ <= x + w);
-  }
+bool Zone::contains(int16_t x_, int16_t y_) {
+  return (y_ >= y && y_ < y + h && x_ >= x && x_ < x + w);
 }
 
 void Zone::rotate(uint8_t m) {

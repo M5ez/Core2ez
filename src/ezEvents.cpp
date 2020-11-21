@@ -42,9 +42,10 @@ const char* Event::typeName() {
   const char* unknown = "E_UNKNOWN";
   const char* none = "E_NONE";
   const char* eventNames[NUMEVENTS] = {
-      "E_TOUCH",    "E_RELEASE",     "E_MOVE",        "E_GESTURE",
-      "E_TAP",      "E_DBLTAP",      "E_DRAGGED",     "E_PRESSED",
-      "E_PRESSING", "E_LONGPRESSED", "E_LONGPRESSING", "E_CHANGED"};
+      "E_TOUCH",    "E_RELEASE",     "E_MOVE",         "E_GESTURE",
+      "E_TAPPED",   "E_DBLTAPPED",   "E_DRAGGED",      "E_PRESSED",
+      "E_PRESSING", "E_LONGPRESSED", "E_LONGPRESSING", "E_CHANGED",
+      "E_FOCUS",    "E_BLUR" };
   if (!type) return none;
   for (uint8_t i = 0; i < NUMEVENTS; i++) {
     if ((type >> i) & 1) return eventNames[i];

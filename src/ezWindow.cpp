@@ -28,16 +28,26 @@ void ezWindow::focus() {
   ez.add(*this);
   draw();
   push();
+  _fire = E_FOCUS;
 }
 
 void ezWindow::blur() {
   ez.remove(*this);
   if (ez._widgets.size()) {
-    ez._widgets.back()->draw();
-    ez._widgets.back()->push();
+    static_cast<ezWindow*>(ez._widgets.back())->focus();
+  }
+  _fire = E_BLUR;
+}
+
+void ezWindow::eventPost() {
+  if (_fire && ez.e == E_NONE) {
+    ez.e.type = _fire;
+    ez.e.widget = this;
+    fireEvent();
+    _fire = E_NONE;
   }
 }
 
-bool ezWindow::focussed() {
+bool ezWindow::hasFocus() {
   return (ez._widgets.back() == this);
 }

@@ -1,7 +1,7 @@
 #include <M5Core2.h>
 #include <Core2ez.h>
 
-// Waveform, Frequency, Attack, Decay, Sustain, Release, Gain
+// Waveform, Frequency, Attack, Decay, Sustain, Release (, Gain)
 ezSynth c5(SINE, NOTE_C5, 50, 300, 0.7, 1000);
 ezSynth e5(SINE, NOTE_E5, 50, 300, 0.7, 1000);
 ezSynth g5(SINE, NOTE_G5, 50, 300, 0.7, 1000);
@@ -16,7 +16,7 @@ void loop() {
   ez.update();
 }
 
-ON(playButton, E_TAP + E_PRESSED) {
+ON(playButton, E_TAPPED + E_PRESSED) {
   c5.playFor(5000);
   ez.Sound.delay(1000);
   e5.playFor(4000);

@@ -8,6 +8,8 @@ struct ezTheme {
 
                  // WidgetColors: fill,       text,      outline
 
+  WidgetColors    wgt_colors    = {NODRAW,    NODRAW,    NODRAW};
+
   WidgetColors    wdw_colors    = {TFT_WHITE, TFT_BLACK, NODRAW};
 
   WidgetColors    btn_colors    = {TFT_BLUE,  TFT_WHITE, TFT_BLACK};

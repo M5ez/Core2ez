@@ -72,7 +72,7 @@ ON(ez, E_TOUCH) {
   WITH(ezButton, b) {
     if (!b.userData) return;
     uint8_t k = b.userData - 1;
-    ez.Sound.waitForSilence();
+    ez.Sound.waitForSilence(50);
     row_gen.freq = rowTones[k / 4];
     col_gen.freq = colTones[k % 4];
     row_gen.start();

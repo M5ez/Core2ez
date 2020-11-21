@@ -40,7 +40,9 @@ void ezCheckbox::init(ezWidget* pwPtr,
 ezCheckbox::operator bool() { return value; }
 
 ezCheckbox& ezCheckbox::operator=(bool value_) {
-  value = value_;
+  value = !value;
+  valueDraw();
+  refresh();
   return *this;
 }
 
@@ -61,7 +63,7 @@ void ezCheckbox::draw() {
 }
 
 void ezCheckbox::eventPost() {
-  if (ez.e.widget == this && ez.e == E_TAP) {
+  if (ez.e.widget == this && ez.e == E_TAPPED) {
     value = !value;
     valueDraw();
     refresh();

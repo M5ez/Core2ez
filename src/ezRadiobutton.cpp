@@ -40,7 +40,10 @@ void ezRadiobutton::init(ezWidget* pwPtr,
 ezRadiobutton::operator bool() { return value; }
 
 ezRadiobutton& ezRadiobutton::operator=(bool value_) {
+  if (_parent) static_cast<ezWidget*>(_parent)->turnOffRadiobuttons();
   value = value_;
+  valueDraw();
+  refresh();
   return *this;
 }
 
@@ -61,12 +64,9 @@ void ezRadiobutton::draw() {
 }
 
 void ezRadiobutton::eventPost() {
-  if (ez.e.widget == this && ez.e == E_TAP) {
+  if (ez.e.widget == this && ez.e == E_TAPPED) {
     if (!value) {
-      if (_parent) static_cast<ezWidget*>(_parent)->turnOffRadiobuttons();
-      value = true;
-      valueDraw();
-      refresh();
+      *this = true;
     }
   }
 }

@@ -10,10 +10,10 @@
 
 class ezGesture : public Eventful {
  public:
-  ezGesture(uint16_t minDistance_ = GESTURE_MINDIST,
-            int16_t direction_ = EZ_INVALID,
-            uint8_t plusminus_ = PLUSMINUS,
-            uint16_t maxTime_ = GESTURE_MAXTIME);
+  ezGesture(uint16_t  minDistance_  = GESTURE_MINDIST,
+            int16_t   direction_    = EZ_INVALID,
+            uint8_t   plusminus_    = PLUSMINUS,
+            uint16_t  maxTime_      = GESTURE_MAXTIME );
   operator bool();
   void              event();
   ezWidget*         parent();

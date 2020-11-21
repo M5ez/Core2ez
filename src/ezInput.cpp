@@ -49,7 +49,7 @@ void ezInput::init(ezWidget* pwPtr,
 }
 
 void ezInput::eventPost() {
-  if (ez.e.widget == this && ez.e == E_TAP) {
+  if (ez.e.widget == this && ez.e == E_TAPPED) {
     String oldText = text;
     text = keyboardInput(prompt, text);
     if (oldText != text) {
@@ -106,23 +106,34 @@ namespace {
 
   struct kbGlobals {
     ezWindow  window      = ezWindow  (  0,  0, 320, 240, ez.Theme.kb);
-    ezLabel   topBar      = ezLabel   (  0,  0, 320, 20, "", ez.Theme.kb_topBar);
-    ezGesture help        = ezGesture (120, DIR_DOWN);
+    ezLabel   topBar      = ezLabel   (  0,  0, 320, 20, "",
+                                       ez.Theme.kb_topBar, FSS9,
+                                       EZ_CENTER, EZ_CENTER);
+    ezGesture help        = ezGesture (120, EZ_DOWN);
     ezWindow  input       = ezWindow  (  0, 20, 320,  55, ez.Theme.kb);
     ezWindow  keys        = ezWindow  (  0, 75, 320, 165, ez.Theme.kb);
-    ezGesture backspace   = ezGesture ( 40, DIR_LEFT);
-    ezGesture space       = ezGesture ( 40, DIR_RIGHT);
-    ezButton  sym         = ezButton  (  0, 110,  40, 55, "sym", ez.Theme.kb_special);
-    ezButton  done        = ezButton  (264, 110,  56, 55, "done", ez.Theme.kb_special);
+    ezGesture backspace   = ezGesture ( 40, EZ_LEFT);
+    ezGesture space       = ezGesture ( 40, EZ_RIGHT);
+    ezButton  sym         = ezButton  (  0, 110,  40, 55, "sym",
+                                       ez.Theme.kb_special);
+    ezButton  done        = ezButton  (264, 110,  56, 55, "done",
+                                       ez.Theme.kb_special);
     ezButton  k[MAX_KEYS];
-    ezWindow  helpW       = ezWindow  (  0, 0, 320, 240, ez.Theme.kb);
-    ezLabel   help_1      = ezLabel   (10,  10, 300,  40, HELP_1, ez.Theme.kb, FSSB18, EZ_LEFT, EZ_TOP);
-    ezLabel   help_2_1    = ezLabel   ( 10,  75, 110, 20, HELP_2_1, ez.Theme.kb, FSS9,  EZ_LEFT, EZ_TOP);
-    ezLabel   help_2_2    = ezLabel   (120,  75, 200, 20, HELP_2_2, ez.Theme.kb, FSS9,  EZ_LEFT, EZ_TOP);
-    ezLabel   help_3_1    = ezLabel   ( 10, 105, 110, 20, HELP_3_1, ez.Theme.kb, FSS9,  EZ_LEFT, EZ_TOP);
-    ezLabel   help_3_2    = ezLabel   (120, 105, 200, 20, HELP_3_2, ez.Theme.kb, FSS9,  EZ_LEFT, EZ_TOP);
-    ezLabel   help_4_1    = ezLabel   ( 10, 135, 110, 20, HELP_4_1, ez.Theme.kb, FSS9,  EZ_LEFT, EZ_TOP);
-    ezLabel   help_4_2    = ezLabel   (120, 135, 200, 20, HELP_4_2, ez.Theme.kb, FSS9,  EZ_LEFT, EZ_TOP);
+    ezWindow  helpW       = ezWindow  (  0,  0,  320, 240, ez.Theme.kb);
+    ezLabel   help_1      = ezLabel   ( 10,  10, 300,  40, HELP_1,
+                                       ez.Theme.kb, FSSB18);
+    ezLabel   help_2_1    = ezLabel   ( 10,  75, 110,  20, HELP_2_1,
+                                       ez.Theme.kb, FSS9);
+    ezLabel   help_2_2    = ezLabel   (120,  75, 200,  20, HELP_2_2,
+                                       ez.Theme.kb, FSS9);
+    ezLabel   help_3_1    = ezLabel   ( 10, 105, 110,  20, HELP_3_1,
+                                       ez.Theme.kb, FSS9);
+    ezLabel   help_3_2    = ezLabel   (120, 105, 200,  20, HELP_3_2,
+                                       ez.Theme.kb, FSS9);
+    ezLabel   help_4_1    = ezLabel   ( 10, 135, 110,  20, HELP_4_1,
+                                       ez.Theme.kb, FSS9);
+    ezLabel   help_4_2    = ezLabel   (120, 135, 200,  20, HELP_4_2,
+                                       ez.Theme.kb, FSS9);
     String    text        = "";
     String    prompt      = "";
     uint8_t   current     = DEFAULT_KB;
@@ -206,7 +217,7 @@ namespace {
     ezButton& b = *static_cast<ezButton*>(ez.e.widget);
     String t = b.label.text;
     if (ez.e == E_DRAGGED) {
-      if (ez.e.isDirection(DIR_UP)) {
+      if (ez.e.isDirection(EZ_UP)) {
         t.toUpperCase();
       } else {
         return;
@@ -241,8 +252,8 @@ namespace {
   }
 
   void inputHandler() {
-    if (ez.e == E_TAP) {
-      kb->caret = ((kb->input.offset.x + ez.e.to.x) / CHAR_WIDTH);
+    if (ez.e == E_TAPPED) {
+      kb->caret = ez.e.to.x / CHAR_WIDTH;
       updateInput();
     }
   //   if (e == E_MOVE) {
@@ -275,7 +286,7 @@ namespace {
 
   void helpScreen() {
     kb->helpW.focus();
-    while (kb->helpW.focussed()) loop();
+    while (kb->helpW.hasFocus()) loop();
   }
 
   void helpWindowTouch() {
@@ -310,15 +321,15 @@ String keyboardInput(String prompt_ /* = "" */, String text_ /* = "" */) {
     kb->k[n].userData     = 1;
     kb->keys.add(kb->k[n]);
   }
-  ez.addHandler(keyHandler, E_TAP | E_PRESSED | E_DRAGGED);
+  ez.addHandler(keyHandler, E_TAPPED | E_PRESSED | E_DRAGGED);
   kb->sym.dbltapTime  = 0;
   kb->sym.label.font  = FSS9;
   kb->keys.add(kb->sym);
-  kb->sym.addHandler(symHandler, E_TAP | E_PRESSED);
+  kb->sym.addHandler(symHandler, E_TAPPED | E_PRESSED);
   kb->done.dbltapTime = 0;
   kb->done.label.font = FSS9;
   kb->keys.add(kb->done);
-  kb->done.addHandler(doneHandler, E_TAP | E_PRESSED);
+  kb->done.addHandler(doneHandler, E_TAPPED | E_PRESSED);
   kb->keys.add(kb->space);
   kb->space.addHandler(spaceHandler);
   kb->keys.add(kb->backspace);

@@ -37,14 +37,29 @@ struct WidgetColors {
 
 class ezWidget : public ezDisplayZone, public Eventful {
  public:
+//   ezWidget(ezWidget& parentWidget,
+//            int16_t x_ = 0, int16_t y_ = 0,
+//            int16_t w_ = 320, int16_t h_ = 240,
+//            WidgetColors colors_   = THEME_COLORS );
+//   ezWidget(int16_t x_ = 0, int16_t y_ = 0,
+//            int16_t w_ = 320, int16_t h_ = 240,
+//            WidgetColors colors_   = THEME_COLORS );
+//   void init(ezWidget* pwPtr,
+//             int16_t x_, int16_t y_, int16_t w_, int16_t h_,
+//             WidgetColors colors_ );
+  ezWidget&               operator=(Zone&);
+  virtual void            set(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID,
+                          int16_t w_ = 0 , int16_t h_ = 0);
   ezWidget*               parent();
+  bool                    isMyDescendant(ezWidget& w);
+  bool                    inVirtual(Point& p);
   const char*             typeName();
   virtual void            add(ezWidget& w);
   virtual void            remove(ezWidget& w);
   virtual void            add(ezGesture& g);
   virtual void            remove(ezGesture& g);
   virtual void            push();
-  uint16_t                parentFill();
+  uint16_t                findFill();
   void                    turnOffRadiobuttons();
   void                    event();
   virtual void            clear();
@@ -60,6 +75,8 @@ class ezWidget : public ezDisplayZone, public Eventful {
   bool                    wasReleased();
 
   widget_t                type            = W_WIDGET;
+  Zone                    setCoords       = Zone();
+  bool                    autoSize        = false;
   WidgetColors            colors          = {TFT_WHITE, TFT_BLACK, TFT_BLACK};
   bool                    numb            = false;
   uint16_t                tapTime         = 200;
@@ -86,6 +103,7 @@ class ezWidget : public ezDisplayZone, public Eventful {
   bool                    _longPressing   = false;
   bool                    _cancelled      = false;
   bool                    _touched[2]     = {false, false};
+  Point                   _posRelParent   = Point();
   uint32_t                _lastRepeat     = 0;
   uint32_t                _lastOnTime     = 0;
   uint32_t                _lastOffTime    = 0;

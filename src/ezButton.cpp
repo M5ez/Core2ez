@@ -26,10 +26,12 @@ void ezButton::init(ezWidget* pwPtr,
                     const GFXfont* font_) {
   type       = W_BUTTON;
   set(x_, y_, w_, h_);
-  colors     = ez.Theme.colors(colors_,   ez.Theme.btn_colors);
-  onColors   = ez.Theme.colors(onColors_, ez.Theme.btn_onColors);
-  label.font = (font_ != THEME_FONT) ? font_ : ez.Theme.btn_font;
-  label.text = text_;
+  colors       = ez.Theme.colors(colors_,   ez.Theme.btn_colors);
+  onColors     = ez.Theme.colors(onColors_, ez.Theme.btn_onColors);
+  label.font   = (font_ != THEME_FONT) ? font_ : ez.Theme.btn_font;
+  label.text   = text_;
+  label.align  = EZ_CENTER;
+  label.valign = EZ_CENTER;
   add(label);
   if (pwPtr) pwPtr->add(*this); else ez.Screen.add(*this);
 }
@@ -62,7 +64,6 @@ void ezButton::draw(WidgetColors wCol) {
   }
 
   label.colors.text = wCol.text;
-  label.align = EZ_CENTER;
   uint8_t margin = max(4, r / 3);
   label.set(margin, margin, w - (2 * margin), h - (2 * margin));
 

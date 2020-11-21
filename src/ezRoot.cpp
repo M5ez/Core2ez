@@ -59,6 +59,7 @@ void ezRoot::update() {
 
   Point curr;
   curr = Touch.point[_finger];
+
   Point& prev = _previous[_finger];
 
   if (curr == prev) {

@@ -20,7 +20,7 @@ ezWidget* ezGesture::parent() { return _parent; }
 void ezGesture::event() {
   if (ez.e != E_RELEASE ) return;
   if (ez.e.gesture) return;
-  if (_parent && !_parent->contains(ez.e.from, true)) return;
+  if (_parent && !_parent->contains(ez.e.from)) return;
   if (ez.e.from.distanceTo(ez.e.to) < minDistance) return;
   if (direction != EZ_INVALID &&
       !ez.e.isDirection(direction, plusminus)) return;

@@ -6,42 +6,44 @@
 #define PINK            0xFE79
 
 
-ezLabel       headerLbl   (  10,   0, 300,  50, "Demo Form",
-                           THEME_COLORS, FSSB24, EZ_CENTER);
-ezRadiobutton ms          ( 150,  80,  90,  25, "Ms");
-ezRadiobutton mr          ( 240,  80,  80,  25, "Mr");
-ezLabel       nameLbl     (  10, 100,  90,  25, "Name");
-ezInput       name        (  10, 125, 300,  45, "", "Enter name:",
-                           THEME_COLORS, FSSB12);
-ezLabel       addressLbl  (  10, 170,  90,  25, "Address");
-ezInput       address     (  10, 195, 300,  45, "", "Enter address:",
-                           THEME_COLORS, FSSB12);
-ezLabel       zipLbl      (  10, 240,  90,  25, "ZIP");
-ezInput       zip         (  10, 265,  90,  45, "", "Enter ZIP:",
-                           THEME_COLORS, FSSB12);
-ezLabel       cityLbl     ( 110, 240, 200,  25, "City");
-ezInput       city        ( 110, 265, 200,  45, "", "Enter city:",
-                           THEME_COLORS, FSSB12);
-ezCheckbox    terms       (  10, 340, 300,  25, "I read the terms & conditions");
-ezCheckbox    newsletter  (  10, 390, 300,  25, "Send me the newsletter");
-ezButton      reset       ( 10 , 440, 100,  45, "reset",  {RED, WHITE, BLACK});
-ezButton      submit      ( 210, 440, 100,  45, "submit");
+ezLabel       headerLbl (  10,   0, 300,  50, "Demo Form",
+                         THEME_COLORS, FSSB24, EZ_CENTER);
+ezRadiobutton ms        ( 150,  80,  90,  25, "Ms", true);
+ezRadiobutton mr        ( 240,  80,  80,  25, "Mr");
+ezLabel       nameLbl   (  10, 100,  90,  25, "Name");
+ezInput       name      (  10, 125, 300,  45, "", "Enter name:",
+                         THEME_COLORS, FSSB12);
+ezLabel       addressLbl(  10, 170,  90,  25, "Address");
+ezInput       address   (  10, 195, 300,  45, "", "Enter address:",
+                         THEME_COLORS, FSSB12);
+ezLabel       zipLbl    (  10, 240,  90,  25, "ZIP");
+ezInput       zip       (  10, 265,  90,  45, "", "Enter ZIP:",
+                         THEME_COLORS, FSSB12);
+ezLabel       cityLbl   ( 110, 240, 200,  25, "City");
+ezInput       city      ( 110, 265, 200,  45, "", "Enter city:",
+                         THEME_COLORS, FSSB12);
+ezCheckbox    terms     (  10, 340, 300,  25, "I read the terms & conditions");
+ezCheckbox    newsletter(  10, 390, 300,  25, "Send me the newsletter", true);
+ezButton      reset     ( 10 , 440, 100,  45, "reset",  {RED, WHITE, BLACK});
+ezButton      submit    ( 210, 440, 100,  45, "submit");
 
 ezWindow  thankyou;
-ezLabel   thankyouLbl     (thankyou, 0, 0, 320, 250, "Thank you!",
-                           THEME_COLORS, FSSB24, EZ_CENTER, EZ_CENTER);
+ezLabel   thankyouLbl   (thankyou, 0, 0, 320, 250, "Thank you!",
+                         THEME_COLORS, FSSB24, EZ_CENTER, EZ_CENTER);
 
 
 void setup() {
   ez.begin();
   ez.Screen.spriteBuffer(320, 500);
   ez.Screen.colors.fill = LIGHTYELLOW;
-  newsletter = true;
-  ms = true;
 }
 
 void loop() {
   ez.update();
+}
+
+ON(reset, E_TAPPED | E_PRESSED) {
+  ESP.restart();
 }
 
 void requiredFieldsWhite() {
@@ -49,17 +51,7 @@ void requiredFieldsWhite() {
   city.colors.fill = terms.colors.fill = WHITE;
 }
 
-ON(reset, E_TAP + E_PRESSED) {
-  name.text = address.text = zip.text = city.text = "";
-  requiredFieldsWhite();
-  terms = false;
-  newsletter = true;
-  ez.Screen.offset.y = 0;
-  ez.Screen.draw();
-  ez.Screen.push();
-}
-
-ON(submit, E_TAP + E_PRESSED) {
+ON(submit, E_TAPPED | E_PRESSED) {
   bool incomplete = false;
   requiredFieldsWhite();
   if (name.text    == "") { name   .colors.fill = PINK; incomplete = true; }
@@ -70,27 +62,26 @@ ON(submit, E_TAP + E_PRESSED) {
   if (incomplete) {
     ez.Screen.draw();
     ez.Screen.push();
-    return;
+  } else {
+    Serial.println("\nYou submitted:\n");
+    Serial.print((ms) ? "Ms " : "Mr. ");
+    Serial.println(name.text);
+    Serial.println(address.text);
+    Serial.print(zip.text); Serial.print("  ");Serial.println(city.text);
+    if (newsletter) Serial.println("(wants newsletter)");
+
+    requiredFieldsWhite();
+    newsletter = true;
+    terms = false;
+    thankyou.focus();
   }
-
-  Serial.println("\nYou submitted:\n");
-  Serial.print((ms) ? "Ms " : "Mr. ");
-  Serial.println(name.text);
-  Serial.println(address.text);
-  Serial.print(zip.text); Serial.print("  ");Serial.println(city.text);
-  if (newsletter) Serial.println("(wants newsletter)");
-
-  requiredFieldsWhite();
-  newsletter = true;
-  terms = false;
-  thankyou.focus();
 }
 
-ON(thankyou, E_TAP + E_PRESSED) {
-  thankyou.blur();
+ON(thankyou, E_TAPPED | E_PRESSED) {
+  ESP.restart();
 }
 
-ON(ez.Screen, E_CHANGED) {
+ON(ez, E_CHANGED) {
   WITH(ezInput, i) {
     if (i.text != "") {
       i.colors.fill = WHITE;

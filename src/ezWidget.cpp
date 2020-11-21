@@ -4,9 +4,67 @@
 #include <ezValues.h>
 #include <Arduino.h>
 
+// ezWidget::ezWidget(ezWidget& parentWidget,
+//                    int16_t x_ /* = EZ_INVALID */,
+//                    int16_t y_ /* = EZ_INVALID */,
+//                    int16_t w_ /* = 0 */, int16_t h_ /* = 0 */,
+//                    WidgetColors colors_ /* = THEME_COLORS */) {
+//   init(&parentWidget, x_, y_, w_, h_, colors_);
+// }
+//
+// ezWidget::ezWidget(int16_t x_ /* = EZ_INVALID */,
+//                    int16_t y_ /* = EZ_INVALID */,
+//                    int16_t w_ /* = 0 */, int16_t h_ /* = 0 */,
+//                    WidgetColors colors_ /* = THEME_COLORS */) {
+//   init(nullptr, x_, y_, w_, h_, colors_);
+// }
+//
+// void ezWidget::init(ezWidget* pwPtr,
+//                     int16_t x_, int16_t y_, int16_t w_, int16_t h_,
+//                     WidgetColors colors_) {
+//   type = W_WIDGET;
+//   set(x_, y_, w_, h_);
+//   colors     = ez.Theme.colors(colors_,   ez.Theme.wgt_colors);
+//   if (pwPtr) pwPtr->add(*this);
+// }
+
+ezWidget& ezWidget::operator=(Zone& z) {
+  x = z.x;
+  y = z.y;
+  w = z.w;
+  h = z.h;
+  return *this;
+}
+
+/* virtual */
+void ezWidget::set(int16_t x_ /* = EZ_INVALID */,
+                   int16_t y_ /* = EZ_INVALID */,
+                   int16_t w_ /* = 0 */, int16_t h_ /* = 0 */) {
+  Zone::set(x_, y_, w_, h_);
+  setCoords.set(x_, y_, w_, h_);
+}
+
 ezWidget* ezWidget::parent() {
   if (_parent) return static_cast<ezWidget*>(_parent);
   return nullptr;
+}
+
+bool ezWidget::isMyDescendant(ezWidget& w) {
+  ezWidget* current = &w;
+  while (current->parent()) {
+    if (current->parent() == this) return true;
+    current = current->parent();
+  }
+  return false;
+}
+
+bool ezWidget::inVirtual(Point& p) {
+  if (sprite) {
+    return (p.y >= 0 && p.y < sprite->height() &&
+            p.x >= 0 && p.x < sprite->width() );
+  } else {
+    return (p.y >= 0 && p.y < h && p.x >= 0 && p.x < w);
+  }
 }
 
 const char* ezWidget::typeName() {
@@ -54,8 +112,9 @@ const char* ezWidget::typeName() {
   _updateBox();
 }
 
-uint16_t ezWidget::parentFill() {
-  if (_parent) return static_cast<ezWidget*>(_parent)->colors.fill;
+uint16_t ezWidget::findFill() {
+  if (colors.fill != NODRAW) return colors.fill;
+  if (_parent) return static_cast<ezWidget*>(_parent)->findFill();
   return TFT_WHITE;
 }
 
@@ -112,18 +171,24 @@ void ezWidget::_drawArrow(int16_t direction) {
 
 void ezWidget::event() {
 
+  // Pass event by all gestures for this widget
+  for (auto gesture : _gestures) gesture->event();
+
+  if (numb) return;
+
   // This will add one for each of a widget or a gesture pointer present
   // on the event. See below
   uint8_t claims = (!!ez.e.widget) + (!!ez.e.gesture);
 
-  // Translate parent coordinates to widget origin
-  ez.e.from.x -= x - offset.x;
-  ez.e.from.y -= y - offset.y;
-  ez.e.to.x -= x - offset.x;
-  ez.e.to.y -= y - offset.y;
+  _posRelParent = ez.e.to;
 
-  // Pass event to all gestures for this widget
-  for (auto gesture : _gestures) gesture->event();
+  // Translate parent coordinates to widget origin
+  Point origin(x, y);
+  origin -= offset;
+
+  ez.e.from -= origin;
+  ez.e.to   -= origin;
+
 
   // Pass event by all widgets in this widget
   for (int i = _widgets.size() - 1; i >= 0; --i) {
@@ -134,10 +199,10 @@ void ezWidget::event() {
   _eventProcess();
 
   // Scroll if set
-  if (sprite && scroll && ez.e == E_MOVE) {
+  if (ez.e.widget && sprite && scroll && ez.e == E_MOVE &&
+    (ez.e.widget == this || isMyDescendant(*ez.e.widget))) {
     Point moveBy;
-    moveBy.x = ez.e.from.x - ez.e.to.x;
-    moveBy.y = ez.e.from.y - ez.e.to.y;
+    moveBy = ez.e.from - ez.e.to;
     if (offset.x + moveBy.x < 0) moveBy.x = -offset.x;
     if (offset.y + moveBy.y < 0) moveBy.y = -offset.y;
     if (offset.x + moveBy.x > sprite->width()  - w)
@@ -146,11 +211,9 @@ void ezWidget::event() {
       moveBy.y = sprite->height() - h - offset.y;
 
     if (moveBy != Point(0,0)) {
-      offset.x += moveBy.x;
-      offset.y += moveBy.y;
-      ez.e.to.x -= moveBy.x;
-      ez.e.to.y -= moveBy.y;
-      push();
+      offset  += moveBy;
+      ez.e.to -= moveBy;
+      refresh();
     }
   }
 
@@ -159,16 +222,15 @@ void ezWidget::event() {
   if (ez.e.widget == this) {
     fireEvent();
   } else if ((!!ez.e.widget) + (!!ez.e.gesture) > claims) {
-    // Something added a widget or gesture pointer, so one of our descendants
-    // must have claimed this event. So we fire it as a descendant event.
+    // Something added a widget or gesture pointer and it's not us, so
+    // one of the descendants must have claimed this event.
+    // So we fire it as a descendant event.
     fireEvent(true);
   }
 
   // Translate back to parent coordinates
-  ez.e.from.x += x - offset.x;
-  ez.e.from.y += y - offset.y;
-  ez.e.to.x += x - offset.x;
-  ez.e.to.y += y - offset.y;
+  ez.e.from += origin;
+  ez.e.to   += origin;
 
 }
 
@@ -183,13 +245,13 @@ void ezWidget::_eventProcess() {
       _changed = false;
       if (!_state && !_cancelled) {
         // Post-releaase events
-        if (!contains(_lastOffEvent.to, true)) {
+        if (!inVirtual(_lastOffEvent.to)) {
           ez.e = _lastOffEvent;
           ez.e.type = E_DRAGGED;
         } else if (_lastOffEvent.duration < tapTime) {
           if (_tapWait) {
             ez.e = _lastOffEvent;
-            ez.e.type = E_DBLTAP;
+            ez.e.type = E_DBLTAPPED;
           } else {
             _tapWait = true;
             return;
@@ -213,7 +275,7 @@ void ezWidget::_eventProcess() {
         if (_tapWait && millis() - _lastOffTime >= dbltapTime) {
           _lastRepeat = millis();
           ez.e = _lastOffEvent;
-          ez.e.type = E_TAP;
+          ez.e.type = E_TAPPED;
           _pressing = false;
           _longPressing = false;
           _tapWait = false;
@@ -239,19 +301,19 @@ void ezWidget::_eventProcess() {
     return;
   }
 
-  // Some other widget is already dealing with this event or we're numb
-  if (ez.e.widget || numb) return;
+  // Some other widget is already dealing with this event
+  if (ez.e.widget) return;
 
   bool parentGlissando = (parent() && parent()->glissando);
 
   // See if this is ours and tag it as such if it is
-  if      (ez.e == E_TOUCH && contains(ez.e.to, true)) {
+  if      (ez.e == E_TOUCH && contains(_posRelParent)) {
     ez.e.widget = this;
     _touched[ez.e.finger] = true;
   }
   else if (ez.e == E_MOVE && _touched[ez.e.finger]) {
     ez.e.widget = this;
-    if (glissando || (parentGlissando && !contains(ez.e.to, true))) {
+    if (glissando || (parentGlissando && !contains(_posRelParent))) {
       ez.e.type = E_RELEASE;
     }
   }
@@ -299,25 +361,69 @@ void ezWidget::_eventProcess() {
 }
 
 void ezWidget::drawChildren() {
-  for (auto widget : _widgets) if (widget && *widget) widget->draw();
+  uint16_t pixels_w = 0;
+  uint16_t shares_w = 0;
+  uint16_t pixels_h = 0;
+  uint16_t shares_h = 0;
+  uint16_t per_share_w = 0;
+  uint16_t per_share_h = 0;
+
+//   for (auto wdgt : _widgets) {
+//     *wdgt = wdgt->setCoords;
+//     if (wdgt->w > 0)                    pixels_w += wdgt->w;
+//     if (wdgt->w < 0 && wdgt->w > -100)  shares_w += abs(wdgt->w);
+//     if (wdgt->h > 0)                    pixels_h += wdgt->h;
+//     if (wdgt->h < 0 && wdgt->h > -100)  shares_h += abs(wdgt->h);
+//   }
+//
+//   if (autoSize) {
+//     if (pixels_w > w || pixels_h > h) {
+//       spriteBuffer(pixels_w, pixels_h);
+//     } else {
+//       direct();
+//     }
+//   } else {
+//     if (shares_w && w - pixels_w > 0) per_share_w = (w - pixels_w) / shares_w;
+//     if (shares_h && h - pixels_h > 0) per_share_h = (h - pixels_h) / shares_h;
+//   }
+//
+//   uint16_t current_x = 0;
+//   uint16_t current_y = 0;
+//
+//   for (auto wdgt : _widgets) {
+//     if (wdgt->w == EZ_PARENT) wdgt->w = w;
+//     if (wdgt->w < 0 && wdgt->w > -100) {
+//       wdgt->w = abs(wdgt->w) * per_share_w;
+//     }
+//     if (wdgt->x == EZ_AUTO) {
+//       wdgt->x = current_x;
+//       current_x += wdgt->w;
+//     }
+//
+//     if (wdgt->h == EZ_PARENT) wdgt->h = h;
+//     if (wdgt->h < 0 && wdgt->h > -100) {
+//       wdgt->h = abs(wdgt->h) * per_share_h;
+//     }
+//     if (wdgt->y == EZ_AUTO) {
+//       wdgt->y = current_y;
+//       current_y += wdgt->h;
+//     }
+//   }
+
+  for (auto wdgt : _widgets) if (wdgt && *wdgt) wdgt->draw();
 }
 
 void ezWidget::spriteBuffer(int16_t w_ /* = -1 */, int16_t h_ /* = -1 */) {
   ezDisplayZone::spriteBuffer(w_, h_);
-  if (parent()) {
-    sprite->fillSprite(parent()->colors.fill);
-  } else {
-    sprite->fillSprite(colors.fill);
-  }
+  sprite->fillSprite(findFill());
 }
 
 void ezWidget::turnOffRadiobuttons() {
-  for (auto widget : _widgets) {
-    if (widget->type == W_RADIOBUTTON) {
-      ezRadiobutton* rb = static_cast<ezRadiobutton*>(widget);
+  for (auto wdgt: _widgets) {
+    if (wdgt->type == W_RADIOBUTTON) {
+      ezRadiobutton* rb = static_cast<ezRadiobutton*>(wdgt);
       rb->value = false;
       rb->valueDraw();
-      rb->refresh();
     }
   }
 }

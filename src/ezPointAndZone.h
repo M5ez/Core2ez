@@ -82,16 +82,9 @@
 #define _EZPOINTANDZONE_H_
 
 #include <Arduino.h>
+#include <ezValues.h>
 
-#define EZ_INVALID -32768
-#define PLUSMINUS 45  // default value for isDirectionTo
-
-#define DIR_UP                 0
-#define DIR_RIGHT             90
-#define DIR_DOWN             180
-#define DIR_LEFT             270
-#define DIR_ANY       EZ_INVALID
-
+#define PLUSMINUS 45          // default value for isDirectionTo
 #define HIGHEST_X 319         // Can't trust TFT_WIDTH, driver is portrait
 #define HIGHEST_Y 239
 
@@ -103,13 +96,15 @@ class Point {
   Point(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID);
   bool operator==(const Point& p);
   bool operator!=(const Point& p);
-//   operator+(const Point &p) const;
-//   operator-(const Point &p) const;
+  Point operator+(const Point &p);
+  Point operator-(const Point &p);
+  Point& operator+=(const Point& p);
+  Point& operator-=(const Point& p);
   explicit operator bool();
   operator char*();
   void set(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID);
   bool valid();
-  bool in(Zone& z, bool selfRef = false);
+  bool in(Zone& z);
   bool Equals(const Point& p);
   uint16_t distanceTo(const Point& p);
   uint16_t directionTo(const Point& p);
@@ -130,8 +125,8 @@ class Zone {
   bool valid();
   virtual void set(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID,
                    int16_t w_ = 0 , int16_t h_ = 0);
-  bool contains(const Point& p, bool selfRef = false);
-  bool contains(int16_t x, int16_t y, bool selfRef = false);
+  bool contains(const Point& p);
+  bool contains(int16_t x, int16_t y);
   void rotate(uint8_t m);
   int16_t x, y, w, h;
 };

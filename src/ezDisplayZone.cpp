@@ -58,20 +58,6 @@ void ezDisplayZone::refresh() {
   if (_parent) _parent->refresh();
 }
 
-/* virtual */ void ezDisplayZone::set(int16_t x_ /* = EZ_INVALID */,
-                                      int16_t y_ /* = EZ_INVALID */,
-                                      int16_t w_ /* = 0 */,
-                                      int16_t h_ /* = 0 */) {
-  if (w_ == EZ_FULL)   w_ = DISPLAY.width();
-  if (h_ == EZ_FULL)   w_ = DISPLAY.height();
-  if (w_ == EZ_PARENT) w_ = parent() ? parent()->w : 0;
-  if (h_ == EZ_PARENT) h_ = parent() ? parent()->h : 0;
-  x = x_;
-  y = y_;
-  w = w_;
-  h = h_;
-}
-
 void ezDisplayZone::ezFont(const GFXfont* gfxFont) {
 	uint32_t ptrAsInt = (uint32_t)gfxFont;
 	uint8_t size = 1;

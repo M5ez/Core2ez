@@ -21,7 +21,11 @@ class ezWindow : public ezWidget {
 
   void            focus();
   void            blur();
-  bool            focussed();
+  bool            hasFocus();
+  void            eventPost();
+
+ protected:
+  uint16_t        _fire   = E_NONE;
 };
 
 #endif /* _EZWINDOW_H_ */

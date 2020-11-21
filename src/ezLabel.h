@@ -35,8 +35,8 @@ class ezLabel : public ezWidget {
   virtual void    eventPost();
   String          text       = "";
   const GFXfont*  font       = FSS9;
-  int16_t         align      = EZ_CENTER;
-  int16_t         valign     = EZ_CENTER;
+  int16_t         align      = EZ_LEFT;
+  int16_t         valign     = EZ_TOP;
   uint8_t         padding    = 0;
   int16_t         dx         = 0;
   int16_t         dy         = 0;
