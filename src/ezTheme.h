@@ -14,22 +14,28 @@ struct ezTheme {
 
   WidgetColors    btn_colors    = {TFT_BLUE,  TFT_WHITE, TFT_BLACK};
   WidgetColors    btn_onColors  = {TFT_CYAN,  TFT_BLACK, TFT_BLACK};
-  const GFXfont*  btn_font      = FSSB12;
+  ezFont          btn_font      = FSSB12;
 
   WidgetColors    lbl_colors    = {NODRAW,    TFT_BLACK, NODRAW};
-  const GFXfont*  lbl_font      = FSS9;
+  ezFont          lbl_font      = FSS9;
 
   WidgetColors    inp_colors    = {TFT_WHITE, TFT_BLACK, TFT_BLACK};
-  const GFXfont*  inp_font      = FSSB9;
+  ezFont          inp_font      = FSSB9;
+
+  WidgetColors    lst_colors    = {TFT_WHITE, TFT_BLACK, TFT_BLACK};
+  ezFont          lst_font      = FSS12;
+  WidgetColors    lsl_colors    = {0xFD75,    TFT_BLACK, NODRAW};
+
+
 
   WidgetColors    chk_colors    = {TFT_WHITE, TFT_BLACK, TFT_BLACK};
-  const GFXfont*  chk_font      = FSS9;
+  ezFont          chk_font      = FSS9;
 
   WidgetColors    rdb_colors    = {TFT_WHITE, TFT_BLACK, TFT_BLACK};
-  const GFXfont*  rdb_font      = FSS9;
+  ezFont          rdb_font      = FSS9;
 
   WidgetColors    kb            = {TFT_BLACK, TFT_WHITE, NODRAW};
-  const GFXfont*  kb_keyFont    = FSSB12;
+  ezFont          kb_keyFont    = FSSB12;
   WidgetColors    kb_keys       = {TFT_WHITE, TFT_BLACK, TFT_BLACK};
   WidgetColors    kb_keysOn     = {TFT_BLACK, TFT_WHITE, NODRAW};
   WidgetColors    kb_special    = {LIGHTGREY, TFT_BLACK, TFT_BLACK};

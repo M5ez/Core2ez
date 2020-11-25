@@ -44,8 +44,7 @@ const char* Event::typeName() {
   const char* eventNames[NUMEVENTS] = {
       "E_TOUCH",    "E_RELEASE",     "E_MOVE",         "E_GESTURE",
       "E_TAPPED",   "E_DBLTAPPED",   "E_DRAGGED",      "E_PRESSED",
-      "E_PRESSING", "E_LONGPRESSED", "E_LONGPRESSING", "E_CHANGED",
-      "E_FOCUS",    "E_BLUR" };
+      "E_PRESSING", "E_LONGPRESSED", "E_LONGPRESSING", "E_CHANGED" };
   if (!type) return none;
   for (uint8_t i = 0; i < NUMEVENTS; i++) {
     if ((type >> i) & 1) return eventNames[i];
@@ -65,7 +64,7 @@ uint16_t Event::distance() { return from.distanceTo(to); }
 
 char* Event::c_str() {
   static char r[80];
-  sprintf(r, "%-10d %-13s %-12s finger%d  %s .. %s %4d ms",
+  sprintf(r, "%-10d %-13s %-14s finger%d  %s .. %s %4d ms",
                 widget, widget ? widget->typeName() : "", typeName(), finger,
                 (char*)from, (char*)to, duration);
   return r;
@@ -74,10 +73,12 @@ char* Event::c_str() {
 
 // ezEventAdd class
 
-ezEventAdd::ezEventAdd(void(*func)(), ezWidget&  widget,  uint16_t event) {
+ezEventAdd::ezEventAdd(void(*func)(), ezWidget&  widget,
+                       uint16_t event /* = E_ALL */) {
   widget.addHandler(func, event);
 }
 
-ezEventAdd::ezEventAdd(void(*func)(), ezGesture& gesture, uint16_t event) {
+ezEventAdd::ezEventAdd(void(*func)(), ezGesture& gesture,
+                       uint16_t event /* = E_ALL */) {
   gesture.addHandler(func, event);
 }

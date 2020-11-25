@@ -183,4 +183,6 @@ class ezTouch {
   uint32_t _lastRead;
 };
 
+extern ezTouch Touch;
+
 #endif /* _EZTOUCH_H_ */

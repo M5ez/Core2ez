@@ -4,30 +4,6 @@
 #include <ezValues.h>
 #include <Arduino.h>
 
-// ezWidget::ezWidget(ezWidget& parentWidget,
-//                    int16_t x_ /* = EZ_INVALID */,
-//                    int16_t y_ /* = EZ_INVALID */,
-//                    int16_t w_ /* = 0 */, int16_t h_ /* = 0 */,
-//                    WidgetColors colors_ /* = THEME_COLORS */) {
-//   init(&parentWidget, x_, y_, w_, h_, colors_);
-// }
-//
-// ezWidget::ezWidget(int16_t x_ /* = EZ_INVALID */,
-//                    int16_t y_ /* = EZ_INVALID */,
-//                    int16_t w_ /* = 0 */, int16_t h_ /* = 0 */,
-//                    WidgetColors colors_ /* = THEME_COLORS */) {
-//   init(nullptr, x_, y_, w_, h_, colors_);
-// }
-//
-// void ezWidget::init(ezWidget* pwPtr,
-//                     int16_t x_, int16_t y_, int16_t w_, int16_t h_,
-//                     WidgetColors colors_) {
-//   type = W_WIDGET;
-//   set(x_, y_, w_, h_);
-//   colors     = ez.Theme.colors(colors_,   ez.Theme.wgt_colors);
-//   if (pwPtr) pwPtr->add(*this);
-// }
-
 ezWidget& ezWidget::operator=(Zone& z) {
   x = z.x;
   y = z.y;
@@ -41,7 +17,9 @@ void ezWidget::set(int16_t x_ /* = EZ_INVALID */,
                    int16_t y_ /* = EZ_INVALID */,
                    int16_t w_ /* = 0 */, int16_t h_ /* = 0 */) {
   Zone::set(x_, y_, w_, h_);
-  setCoords.set(x_, y_, w_, h_);
+  setPos.set(x_, y_, w_, h_);
+  if (w == EZ_PARENT) w = 320;
+  if (h == EZ_PARENT) h = 240;
 }
 
 ezWidget* ezWidget::parent() {
@@ -68,9 +46,10 @@ bool ezWidget::inVirtual(Point& p) {
 }
 
 const char* ezWidget::typeName() {
-  const char* typeNames[8] = { "ezWidget", "ez", "ezWindow", "ezButton",
-                               "ezLabel", "ezCheckBox", "ezRadiobutton",
-                               "ezInput" };
+  const char* typeNames[11] = { "ezWidget", "ez", "ezWindow", "ezButton",
+                                "ezLabel", "ezCheckBox", "ezRadiobutton",
+                                "ezInput", "ezLayout", "ezListBox",
+                                "ezListItem" };
   return typeNames[type];
 }
 
@@ -135,37 +114,37 @@ void ezWidget::_drawArrow(int16_t direction) {
   if (!parent()) return;
   Point tip, tail1, tail2;
 
-  if        (ez.Theme.arrowValign == EZ_TOP   ) {
-    tip.y = y + ez.Theme.arrowPadding + (ez.Theme.arrowWidth / 2);
-  } else if (ez.Theme.arrowValign == EZ_BOTTOM) {
-    tip.y = y + h - ez.Theme.arrowPadding - (ez.Theme.arrowWidth / 2);
+  if        (Theme.arrowValign == EZ_TOP   ) {
+    tip.y = y + Theme.arrowPadding + (Theme.arrowWidth / 2);
+  } else if (Theme.arrowValign == EZ_BOTTOM) {
+    tip.y = y + h - Theme.arrowPadding - (Theme.arrowWidth / 2);
   } else {
     tip.y = y + (h / 2);
   }
-  tail1.y = tip.y - (ez.Theme.arrowWidth / 2);
-  tail2.y = tip.y + (ez.Theme.arrowWidth / 2);
+  tail1.y = tip.y - (Theme.arrowWidth / 2);
+  tail2.y = tip.y + (Theme.arrowWidth / 2);
 
   if        (direction == EZ_LEFT) {
-    tip.x = x + ez.Theme.arrowPadding;
-    tail1.x = tail2.x = tip.x + ez.Theme.arrowLength;
+    tip.x = x + Theme.arrowPadding;
+    tail1.x = tail2.x = tip.x + Theme.arrowLength;
   } else if (direction == EZ_RIGHT) {
-    tip.x = x + w - ez.Theme.arrowPadding;
-    tail1.x = tail2.x = tip.x - ez.Theme.arrowLength;
+    tip.x = x + w - Theme.arrowPadding;
+    tail1.x = tail2.x = tip.x - Theme.arrowLength;
   } else if (direction == EZ_UP) {
     tip.x = x + (w / 2);
-    tip.y = y + ez.Theme.arrowPadding;
-    tail1.y = tail2.y = tip.y + ez.Theme.arrowLength;
-    tail1.x = tip.x - (ez.Theme.arrowWidth / 2);
-    tail2.x = tip.x + (ez.Theme.arrowWidth / 2);
+    tip.y = y + Theme.arrowPadding;
+    tail1.y = tail2.y = tip.y + Theme.arrowLength;
+    tail1.x = tip.x - (Theme.arrowWidth / 2);
+    tail2.x = tip.x + (Theme.arrowWidth / 2);
   } else {
     tip.x = x + (w / 2);
-    tip.y = y + h - ez.Theme.arrowPadding;
-    tail1.y = tail2.y = tip.y - ez.Theme.arrowLength;
-    tail1.x = tip.x - (ez.Theme.arrowWidth / 2);
-    tail2.x = tip.x + (ez.Theme.arrowWidth / 2);
+    tip.y = y + h - Theme.arrowPadding;
+    tail1.y = tail2.y = tip.y - Theme.arrowLength;
+    tail1.x = tip.x - (Theme.arrowWidth / 2);
+    tail2.x = tip.x + (Theme.arrowWidth / 2);
   }
-  parent()->fillTriangle(tip, tail1, tail2, ez.Theme.arrowFill);
-  parent()->drawTriangle(tip, tail1, tail2, ez.Theme.arrowOutline);
+  parent()->fillTriangle(tip, tail1, tail2, Theme.arrowFill);
+  parent()->drawTriangle(tip, tail1, tail2, Theme.arrowOutline);
 }
 
 
@@ -173,8 +152,6 @@ void ezWidget::event() {
 
   // Pass event by all gestures for this widget
   for (auto gesture : _gestures) gesture->event();
-
-  if (numb) return;
 
   // This will add one for each of a widget or a gesture pointer present
   // on the event. See below
@@ -196,7 +173,7 @@ void ezWidget::event() {
   }
 
   eventPre();
-  _eventProcess();
+  if (!numb) _eventProcess();
 
   // Scroll if set
   if (ez.e.widget && sprite && scroll && ez.e == E_MOVE &&
@@ -354,63 +331,83 @@ void ezWidget::_eventProcess() {
 }
 
 /* virtual */ void ezWidget::draw() {
-  if (!*this) return;
   if (colors.fill    != NODRAW) clear();
   drawChildren();
   if (colors.outline != NODRAW && !sprite) drawRect(colors.outline);
+  push();
 }
 
 void ezWidget::drawChildren() {
-  uint16_t pixels_w = 0;
-  uint16_t shares_w = 0;
-  uint16_t pixels_h = 0;
-  uint16_t shares_h = 0;
-  uint16_t per_share_w = 0;
-  uint16_t per_share_h = 0;
 
-//   for (auto wdgt : _widgets) {
-//     *wdgt = wdgt->setCoords;
-//     if (wdgt->w > 0)                    pixels_w += wdgt->w;
-//     if (wdgt->w < 0 && wdgt->w > -100)  shares_w += abs(wdgt->w);
-//     if (wdgt->h > 0)                    pixels_h += wdgt->h;
-//     if (wdgt->h < 0 && wdgt->h > -100)  shares_h += abs(wdgt->h);
-//   }
-//
-//   if (autoSize) {
-//     if (pixels_w > w || pixels_h > h) {
-//       spriteBuffer(pixels_w, pixels_h);
-//     } else {
-//       direct();
-//     }
-//   } else {
-//     if (shares_w && w - pixels_w > 0) per_share_w = (w - pixels_w) / shares_w;
-//     if (shares_h && h - pixels_h > 0) per_share_h = (h - pixels_h) / shares_h;
-//   }
-//
-//   uint16_t current_x = 0;
-//   uint16_t current_y = 0;
-//
-//   for (auto wdgt : _widgets) {
-//     if (wdgt->w == EZ_PARENT) wdgt->w = w;
-//     if (wdgt->w < 0 && wdgt->w > -100) {
-//       wdgt->w = abs(wdgt->w) * per_share_w;
-//     }
-//     if (wdgt->x == EZ_AUTO) {
-//       wdgt->x = current_x;
-//       current_x += wdgt->w;
-//     }
-//
-//     if (wdgt->h == EZ_PARENT) wdgt->h = h;
-//     if (wdgt->h < 0 && wdgt->h > -100) {
-//       wdgt->h = abs(wdgt->h) * per_share_h;
-//     }
-//     if (wdgt->y == EZ_AUTO) {
-//       wdgt->y = current_y;
-//       current_y += wdgt->h;
-//     }
-//   }
+  uint16_t pixels_w         = 0;
+  uint16_t shares_w         = 0;
+  uint16_t pixels_h         = 0;
+  uint16_t shares_h         = 0;
+  uint16_t per_share_w      = 0;
+  uint16_t per_share_h      = 0;
+  uint8_t count_w           = 0;
+  uint8_t count_h           = 0;
 
-  for (auto wdgt : _widgets) if (wdgt && *wdgt) wdgt->draw();
+  for (auto wdgtPtr : _widgets) {
+    ezWidget& wdgt = *wdgtPtr;
+
+    if (wdgt.setPos.x == EZ_AUTO) {
+      if (wdgt.setPos.w > 0) pixels_w += wdgt.setPos.w;
+      if (wdgt.setPos.w < 0 && wdgt.setPos.w > -100)  shares_w += abs(wdgt.setPos.w);
+      count_w++;
+    }
+    if (wdgt.setPos.y == EZ_AUTO) {
+      if (wdgt.setPos.h > 0) pixels_h += wdgt.setPos.h;
+      if (wdgt.setPos.h < 0 && wdgt.setPos.h > -100)  shares_h += abs(wdgt.setPos.h);
+      count_h++;
+    }
+  }
+
+  pixels_w += --count_w * gutter;
+  pixels_h += --count_h * gutter;
+
+  if (autoSize) {
+    if (pixels_w > w || pixels_h > h) {
+      Serial.printf("sprite! %d %d\n",
+                    pixels_w ? pixels_w : w, pixels_h ? pixels_h : h);
+      spriteBuffer(pixels_w ? pixels_w : w, pixels_h ? pixels_h : h);
+    } else {
+      direct();
+    }
+  } else {
+    if (shares_w && w - pixels_w > 0) per_share_w = (w - pixels_w) / shares_w;
+    if (shares_h && h - pixels_h > 0) per_share_h = (h - pixels_h) / shares_h;
+  }
+
+  uint16_t current_x = 0;
+  uint16_t current_y = 0;
+
+  for (auto wdgtPtr : _widgets) {
+    ezWidget& wdgt = *wdgtPtr;
+
+    if (wdgt.setPos.w == EZ_PARENT) wdgt.w = w;
+    if (wdgt.setPos.w < 0 && wdgt.setPos.w > -100) {
+      wdgt.w = abs(wdgt.setPos.w) * per_share_w;
+    }
+    if (wdgt.setPos.x == EZ_AUTO) {
+      wdgt.x = current_x;
+      current_x += wdgt.w + gutter;
+    }
+
+    if (wdgt.setPos.h == EZ_PARENT) wdgt.h = h;
+    if (wdgt.setPos.h < 0 && wdgt.setPos.h > -100) {
+      wdgt.h = abs(wdgt.setPos.h) * per_share_h;
+    }
+    if (wdgt.setPos.y == EZ_AUTO) {
+      wdgt.y = current_y;
+      current_y += wdgt.h + gutter;
+    }
+  }
+
+  for (auto wdgtPtr : _widgets) {
+    ezWidget& wdgt = *wdgtPtr;
+    wdgt.draw();
+  }
 }
 
 void ezWidget::spriteBuffer(int16_t w_ /* = -1 */, int16_t h_ /* = -1 */) {

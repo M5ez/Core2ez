@@ -6,7 +6,7 @@ ezLabel::ezLabel(ezWidget& parentWidget,
                  int16_t w_ /* = 0 */, int16_t h_ /* = 0 */,
                  String text_ /* = "" */,
                  WidgetColors colors_ /* = THEME_COLORS */,
-                 const GFXfont* font_ /* = THEME_FONT */,
+                 ezFont font_ /* = THEME_FONT */,
                  int16_t align_ /* = EZ_LEFT */,
                  int16_t valign_ /* = EZ_CENTER */, uint8_t padding_ /* = 2 */,
                  int16_t dx_ /* = 0 */, int16_t dy_ /* = 0 */) {
@@ -18,7 +18,7 @@ ezLabel::ezLabel(int16_t x_ /* = EZ_INVALID */, int16_t y_ /* = EZ_INVALID */,
                  int16_t w_ /* = 0 */, int16_t h_ /* = 0 */,
                  String text_ /* = "" */,
                  WidgetColors colors_ /* = THEME_COLORS */,
-                 const GFXfont* font_ /* = THEME_FONT */,
+                 ezFont font_ /* = THEME_FONT */,
                  int16_t align_ /* = EZ_LEFT */,
                  int16_t valign_ /* = EZ_CENTER */, uint8_t padding_ /* = 2 */,
                  int16_t dx_ /* = 0 */, int16_t dy_ /* = 0 */) {
@@ -28,21 +28,21 @@ ezLabel::ezLabel(int16_t x_ /* = EZ_INVALID */, int16_t y_ /* = EZ_INVALID */,
 
 void ezLabel::init(ezWidget* pwPtr,
                    int16_t x_, int16_t y_, int16_t w_, int16_t h_,
-                   String text_, WidgetColors colors_, const GFXfont* font_,
+                   String text_, WidgetColors colors_, ezFont font_,
                    int16_t align_, int16_t valign_, uint8_t padding_,
                    int16_t dx_, int16_t dy_) {
   type    = W_LABEL;
   set(x_, y_, w_, h_);
   text    = text_;
-  colors  = ez.Theme.colors(colors_, ez.Theme.lbl_colors);
-  font    = (font_ != THEME_FONT) ? font_ : ez.Theme.lbl_font;
+  colors  = Theme.colors(colors_, Theme.lbl_colors);
+  font    = font_ ? font_ : Theme.lbl_font;
   align   = align_;
   valign  = valign_;
   padding = padding_;
   dx      = dx_;
   dy      = dy_;
   numb    = true;
-  if (pwPtr) pwPtr->add(*this); else ez.Screen.add(*this);
+  if (pwPtr) pwPtr->add(*this); else Screen.add(*this);
 }
 
 void ezLabel::eventPre() { };
@@ -51,7 +51,7 @@ void ezLabel::eventPost() { };
 
 void ezLabel::draw() {
 
-  if (colors.fill    != NODRAW) fillRect(colors.fill);
+  if (colors.fill    != NODRAW) clear();
 
   if (colors.outline != NODRAW) drawRect(colors.outline);
 
@@ -84,13 +84,13 @@ void ezLabel::draw() {
 
     // Actual drawing of text
     setTextColor(colors.text);
-    ezFont(font);
+    setFont(font);
     setTextDatum(datum);
     setTextPadding(0);
     if (!sprite && textWidth(text) > w - padding) {
       spriteBuffer();
       setTextColor(colors.text);
-      ezFont(font);
+      setFont(font);
       setTextDatum(datum);
       setTextPadding(0);
       drawString(text, tx + dx, ty + dy);

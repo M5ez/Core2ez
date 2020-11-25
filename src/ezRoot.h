@@ -19,11 +19,6 @@ class ezRoot : public ezWidget {
   void                        add(ezGesture& g);
   void                        remove(ezGesture& g);
 
-  ezSound                     Sound;
-  ezTouch                     Touch;
-  ezTheme                     Theme;
-  ezWindow                    Screen          = ezWindow(0, 0, 320, 240);
-
  protected:
   uint8_t                     _finger         = 0;
   Point                       _previous  [2]  = {Point(), Point()};
@@ -32,6 +27,7 @@ class ezRoot : public ezWidget {
 };
 
 extern ezRoot ez;
+extern ezTheme Theme;
 
 #define ROOT                  ezRoot::instance
 

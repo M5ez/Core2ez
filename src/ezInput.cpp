@@ -7,7 +7,7 @@ ezInput::ezInput(ezWidget& parentWidget,
                  String text_ /* = "" */,
                  String prompt_ /* = "" */,
                  WidgetColors colors_ /* = THEME_COLORS */,
-                 const GFXfont* font_ /* = THEME_FONT */,
+                 ezFont font_ /* = THEME_FONT */,
                  int16_t align_ /* = EZ_LEFT */,
                  int16_t valign_ /* = EZ_CENTER */, uint8_t padding_ /* = 2 */,
                  int16_t dx_ /* = 0 */, int16_t dy_ /* = 0 */) {
@@ -20,7 +20,7 @@ ezInput::ezInput(int16_t x_ /* = EZ_INVALID */, int16_t y_ /* = EZ_INVALID */,
                  String text_ /* = "" */,
                  String prompt_ /* = "" */,
                  WidgetColors colors_ /* = THEME_COLORS */,
-                 const GFXfont* font_ /* = THEME_FONT */,
+                 ezFont font_ /* = THEME_FONT */,
                  int16_t align_ /* = EZ_LEFT */,
                  int16_t valign_ /* = EZ_CENTER */, uint8_t padding_ /* = 2 */,
                  int16_t dx_ /* = 0 */, int16_t dy_ /* = 0 */) {
@@ -31,21 +31,21 @@ ezInput::ezInput(int16_t x_ /* = EZ_INVALID */, int16_t y_ /* = EZ_INVALID */,
 void ezInput::init(ezWidget* pwPtr,
                    int16_t x_, int16_t y_, int16_t w_, int16_t h_,
                    String text_,String prompt_, WidgetColors colors_,
-                   const GFXfont* font_, int16_t align_, int16_t valign_,
+                   ezFont font_, int16_t align_, int16_t valign_,
                    uint8_t padding_, int16_t dx_, int16_t dy_) {
   type    = W_INPUT;
   set(x_, y_, w_, h_);
   text    = text_;
   prompt  = prompt_;
-  colors  = ez.Theme.colors(colors_, ez.Theme.inp_colors);
-  font    = (font_ != THEME_FONT) ? font_ : ez.Theme.inp_font;
+  colors  = Theme.colors(colors_, Theme.inp_colors);
+  font    = font_ ? font_ : Theme.inp_font;
   align   = align_;
   valign  = valign_;
   padding = padding_;
   dx      = dx_;
   dy      = dy_;
   numb    = false;
-  if (pwPtr) pwPtr->add(*this); else ez.Screen.add(*this);
+  if (pwPtr) pwPtr->add(*this); else Screen.add(*this);
 }
 
 void ezInput::eventPost() {
@@ -102,38 +102,36 @@ namespace {
     }
   };
 
-
-
   struct kbGlobals {
-    ezWindow  window      = ezWindow  (  0,  0, 320, 240, ez.Theme.kb);
+    ezWindow  window      = ezWindow  (  0,  0, 320, 240, Theme.kb);
     ezLabel   topBar      = ezLabel   (  0,  0, 320, 20, "",
-                                       ez.Theme.kb_topBar, FSS9,
+                                       Theme.kb_topBar, FSS9,
                                        EZ_CENTER, EZ_CENTER);
     ezGesture help        = ezGesture (120, EZ_DOWN);
-    ezWindow  input       = ezWindow  (  0, 20, 320,  55, ez.Theme.kb);
-    ezWindow  keys        = ezWindow  (  0, 75, 320, 165, ez.Theme.kb);
+    ezWindow  input       = ezWindow  (  0, 20, 320,  55, Theme.kb);
+    ezWindow  keys        = ezWindow  (  0, 75, 320, 165, Theme.kb);
     ezGesture backspace   = ezGesture ( 40, EZ_LEFT);
     ezGesture space       = ezGesture ( 40, EZ_RIGHT);
     ezButton  sym         = ezButton  (  0, 110,  40, 55, "sym",
-                                       ez.Theme.kb_special);
+                                       Theme.kb_special);
     ezButton  done        = ezButton  (264, 110,  56, 55, "done",
-                                       ez.Theme.kb_special);
+                                       Theme.kb_special);
     ezButton  k[MAX_KEYS];
-    ezWindow  helpW       = ezWindow  (  0,  0,  320, 240, ez.Theme.kb);
+    ezWindow  helpW       = ezWindow  (  0,  0,  320, 240, Theme.kb);
     ezLabel   help_1      = ezLabel   ( 10,  10, 300,  40, HELP_1,
-                                       ez.Theme.kb, FSSB18);
+                                       Theme.kb, FSSB18);
     ezLabel   help_2_1    = ezLabel   ( 10,  75, 110,  20, HELP_2_1,
-                                       ez.Theme.kb, FSS9);
+                                       Theme.kb, FSS9);
     ezLabel   help_2_2    = ezLabel   (120,  75, 200,  20, HELP_2_2,
-                                       ez.Theme.kb, FSS9);
+                                       Theme.kb, FSS9);
     ezLabel   help_3_1    = ezLabel   ( 10, 105, 110,  20, HELP_3_1,
-                                       ez.Theme.kb, FSS9);
+                                       Theme.kb, FSS9);
     ezLabel   help_3_2    = ezLabel   (120, 105, 200,  20, HELP_3_2,
-                                       ez.Theme.kb, FSS9);
+                                       Theme.kb, FSS9);
     ezLabel   help_4_1    = ezLabel   ( 10, 135, 110,  20, HELP_4_1,
-                                       ez.Theme.kb, FSS9);
+                                       Theme.kb, FSS9);
     ezLabel   help_4_2    = ezLabel   (120, 135, 200,  20, HELP_4_2,
-                                       ez.Theme.kb, FSS9);
+                                       Theme.kb, FSS9);
     String    text        = "";
     String    prompt      = "";
     uint8_t   current     = DEFAULT_KB;
@@ -312,11 +310,11 @@ String keyboardInput(String prompt_ /* = "" */, String text_ /* = "" */) {
   kb->input.addHandler(inputHandler);
 
   kb->window.add(kb->keys);
-  kb->keys.colors = ez.Theme.kb;
+  kb->keys.colors = Theme.kb;
   for (int8_t n = 0; n < MAX_KEYS; n++) {
-    kb->k[n].label.font   = ez.Theme.kb_keyFont;
-    kb->k[n].colors       = ez.Theme.kb_keys;
-    kb->k[n].onColors     = ez.Theme.kb_keysOn;
+    kb->k[n].label.font   = Theme.kb_keyFont;
+    kb->k[n].colors       = Theme.kb_keys;
+    kb->k[n].onColors     = Theme.kb_keysOn;
     kb->k[n].dbltapTime   = 0;
     kb->k[n].userData     = 1;
     kb->keys.add(kb->k[n]);

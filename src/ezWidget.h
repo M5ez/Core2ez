@@ -16,7 +16,10 @@ enum widget_t {
   W_LABEL,
   W_CHECKBOX,
   W_RADIOBUTTON,
-  W_INPUT
+  W_INPUT,
+  W_LAYOUT,
+  W_LISTBOX,
+  W_LISTITEM
 };
 
 
@@ -37,16 +40,6 @@ struct WidgetColors {
 
 class ezWidget : public ezDisplayZone, public Eventful {
  public:
-//   ezWidget(ezWidget& parentWidget,
-//            int16_t x_ = 0, int16_t y_ = 0,
-//            int16_t w_ = 320, int16_t h_ = 240,
-//            WidgetColors colors_   = THEME_COLORS );
-//   ezWidget(int16_t x_ = 0, int16_t y_ = 0,
-//            int16_t w_ = 320, int16_t h_ = 240,
-//            WidgetColors colors_   = THEME_COLORS );
-//   void init(ezWidget* pwPtr,
-//             int16_t x_, int16_t y_, int16_t w_, int16_t h_,
-//             WidgetColors colors_ );
   ezWidget&               operator=(Zone&);
   virtual void            set(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID,
                           int16_t w_ = 0 , int16_t h_ = 0);
@@ -75,9 +68,10 @@ class ezWidget : public ezDisplayZone, public Eventful {
   bool                    wasReleased();
 
   widget_t                type            = W_WIDGET;
-  Zone                    setCoords       = Zone();
+  Zone                    setPos          = Zone();
   bool                    autoSize        = false;
-  WidgetColors            colors          = {TFT_WHITE, TFT_BLACK, TFT_BLACK};
+  WidgetColors            colors          = {NODRAW, NODRAW, NODRAW};
+  int16_t                 gutter          = 0;
   bool                    numb            = false;
   uint16_t                tapTime         = 200;
   uint16_t                dbltapTime      = 200;

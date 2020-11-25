@@ -7,7 +7,7 @@ ezButton::ezButton(ezWidget& parentWidget,
                    String text_ /* = "" */,
                    WidgetColors colors_ /* = THEME_COLORS */,
                    WidgetColors onColors_ /* = THEME_COLORS */,
-                   const GFXfont* font_ /* = THEME_FONT */) {
+                   ezFont font_ /* = THEME_FONT */) {
   init(&parentWidget, x_, y_, w_, h_, text_, colors_, onColors_, font_);
 }
 
@@ -16,24 +16,24 @@ ezButton::ezButton(int16_t x_ /* = EZ_INVALID */, int16_t y_ /* = EZ_INVALID */,
                    String text_ /* = "" */,
                    WidgetColors colors_ /* = THEME_COLORS */,
                    WidgetColors onColors_ /* = THEME_COLORS */,
-                   const GFXfont* font_ /* = THEME_FONT */) {
+                   ezFont font_ /* = THEME_FONT */) {
   init(nullptr, x_, y_, w_, h_, text_, colors_, onColors_, font_);
 }
 
 void ezButton::init(ezWidget* pwPtr,
                     int16_t x_, int16_t y_, int16_t w_, int16_t h_,
                     String text_, WidgetColors colors_, WidgetColors onColors_,
-                    const GFXfont* font_) {
+                    ezFont font_) {
   type       = W_BUTTON;
   set(x_, y_, w_, h_);
-  colors       = ez.Theme.colors(colors_,   ez.Theme.btn_colors);
-  onColors     = ez.Theme.colors(onColors_, ez.Theme.btn_onColors);
-  label.font   = (font_ != THEME_FONT) ? font_ : ez.Theme.btn_font;
+  colors       = Theme.colors(colors_,   Theme.btn_colors);
+  onColors     = Theme.colors(onColors_, Theme.btn_onColors);
+  label.font   = font_ ? font_ : Theme.btn_font;
   label.text   = text_;
   label.align  = EZ_CENTER;
   label.valign = EZ_CENTER;
   add(label);
-  if (pwPtr) pwPtr->add(*this); else ez.Screen.add(*this);
+  if (pwPtr) pwPtr->add(*this); else Screen.add(*this);
 }
 
 

@@ -30,9 +30,9 @@ ezSynth synth[KEYS] = ezSynth(TRIANGLE, 0, 50, 300, 0.6, 1000, 0.4);
 void setup() {
   ez.begin();
 
-  ez.Screen.colors.fill = BLACK;
-  ez.Screen.spriteBuffer();      // Prevents flicker, buffer until push()
-  ez.Screen.glissando = true;
+  Screen.colors.fill = BLACK;
+  Screen.spriteBuffer();      // Prevents flicker, buffer until push()
+  Screen.glissando = true;
 
   // Set up white keys
   for (uint8_t n = 0; n < 8; n++) {
@@ -52,13 +52,13 @@ void setup() {
     keys[n].userData = n;
   }
 
-  ez.Screen.focus();
-  ez.Screen.fillRect(0, 0, 320, 5, BLACK);   // top of keys as straight line
-  ez.Screen.push();
+  Screen.focus();
+  Screen.fillRect(0, 0, 320, 5, BLACK);   // top of keys as straight line
+  Screen.push();
 
   // Set up synths with their notes
-  const float notes[KEYS] = { NOTE_F4, NOTE_G4, NOTE_A4, NOTE_B4, NOTE_C5,
-                              NOTE_D5, NOTE_E5, NOTE_F5, NOTE_Gb4, NOTE_Ab4,
+  const float notes[KEYS] = { NOTE_F4,  NOTE_G4,  NOTE_A4,  NOTE_B4,  NOTE_C5,
+                              NOTE_D5,  NOTE_E5,  NOTE_F5,  NOTE_Gb4, NOTE_Ab4,
                               NOTE_Bb4, NOTE_Db5, NOTE_Eb5, NOTE_Gb5 };
   for (uint8_t n = 0; n < 14; n++) synth[n].freq = notes[n];
 }

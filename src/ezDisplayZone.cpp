@@ -1,5 +1,61 @@
 #include "ezDisplayZone.h"
 #include <ezValues.h>
+#include <ezRoot.h>
+
+
+ezFont::ezFont() {
+  _font = 0;
+  _gfxFont = nullptr;
+}
+
+ezFont::ezFont(uint8_t font_) {
+  *this = font_;
+}
+
+ezFont::ezFont(const GFXfont* gfxFont_) {
+  *this = gfxFont_;
+}
+
+ezFont::operator bool() { return (_font); }
+
+ezFont& ezFont::operator=(const GFXfont* gfxFont_) {
+  uint32_t ptrAsInt = (uint32_t)gfxFont_;
+  textsize = 1;
+  if (ptrAsInt <= 16) {
+    if (ptrAsInt > 8) {
+      ptrAsInt -= 8;
+      textsize++;
+    }
+    _font = ptrAsInt;
+    _gfxFont = nullptr;
+  } else {
+    _font = 1;
+    _gfxFont = gfxFont_;
+  }
+  return *this;
+}
+
+ezFont& ezFont::operator=(uint8_t font_) {
+  _gfxFont = nullptr;
+  _font = font_;
+  textsize = 1;
+  return *this;
+}
+
+void ezFont::set(ezDisplayZone& dz) {
+  if (_gfxFont) {
+    dz.setFreeFont(_gfxFont);
+  } else {
+    dz.setTextFont(_font);
+  }
+  dz.setTextSize(textsize);
+}
+
+int16_t ezFont::height() {
+  set(ez);
+  return ez.fontHeight();
+}
+
 
 
 ezDisplayZone* ezDisplayZone::parent() {
@@ -58,19 +114,8 @@ void ezDisplayZone::refresh() {
   if (_parent) _parent->refresh();
 }
 
-void ezDisplayZone::ezFont(const GFXfont* gfxFont) {
-	uint32_t ptrAsInt = (uint32_t)gfxFont;
-	uint8_t size = 1;
-	if (ptrAsInt <= 16) {
- 		if (ptrAsInt > 8) {
- 			ptrAsInt -= 8;
- 			size++;
- 		}
-		setTextFont(ptrAsInt);
-	} else {
-		setFreeFont(gfxFont);
-	}
-	setTextSize(size);
+void ezDisplayZone::setFont(ezFont& f) {
+  f.set(*this);
 }
 
 void ezDisplayZone::drawRect(uint32_t color) {
@@ -506,4 +551,6 @@ size_t  ezDisplayZone::write(uint8_t utf8) {
   else if (_parent) return _parent ->write(utf8);
   else              return DISPLAY .write(utf8);
 }
+
+
 

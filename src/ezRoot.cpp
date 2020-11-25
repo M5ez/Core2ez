@@ -6,7 +6,7 @@
 ezRoot::ezRoot() {
   if (!instance) instance = this;
   type = W_ROOT;
-  set(0, 0, 320, 280);
+  set(0, 0, 320, 240);
   // numb = true;
 }
 
@@ -40,20 +40,23 @@ void ezRoot::add(ezWidget& w) { }
 void ezRoot::remove(ezWidget& w) { }
 
 void ezRoot::draw() {
+
   // root is special in that it only draws the top widget
-  if (_widgets.size()) _widgets.back()->draw();
+  if (_widgets.size()) {
+    ezWidget& wdgt = *_widgets.back();
+    if (wdgt.setPos.w == EZ_PARENT) wdgt.w = w;
+    if (wdgt.setPos.h == EZ_PARENT) wdgt.h = h;
+    wdgt.draw();
+    wdgt.push();
+  }
 }
 
 void ezRoot::update() {
 
-  if (!_widgets.size()) {
-    Screen.focus();
-    draw();
-    Screen.push();
-  }
+  if (!_widgets.size()) Screen.focus();
 
-  Sound.update();
   Touch.update();
+  Sound.update();
 
   e = Event();
 
@@ -101,3 +104,5 @@ void ezRoot::update() {
 }
 
 ezRoot ez;
+ezTheme Theme;
+ezWindow Screen;

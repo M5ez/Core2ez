@@ -247,3 +247,5 @@ int16_t ezSynth::scaleAmplitude(float gain) {
   // 181 is (almost) the square root of 32768.
   return pow(gain * 181, 2);
 }
+
+ezSound Sound;

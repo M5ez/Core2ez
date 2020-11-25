@@ -146,4 +146,4 @@ void ezTouch::dump() {
   Serial.printf("\n\n\n");
 }
 
-
+ezTouch Touch;

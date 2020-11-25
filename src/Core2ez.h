@@ -3,6 +3,7 @@
 
 #include <ezSound.h>
 
+#include <ezTheme.h>
 #include <ezPointAndZone.h>
 #include <ezTouch.h>
 #include <ezEvents.h>
@@ -13,9 +14,11 @@
 #include <ezInput.h>
 #include <ezCheckbox.h>
 #include <ezRadiobutton.h>
-#include <ezTheme.h>
 #include <ezWindow.h>
+#include <ezList.h>
+#include <ezLayout.h>
 #include <ezRoot.h>
+
 
 
 #endif /* _CORE2EZ_H_ */

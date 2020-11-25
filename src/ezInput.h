@@ -37,7 +37,7 @@ class ezInput : public ezLabel {
           String text_         = "",
           String prompt_       = "",
           WidgetColors colors_ = THEME_COLORS,
-          const GFXfont* font_ = THEME_FONT,
+          ezFont font_ = THEME_FONT,
           int16_t align_ = EZ_LEFT,
           int16_t valign_ = EZ_CENTER,
           uint8_t padding_ = 2, int16_t dx_ = 0, int16_t dy_ = 0);
@@ -47,14 +47,14 @@ class ezInput : public ezLabel {
           String text_         = "",
           String prompt_       = "",
           WidgetColors colors_ = THEME_COLORS,
-          const GFXfont* font_ = THEME_FONT,
+          ezFont font_ = THEME_FONT,
           int16_t align_ = EZ_LEFT,
           int16_t valign_ = EZ_CENTER,
           uint8_t padding_ = 2, int16_t dx_ = 0, int16_t dy_ = 0);
 
   void init(ezWidget* pwPtr,
             int16_t x_, int16_t y_, int16_t w_, int16_t h_, String text_,
-            String prompt_, WidgetColors colors_, const GFXfont* font_,
+            String prompt_, WidgetColors colors_, ezFont font_,
             int16_t align_, int16_t valign_, uint8_t padding_,
             int16_t dx_, int16_t dy_);
 

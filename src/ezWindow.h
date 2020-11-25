@@ -8,11 +8,11 @@ class ezWindow : public ezWidget {
  public:
   ezWindow(ezWidget& parentWidget,
            int16_t x_ = 0, int16_t y_ = 0,
-           int16_t w_ = 320, int16_t h_ = 240,
+           int16_t w_ = EZ_PARENT, int16_t h_ = EZ_PARENT,
            WidgetColors colors_   = THEME_COLORS );
 
   ezWindow(int16_t x_ = 0, int16_t y_ = 0,
-           int16_t w_ = 320, int16_t h_ = 240,
+           int16_t w_ = EZ_PARENT, int16_t h_ = EZ_PARENT,
            WidgetColors colors_   = THEME_COLORS );
 
   void init(ezWidget* pwPtr,
@@ -22,10 +22,9 @@ class ezWindow : public ezWidget {
   void            focus();
   void            blur();
   bool            hasFocus();
-  void            eventPost();
 
- protected:
-  uint16_t        _fire   = E_NONE;
 };
+
+extern ezWindow Screen;
 
 #endif /* _EZWINDOW_H_ */

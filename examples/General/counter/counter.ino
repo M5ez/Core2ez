@@ -9,15 +9,17 @@ ezGesture swipeDown = ezGesture(100, EZ_DOWN);
 
 void setup() {
   ez.begin();
-  ez.Screen.spriteBuffer();     // Prevents screen flicker when updating number
-  ez.Screen.longPressTime = 1500;
+  ctrLbl.spriteBuffer();     // Prevents screen flicker when updating number
+  Screen.longPressTime = 1500;
+  ctrLbl.draw();
+  ctrLbl.refresh();
 }
 
 void loop() {
   ez.update();
 }
 
-ON(ez.Screen, E_TOUCH) {
+ON(Screen, E_TOUCH) {
   counter++;
   sprintf(tmp, "%04d", counter);
   ctrLbl.text = tmp;
@@ -25,7 +27,7 @@ ON(ez.Screen, E_TOUCH) {
   ctrLbl.refresh();
 }
 
-ON(ez.Screen, E_LONGPRESSING) {
+ON(Screen, E_LONGPRESSING) {
   counter = 0;
   ctrLbl.text = "0000";
   ctrLbl.draw();

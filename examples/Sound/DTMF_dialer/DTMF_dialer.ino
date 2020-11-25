@@ -20,8 +20,8 @@ uint8_t       columns = 4;
 
 void setup() {
 	ez.begin();
-  ez.Screen.colors.fill = BLACK;
-	ez.Screen.glissando = true;
+  Screen.colors.fill = BLACK;
+	Screen.glissando = true;
   M5.IMU.Init();
   row_gen.gain  = col_gen.gain   = 0.3;
   row_gen.decay = col_gen.decay = 50;   // min tone length
@@ -36,7 +36,7 @@ void loop() {
 void doButtons() {
   uint16_t scr_w = M5.Lcd.width();
   uint16_t scr_h = M5.Lcd.height();
-  ez.Screen.set(0, 0, scr_w, scr_h);
+  Screen.set(0, 0, scr_w, scr_h);
   uint8_t  btn_w = (scr_w / columns) - MARGIN;
   uint8_t  btn_h = (scr_h / 4) - MARGIN;
 
@@ -49,10 +49,12 @@ void doButtons() {
   for (uint8_t r = 0; r < 4; r++) {
     for (uint8_t c = 0; c < columns; c++) {
       uint8_t i = (r * 4) + c;
-      key[i].x          = c * (scr_w / columns) + (MARGIN / 2);
-      key[i].y          = r * (scr_h / 4) + (MARGIN / 2);
-      key[i].w          = btn_w;
-      key[i].h          = btn_h;
+      key[i].set(
+        c * (scr_w / columns) + (MARGIN / 2),
+        r * (scr_h / 4) + (MARGIN / 2),
+        btn_w,
+        btn_h
+      );
       key[i].colors     = offColors;
       key[i].onColors   =  onColors;
       key[i].label.font = FSSB18;
@@ -65,14 +67,14 @@ void doButtons() {
   key[12].label.font = FSSB24;
   key[12].label.dy = 8;
 
-  ez.draw();
+  Screen.focus();
 }
 
 ON(ez, E_TOUCH) {
   WITH(ezButton, b) {
     if (!b.userData) return;
     uint8_t k = b.userData - 1;
-    ez.Sound.waitForSilence(50);
+    Sound.waitForSilence(50);
     row_gen.freq = rowTones[k / 4];
     col_gen.freq = colTones[k % 4];
     row_gen.start();

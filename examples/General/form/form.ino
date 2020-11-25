@@ -34,8 +34,8 @@ ezLabel   thankyouLbl   (thankyou, 0, 0, 320, 250, "Thank you!",
 
 void setup() {
   ez.begin();
-  ez.Screen.spriteBuffer(320, 500);
-  ez.Screen.colors.fill = LIGHTYELLOW;
+  Screen.spriteBuffer(320, 500);
+  Screen.colors.fill = LIGHTYELLOW;
 }
 
 void loop() {
@@ -43,37 +43,30 @@ void loop() {
 }
 
 ON(reset, E_TAPPED | E_PRESSED) {
+  Screen.clear();
   ESP.restart();
-}
-
-void requiredFieldsWhite() {
-  name.colors.fill = address.colors.fill = zip.colors.fill = WHITE;
-  city.colors.fill = terms.colors.fill = WHITE;
 }
 
 ON(submit, E_TAPPED | E_PRESSED) {
   bool incomplete = false;
-  requiredFieldsWhite();
+  name.colors.fill = address.colors.fill = zip.colors.fill = WHITE;
+  city.colors.fill = terms.colors.fill = WHITE;
   if (name.text    == "") { name   .colors.fill = PINK; incomplete = true; }
   if (address.text == "") { address.colors.fill = PINK; incomplete = true; }
   if (zip.text     == "") { zip    .colors.fill = PINK; incomplete = true; }
   if (city.text    == "") { city   .colors.fill = PINK; incomplete = true; }
   if (!terms)             { terms  .colors.fill = PINK; incomplete = true; }
   if (incomplete) {
-    ez.Screen.draw();
-    ez.Screen.push();
+    Screen.draw();
+    Screen.push();
   } else {
+    thankyou.focus();
     Serial.println("\nYou submitted:\n");
     Serial.print((ms) ? "Ms " : "Mr. ");
     Serial.println(name.text);
     Serial.println(address.text);
     Serial.print(zip.text); Serial.print("  ");Serial.println(city.text);
     if (newsletter) Serial.println("(wants newsletter)");
-
-    requiredFieldsWhite();
-    newsletter = true;
-    terms = false;
-    thankyou.focus();
   }
 }
 

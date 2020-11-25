@@ -17,7 +17,7 @@
 #define EZ_THEME              4537
 
 
-#define THEME_FONT            nullptr
+#define THEME_FONT            ezFont()
 #define THEME_COLORS          { EZ_THEME, EZ_THEME, EZ_THEME }
 
 

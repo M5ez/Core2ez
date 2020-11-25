@@ -13,18 +13,18 @@ class ezRadiobutton : public ezWidget {
                 String text_           = "",
                 bool value_            = false,
                 WidgetColors colors_   = THEME_COLORS,
-                const GFXfont* font_   = THEME_FONT);
+                ezFont font_   = THEME_FONT);
 
   ezRadiobutton(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID,
                 int16_t w_ = 0, int16_t h_ = 0,
                 String text_           = "",
                 bool value_            = false,
                 WidgetColors colors_   = THEME_COLORS,
-                const GFXfont* font_   = THEME_FONT);
+                ezFont font_   = THEME_FONT);
 
   void init(ezWidget* pwPtr,
             int16_t x_, int16_t y_, int16_t w_, int16_t h_, String text_,
-            bool value_, WidgetColors colors_, const GFXfont* font_);
+            bool value_, WidgetColors colors_, ezFont font_);
 
                   explicit operator bool();
   ezRadiobutton&  operator=(bool value_);

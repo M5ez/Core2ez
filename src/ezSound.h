@@ -126,4 +126,6 @@ class ezSynth {
   int16_t _sbuf[BUFLEN];
 };
 
+extern ezSound Sound;
+
 #endif /* _M5SOUND_H_ */

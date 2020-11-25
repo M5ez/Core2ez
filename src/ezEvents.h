@@ -11,8 +11,8 @@
 #define EXP3(x, y) x ## y
 #define EXP2(x, y) EXP3(x, y)
 #define EXP(x) EXP2(x, __LINE__)
-#define ON(widget, event) \
-  ezEventAdd EXP(eventAdd) (EXP(ezHandler), widget, event); \
+#define ON(widget, ...) \
+  ezEventAdd EXP(eventAdd) (EXP(ezHandler), widget, ##__VA_ARGS__); \
   void EXP(ezHandler)()
 
 #define WITH(widget_type, variable) \
@@ -23,7 +23,7 @@
 class ezWidget;
 class ezGesture;
 
-#define NUMEVENTS       14
+#define NUMEVENTS       12
 #define E_NONE          0x0000
 #define E_TOUCH         0x0001
 #define E_RELEASE       0x0002
@@ -37,8 +37,6 @@ class ezGesture;
 #define E_LONGPRESSED   0x0200
 #define E_LONGPRESSING  0x0400
 #define E_CHANGED       0x0800
-#define E_FOCUS         0x1000
-#define E_BLUR          0x2000
 
 #define E_ALL           0xFFFF
 
@@ -80,8 +78,8 @@ class Eventful {
 // so that event handlers can be set up from outside functions with ON.
 class ezEventAdd {
  public:
-  ezEventAdd(void(*func)(), ezWidget&  widget,  uint16_t event);
-  ezEventAdd(void(*func)(), ezGesture& gesture, uint16_t event);
+  ezEventAdd(void(*func)(), ezWidget&  widget,  uint16_t event = E_ALL);
+  ezEventAdd(void(*func)(), ezGesture& gesture, uint16_t event = E_ALL);
 };
 
 

@@ -1,3 +1,6 @@
+#ifndef _EZDISPLAYZONE_H_
+#define _EZDISPLAYZONE_H_
+
 #include <ezPointAndZone.h>
 
 #include <M5Core2.h>
@@ -23,7 +26,23 @@
 
 #include <Free_Fonts.h>
 
+class ezDisplayZone;
 
+class ezFont {
+ public:
+  ezFont();
+  ezFont(uint8_t font_);
+  ezFont(const GFXfont* gfxFont_);
+  operator bool();
+  ezFont& operator=(const GFXfont* gfxFont_) ;
+  ezFont& operator=(uint8_t font_);
+  void set(ezDisplayZone& dz);
+  int16_t height();
+  uint8_t textsize;
+ private:
+  const GFXfont* _gfxFont;
+  uint8_t _font;
+};
 
 
 class ezDisplayZone : public Zone {
@@ -35,7 +54,7 @@ class ezDisplayZone : public Zone {
   virtual void spriteBuffer(int16_t w_ = -1, int16_t h_ = -1);
   void     direct();
   void     refresh();
-  void     ezFont(const GFXfont* gfxFont);
+  void     setFont(ezFont& f);
   void     drawRect(uint32_t color);
   void     fillRect(uint32_t color);
   void     drawRoundRect(int32_t radius, uint32_t color);
@@ -117,3 +136,6 @@ class ezDisplayZone : public Zone {
   Point             offset     = Point(0, 0);
   ezDisplayZone*    _parent    = nullptr;
 };
+
+
+#endif /* _EZDISPLAYZONE_H_ */

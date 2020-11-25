@@ -8,7 +8,7 @@ ezCheckbox::ezCheckbox(ezWidget& parentWidget,
                        String text_ /* = "" */,
                        bool value_ /* = false */,
                        WidgetColors colors_ /* = THEME_COLORS */,
-                       const GFXfont* font_ /* = THEME_FONT */) {
+                       ezFont font_ /* = THEME_FONT */) {
   init(&parentWidget, x_, y_, w_, h_, text_, value_, colors_, font_);
 }
 
@@ -18,22 +18,22 @@ ezCheckbox::ezCheckbox(int16_t x_ /* = EZ_INVALID */,
                        String text_ /* = "" */,
                        bool value_ /* = false */,
                        WidgetColors colors_ /* = THEME_COLORS */,
-                       const GFXfont* font_ /* = THEME_FONT */) {
+                       ezFont font_ /* = THEME_FONT */) {
   init(nullptr, x_, y_, w_, h_, text_, value_, colors_, font_);
 }
 
 void ezCheckbox::init(ezWidget* pwPtr,
                       int16_t x_, int16_t y_, int16_t w_, int16_t h_,
                       String text_, bool value_, WidgetColors colors_,
-                      const GFXfont* font_) {
+                      ezFont font_) {
   type       = W_CHECKBOX;
   set(x_, y_, w_, h_);
-  colors     = ez.Theme.colors(colors_,   ez.Theme.chk_colors);
+  colors     = Theme.colors(colors_,   Theme.chk_colors);
   value      = value_;
-  label.font = (font_ != THEME_FONT) ? font_ : ez.Theme.chk_font;
+  label.font = font_ ? font_ : Theme.chk_font;
   label.text = text_;
   add(label);
-  if (pwPtr) pwPtr->add(*this); else ez.Screen.add(*this);
+  if (pwPtr) pwPtr->add(*this); else Screen.add(*this);
 }
 
 
