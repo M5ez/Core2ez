@@ -18,9 +18,9 @@ void loop() {
 
 ON(playButton, E_TAPPED + E_PRESSED) {
   c5.playFor(5000);
-  Sound.delay(1000);
+  ezSound.delay(1000);
   e5.playFor(4000);
-  Sound.delay(1000);
+  ezSound.delay(1000);
   g5.playFor(3000);
-  Sound.waitForSilence();
+  ezSound.waitForSilence();
 }

@@ -1,5 +1,5 @@
 #include "ezButton.h"
-#include <ezRoot.h>
+#include <ez.h>
 
 ezButton::ezButton(ezWidget& parentWidget,
                    int16_t x_ /* = EZ_INVALID */, int16_t y_ /* = EZ_INVALID */,
@@ -26,14 +26,14 @@ void ezButton::init(ezWidget* pwPtr,
                     ezFont font_) {
   type       = W_BUTTON;
   set(x_, y_, w_, h_);
-  colors       = Theme.colors(colors_,   Theme.btn_colors);
-  onColors     = Theme.colors(onColors_, Theme.btn_onColors);
-  label.font   = font_ ? font_ : Theme.btn_font;
+  colors       = ezTheme.colors(colors_,   ezTheme.btn_colors);
+  onColors     = ezTheme.colors(onColors_, ezTheme.btn_onColors);
+  label.font   = font_ ? font_ : ezTheme.btn_font;
   label.text   = text_;
   label.align  = EZ_CENTER;
   label.valign = EZ_CENTER;
   add(label);
-  if (pwPtr) pwPtr->add(*this); else Screen.add(*this);
+  if (pwPtr) pwPtr->add(*this); else ezScreen.add(*this);
 }
 
 

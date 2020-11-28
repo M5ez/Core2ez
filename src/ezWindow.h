@@ -25,6 +25,6 @@ class ezWindow : public ezWidget {
 
 };
 
-extern ezWindow Screen;
+extern ezWindow ezScreen;
 
 #endif /* _EZWINDOW_H_ */

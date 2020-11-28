@@ -17,7 +17,7 @@
 #include <ezWindow.h>
 #include <ezList.h>
 #include <ezLayout.h>
-#include <ezRoot.h>
+#include <ez.h>
 
 
 

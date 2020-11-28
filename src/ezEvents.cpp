@@ -1,5 +1,5 @@
 #include <ezEvents.h>
-#include <ezRoot.h>
+#include <ez.h>
 
 
 // Eventful class

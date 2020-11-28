@@ -7,15 +7,7 @@
 #define   DISPLAY           M5.Lcd
 
 
-// ezTouch class
-
-/* static */ ezTouch* ezTouch::instance = nullptr;
-
-ezTouch::ezTouch() {
-  if (!instance) instance = this;
-}
-
-void ezTouch::begin() {
+void ezTouchClass::begin() {
   Wire1.begin(21, 22);
   pinMode(CST_INT, INPUT);
 
@@ -35,11 +27,11 @@ void ezTouch::begin() {
 //   }
 }
 
-bool ezTouch::ispressed() { return (digitalRead(CST_INT) == LOW); }
+bool ezTouchClass::ispressed() { return (digitalRead(CST_INT) == LOW); }
 
 // Single register read and write
 
-uint8_t ezTouch::ft6336(uint8_t reg) {
+uint8_t ezTouchClass::ft6336(uint8_t reg) {
   Wire1.beginTransmission((uint8_t)CST_DEVICE_ADDR);
   Wire1.write(reg);
   Wire1.endTransmission();
@@ -47,7 +39,7 @@ uint8_t ezTouch::ft6336(uint8_t reg) {
   return Wire1.read();
 }
 
-void ezTouch::ft6336(uint8_t reg, uint8_t value) {
+void ezTouchClass::ft6336(uint8_t reg, uint8_t value) {
   Wire1.beginTransmission(CST_DEVICE_ADDR);
   Wire1.write(reg);
   Wire1.write((uint8_t)value);
@@ -55,7 +47,7 @@ void ezTouch::ft6336(uint8_t reg, uint8_t value) {
 }
 
 // Reading size bytes into data
-void ezTouch::ft6336(uint8_t reg, uint8_t size, uint8_t* data) {
+void ezTouchClass::ft6336(uint8_t reg, uint8_t size, uint8_t* data) {
   Wire1.beginTransmission((uint8_t)CST_DEVICE_ADDR);
   Wire1.write(reg);
   Wire1.endTransmission();
@@ -63,18 +55,18 @@ void ezTouch::ft6336(uint8_t reg, uint8_t size, uint8_t* data) {
   for (uint8_t i = 0; i < size; i++) data[i] = Wire1.read();
 }
 
-uint8_t ezTouch::interval(uint8_t ivl) {
+uint8_t ezTouchClass::interval(uint8_t ivl) {
   ft6336(0x88, ivl);
   return interval();
 }
 
-uint8_t ezTouch::interval() {
+uint8_t ezTouchClass::interval() {
   _interval = ft6336(0x88);
   return _interval;
 }
 
 // This is normally called from update()
-bool ezTouch::read() {
+bool ezTouchClass::read() {
   // true if real read, not a "come back later"
   wasRead = false;
 
@@ -130,9 +122,9 @@ bool ezTouch::read() {
   return true;
 }
 
-void ezTouch::update() { read(); }
+void ezTouchClass::update() { read(); }
 
-void ezTouch::dump() {
+void ezTouchClass::dump() {
   uint8_t data[256] = {0};
   ft6336(0x00, 0x80, data);
   ft6336(0x80, 0x80, data + 0x80);
@@ -146,4 +138,4 @@ void ezTouch::dump() {
   Serial.printf("\n\n\n");
 }
 
-ezTouch Touch;
+ezTouchClass& ezTouch = ezTouchClass::instance();

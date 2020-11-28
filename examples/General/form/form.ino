@@ -34,8 +34,8 @@ ezLabel   thankyouLbl   (thankyou, 0, 0, 320, 250, "Thank you!",
 
 void setup() {
   ez.begin();
-  Screen.spriteBuffer(320, 500);
-  Screen.colors.fill = LIGHTYELLOW;
+  ezScreen.spriteBuffer(320, 500);
+  ezScreen.colors.fill = LIGHTYELLOW;
 }
 
 void loop() {
@@ -43,7 +43,7 @@ void loop() {
 }
 
 ON(reset, E_TAPPED | E_PRESSED) {
-  Screen.clear();
+  ezScreen.clear();
   ESP.restart();
 }
 
@@ -57,8 +57,8 @@ ON(submit, E_TAPPED | E_PRESSED) {
   if (city.text    == "") { city   .colors.fill = PINK; incomplete = true; }
   if (!terms)             { terms  .colors.fill = PINK; incomplete = true; }
   if (incomplete) {
-    Screen.draw();
-    Screen.push();
+    ezScreen.draw();
+    ezScreen.push();
   } else {
     thankyou.focus();
     Serial.println("\nYou submitted:\n");

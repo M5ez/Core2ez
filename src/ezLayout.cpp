@@ -17,5 +17,5 @@ ezLayout::ezLayout(int16_t x_ /* = EZ_INVALID */, int16_t y_ /* = EZ_INVALID */,
   type = W_LAYOUT;
   set(x_, y_, w_, h_);
   gutter = gutter_;
-  Screen.add(*this);
+  ezScreen.add(*this);
 }

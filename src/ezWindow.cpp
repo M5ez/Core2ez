@@ -1,6 +1,7 @@
 #include "ezWindow.h"
 
-#include <ezRoot.h>
+#include <ezTheme.h>
+#include <ez.h>
 
 ezWindow::ezWindow(ezWidget& parentWidget,
                    int16_t x_ /* = 0 */, int16_t y_ /* = 0 */,
@@ -20,7 +21,8 @@ void ezWindow::init(ezWidget* pwPtr,
                     WidgetColors colors_) {
   type = W_WINDOW;
   set(x_, y_, w_, h_);
-  colors     = Theme.colors(colors_, Theme.wdw_colors);
+  ezThemeClass& t = ezThemeClass::instance();
+  colors     = t.colors(colors_, t.wdw_colors);
   if (pwPtr) pwPtr->add(*this);
 }
 
@@ -38,3 +40,5 @@ void ezWindow::blur() {
 bool ezWindow::hasFocus() {
   return (ez._widgets.back() == this);
 }
+
+ezWindow ezScreen;

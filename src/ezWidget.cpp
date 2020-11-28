@@ -1,5 +1,5 @@
 #include <ezWidget.h>
-#include <ezRoot.h>
+#include <ez.h>
 #include <ezGesture.h>
 #include <ezValues.h>
 #include <Arduino.h>
@@ -114,37 +114,37 @@ void ezWidget::_drawArrow(int16_t direction) {
   if (!parent()) return;
   Point tip, tail1, tail2;
 
-  if        (Theme.arrowValign == EZ_TOP   ) {
-    tip.y = y + Theme.arrowPadding + (Theme.arrowWidth / 2);
-  } else if (Theme.arrowValign == EZ_BOTTOM) {
-    tip.y = y + h - Theme.arrowPadding - (Theme.arrowWidth / 2);
+  if        (ezTheme.arrowValign == EZ_TOP   ) {
+    tip.y = y + ezTheme.arrowPadding + (ezTheme.arrowWidth / 2);
+  } else if (ezTheme.arrowValign == EZ_BOTTOM) {
+    tip.y = y + h - ezTheme.arrowPadding - (ezTheme.arrowWidth / 2);
   } else {
     tip.y = y + (h / 2);
   }
-  tail1.y = tip.y - (Theme.arrowWidth / 2);
-  tail2.y = tip.y + (Theme.arrowWidth / 2);
+  tail1.y = tip.y - (ezTheme.arrowWidth / 2);
+  tail2.y = tip.y + (ezTheme.arrowWidth / 2);
 
   if        (direction == EZ_LEFT) {
-    tip.x = x + Theme.arrowPadding;
-    tail1.x = tail2.x = tip.x + Theme.arrowLength;
+    tip.x = x + ezTheme.arrowPadding;
+    tail1.x = tail2.x = tip.x + ezTheme.arrowLength;
   } else if (direction == EZ_RIGHT) {
-    tip.x = x + w - Theme.arrowPadding;
-    tail1.x = tail2.x = tip.x - Theme.arrowLength;
+    tip.x = x + w - ezTheme.arrowPadding;
+    tail1.x = tail2.x = tip.x - ezTheme.arrowLength;
   } else if (direction == EZ_UP) {
     tip.x = x + (w / 2);
-    tip.y = y + Theme.arrowPadding;
-    tail1.y = tail2.y = tip.y + Theme.arrowLength;
-    tail1.x = tip.x - (Theme.arrowWidth / 2);
-    tail2.x = tip.x + (Theme.arrowWidth / 2);
+    tip.y = y + ezTheme.arrowPadding;
+    tail1.y = tail2.y = tip.y + ezTheme.arrowLength;
+    tail1.x = tip.x - (ezTheme.arrowWidth / 2);
+    tail2.x = tip.x + (ezTheme.arrowWidth / 2);
   } else {
     tip.x = x + (w / 2);
-    tip.y = y + h - Theme.arrowPadding;
-    tail1.y = tail2.y = tip.y - Theme.arrowLength;
-    tail1.x = tip.x - (Theme.arrowWidth / 2);
-    tail2.x = tip.x + (Theme.arrowWidth / 2);
+    tip.y = y + h - ezTheme.arrowPadding;
+    tail1.y = tail2.y = tip.y - ezTheme.arrowLength;
+    tail1.x = tip.x - (ezTheme.arrowWidth / 2);
+    tail2.x = tip.x + (ezTheme.arrowWidth / 2);
   }
-  parent()->fillTriangle(tip, tail1, tail2, Theme.arrowFill);
-  parent()->drawTriangle(tip, tail1, tail2, Theme.arrowOutline);
+  parent()->fillTriangle(tip, tail1, tail2, ezTheme.arrowFill);
+  parent()->drawTriangle(tip, tail1, tail2, ezTheme.arrowOutline);
 }
 
 
@@ -363,13 +363,11 @@ void ezWidget::drawChildren() {
     }
   }
 
-  pixels_w += --count_w * gutter;
-  pixels_h += --count_h * gutter;
+  if (count_w) pixels_w += --count_w * gutter;
+  if (count_h) pixels_h += --count_h * gutter;
 
   if (autoSize) {
     if (pixels_w > w || pixels_h > h) {
-      Serial.printf("sprite! %d %d\n",
-                    pixels_w ? pixels_w : w, pixels_h ? pixels_h : h);
       spriteBuffer(pixels_w ? pixels_w : w, pixels_h ? pixels_h : h);
     } else {
       direct();

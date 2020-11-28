@@ -1,5 +1,5 @@
 #include "ezButton.h"
-#include <ezRoot.h>
+#include <ez.h>
 
 ezCheckbox::ezCheckbox(ezWidget& parentWidget,
                        int16_t x_ /* = EZ_INVALID */,
@@ -28,12 +28,12 @@ void ezCheckbox::init(ezWidget* pwPtr,
                       ezFont font_) {
   type       = W_CHECKBOX;
   set(x_, y_, w_, h_);
-  colors     = Theme.colors(colors_,   Theme.chk_colors);
+  colors     = ezTheme.colors(colors_,   ezTheme.chk_colors);
   value      = value_;
-  label.font = font_ ? font_ : Theme.chk_font;
+  label.font = font_ ? font_ : ezTheme.chk_font;
   label.text = text_;
   add(label);
-  if (pwPtr) pwPtr->add(*this); else Screen.add(*this);
+  if (pwPtr) pwPtr->add(*this); else ezScreen.add(*this);
 }
 
 

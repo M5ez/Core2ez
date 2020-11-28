@@ -1,5 +1,5 @@
 #include <ezGesture.h>
-#include <ezRoot.h>
+#include <ez.h>
 
 ezGesture::ezGesture(uint16_t minDistance_,
                  int16_t direction_ /* = EZ_INVALID */,

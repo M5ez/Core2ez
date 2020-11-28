@@ -3,15 +3,15 @@
 
 void setup() {
   ez.begin();
-  Screen.spriteBuffer();
+  ezScreen.spriteBuffer();
 }
 
 void loop() {
   ez.update();
-  if (Touch.changed) {
-    Screen.clear();
-    Screen.fillCircle(Touch.point[0], 50, RED);
-    Screen.fillCircle(Touch.point[1], 50, BLUE);
-    Screen.push();
+  if (ezTouch.changed) {
+    ezScreen.clear();
+    ezScreen.fillCircle(ezTouch.point[0], 50, RED);
+    ezScreen.fillCircle(ezTouch.point[1], 50, BLUE);
+    ezScreen.push();
   }
 }

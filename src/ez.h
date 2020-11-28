@@ -1,14 +1,22 @@
-#ifndef _EZROOT_H_
-#define _EZROOT_H_
+#ifndef _EZ_H_
+#define _EZ_H_
 
 #include <Core2ez.h>
 
-#define MAX_WINDOWSTACK       10
+#define MAX_WINDOWSTACK       15
 
-class ezRoot : public ezWidget {
+class ezClass : public ezWidget {
  public:
-  static ezRoot*              instance;
-                              ezRoot();
+  static ezClass& instance() {
+    static ezClass INSTANCE;
+    return INSTANCE;
+  }
+  ezClass(ezClass const&)         = delete;
+  void operator=(ezClass const&)  = delete;
+ private:
+  ezClass();
+
+ public:
   void                        begin();
   void                        update();
   void                        draw();
@@ -26,10 +34,7 @@ class ezRoot : public ezWidget {
   uint32_t                    _startTime [2]  = {0, 0};
 };
 
-extern ezRoot ez;
-extern ezTheme Theme;
-
-#define ROOT                  ezRoot::instance
+extern ezClass& ez;
 
 
-#endif /* _EZROOT_H_ */
+#endif /* _EZ_H_ */

@@ -1,6 +1,6 @@
 #include "ezDisplayZone.h"
 #include <ezValues.h>
-#include <ezRoot.h>
+#include <ez.h>
 
 
 ezFont::ezFont() {

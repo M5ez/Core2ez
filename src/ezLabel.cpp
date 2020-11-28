@@ -1,5 +1,5 @@
 #include "ezLabel.h"
-#include <ezRoot.h>
+#include <ez.h>
 
 ezLabel::ezLabel(ezWidget& parentWidget,
                  int16_t x_ /* = EZ_INVALID */, int16_t y_ /* = EZ_INVALID */,
@@ -34,15 +34,15 @@ void ezLabel::init(ezWidget* pwPtr,
   type    = W_LABEL;
   set(x_, y_, w_, h_);
   text    = text_;
-  colors  = Theme.colors(colors_, Theme.lbl_colors);
-  font    = font_ ? font_ : Theme.lbl_font;
+  colors  = ezTheme.colors(colors_, ezTheme.lbl_colors);
+  font    = font_ ? font_ : ezTheme.lbl_font;
   align   = align_;
   valign  = valign_;
   padding = padding_;
   dx      = dx_;
   dy      = dy_;
   numb    = true;
-  if (pwPtr) pwPtr->add(*this); else Screen.add(*this);
+  if (pwPtr) pwPtr->add(*this); else ezScreen.add(*this);
 }
 
 void ezLabel::eventPre() { };

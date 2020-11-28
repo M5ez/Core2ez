@@ -30,14 +30,14 @@ void ezListBox::init(ezWidget* pwPtr,
                      ezFont font_, uint8_t spacing_) {
   type                = W_LISTBOX;
   set(x_, y_, w_, h_);
-  colors              = Theme.colors(colors_, Theme.lst_colors);
+  colors              = ezTheme.colors(colors_, ezTheme.lst_colors);
   itemNormal          = colors;
   itemNormal.outline  = NODRAW;
-  itemSelected        = Theme.colors(itemSelected_, Theme.lsl_colors);
-  font                = font_ ? font_ : Theme.lst_font;
+  itemSelected        = ezTheme.colors(itemSelected_, ezTheme.lsl_colors);
+  font                = font_ ? font_ : ezTheme.lst_font;
   spacing             = spacing_;
   autoSize            = true;
-  if (pwPtr) pwPtr->add(*this); else Screen.add(*this);
+  if (pwPtr) pwPtr->add(*this); else ezScreen.add(*this);
 }
 
 

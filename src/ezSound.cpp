@@ -5,14 +5,7 @@
 #include <driver/i2s.h>
 
 
-/* static */ ezSound* ezSound::instance;
-
-ezSound::ezSound() {
-  if (!instance) instance = this;
-  _bytes_left = 0;
-}
-
-void ezSound::begin() {
+void ezSoundClass::begin() {
   // populate sinewave table
   for (uint8_t n = 0; n < 100; n++) {
     _sineTable[n] = sin((float)n * TWO_PI / 100);
@@ -48,7 +41,7 @@ void ezSound::begin() {
   _silentSince = millis();
 }
 
-void ezSound::delay(uint16_t msec) {
+void ezSoundClass::delay(uint16_t msec) {
   uint32_t start = millis();
   while (millis() - start < msec) {
     update();
@@ -56,21 +49,21 @@ void ezSound::delay(uint16_t msec) {
   }
 }
 
-void ezSound::waitForSilence(uint16_t msec /* = 0 */) {
+void ezSoundClass::waitForSilence(uint16_t msec /* = 0 */) {
   while (!silence(msec)) {
     update();
     yield();
   }
 }
 
-bool ezSound::silence(uint16_t msec /* = 0 */) {
+bool ezSoundClass::silence(uint16_t msec /* = 0 */) {
   if (!_silentSince) return false;
   if (millis() - _silentSince >= msec) return true;
   return false;
 }
 
 
-void ezSound::update() {
+void ezSoundClass::update() {
   bool silent = true;
   // If last packet is gone, make a new one
   if (!_bytes_left) {
@@ -185,7 +178,7 @@ bool ezSynth::fillSbuf() {
     case SINE:
       for(uint16_t i = 0; i < BUFLEN; i++) {
         uint8_t t = (uint16_t)((phase + (i * steps)) * 100) % 100;
-        _sbuf[i] = ezSound::instance->_sineTable[t] * amplitude;
+        _sbuf[i] = ezSoundClass::instance()._sineTable[t] * amplitude;
       }
       break;
     case SQUARE:
@@ -248,4 +241,4 @@ int16_t ezSynth::scaleAmplitude(float gain) {
   return pow(gain * 181, 2);
 }
 
-ezSound Sound;
+ezSoundClass& ezSound = ezSoundClass::instance();

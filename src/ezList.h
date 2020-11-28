@@ -3,7 +3,7 @@
 
 #include <ezWidget.h>
 #include <ezLabel.h>
-#include <ezRoot.h>
+#include <ez.h>
 
 class ezListBox : public ezWidget {
  public:

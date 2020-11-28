@@ -159,10 +159,18 @@
 // Strangely, the value 13 leads to slightly more frequent updates than 10
 #define DEFAULT_INTERVAL	13
 
-class ezTouch {
+class ezTouchClass {
  public:
-  static ezTouch* instance;
-  ezTouch();
+  static ezTouchClass& instance() {
+    static ezTouchClass INSTANCE;
+    return INSTANCE;
+  }
+  ezTouchClass(ezTouchClass const&)         = delete;
+  void operator=(ezTouchClass const&)  = delete;
+ private:
+  ezTouchClass() {}
+
+ public:
   void begin();
   uint8_t ft6336(uint8_t reg);
   void ft6336(uint8_t reg, uint8_t value);
@@ -183,6 +191,6 @@ class ezTouch {
   uint32_t _lastRead;
 };
 
-extern ezTouch Touch;
+extern ezTouchClass& ezTouch;
 
 #endif /* _EZTOUCH_H_ */

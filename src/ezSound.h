@@ -84,10 +84,18 @@ enum waveform_t {
   NOISE
 };
 
-class ezSound {
+class ezSoundClass {
  public:
-  static ezSound* instance;
-  ezSound();
+  static ezSoundClass& instance() {
+    static ezSoundClass INSTANCE;
+    return INSTANCE;
+  }
+  ezSoundClass(ezSoundClass const&)    = delete;
+  void operator=(ezSoundClass const&)  = delete;
+ private:
+  ezSoundClass() {}
+
+ public:
   void begin();
   void update();
   void delay(uint16_t msec);
@@ -99,8 +107,8 @@ class ezSound {
   uint32_t _silentSince;
   int16_t _buf[BUFLEN * 2];
   int32_t _mixbuf[BUFLEN];
-  size_t _bytes_left;
-  bool _amp_on;
+  size_t _bytes_left          = 0;
+  bool _amp_on                = false;
 };
 
 class ezSynth {
@@ -120,12 +128,12 @@ class ezSynth {
   uint16_t attack, decay, release;
   uint32_t startTime, stopTime;
  protected:
-  friend class ezSound;
+  friend class ezSoundClass;
   inline int16_t scaleAmplitude(float gain);
   float _startEnvelope;
   int16_t _sbuf[BUFLEN];
 };
 
-extern ezSound Sound;
+extern ezSoundClass& ezSound;
 
 #endif /* _M5SOUND_H_ */

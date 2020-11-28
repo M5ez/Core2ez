@@ -1,29 +1,26 @@
-#include "ezRoot.h"
+#include "ez.h"
 
 
-/* static */ ezRoot* ezRoot::instance = nullptr;
-
-ezRoot::ezRoot() {
-  if (!instance) instance = this;
+ezClass::ezClass() {
   type = W_ROOT;
   set(0, 0, 320, 240);
   // numb = true;
 }
 
-void ezRoot::begin() {
+void ezClass::begin() {
   M5.begin();         // Never hurts: just returns on subsequent calls
-  Sound.begin();
-  Touch.begin();
+  ezSound.begin();
+  ezTouch.begin();
 }
 
-void ezRoot::add(ezWindow& w) {
+void ezClass::add(ezWindow& w) {
   if (w.parent()) w.parent()->remove(w);
   _widgets.push_back(&w);
   while (_widgets.size() > MAX_WINDOWSTACK) _widgets.erase(_widgets.begin());
   w._parent = this;
 }
 
-void ezRoot::remove(ezWindow& w) {
+void ezClass::remove(ezWindow& w) {
   for (int i = _widgets.size() - 1; i >= 0; --i) {
     if (_widgets[i] == &w) {
       _widgets.erase(_widgets.begin() + i);
@@ -32,14 +29,14 @@ void ezRoot::remove(ezWindow& w) {
   }
 }
 
-void ezRoot::add   (ezGesture& g) { ezWidget::add   (g); }
-void ezRoot::remove(ezGesture& g) { ezWidget::remove(g); }
+void ezClass::add   (ezGesture& g) { ezWidget::add   (g); }
+void ezClass::remove(ezGesture& g) { ezWidget::remove(g); }
 
 // Only windows not other widgets can be added to the root.
-void ezRoot::add(ezWidget& w) { }
-void ezRoot::remove(ezWidget& w) { }
+void ezClass::add(ezWidget& w) { }
+void ezClass::remove(ezWidget& w) { }
 
-void ezRoot::draw() {
+void ezClass::draw() {
 
   // root is special in that it only draws the top widget
   if (_widgets.size()) {
@@ -51,17 +48,17 @@ void ezRoot::draw() {
   }
 }
 
-void ezRoot::update() {
+void ezClass::update() {
 
-  if (!_widgets.size()) Screen.focus();
+  if (!_widgets.size()) ezScreen.focus();
 
-  Touch.update();
-  Sound.update();
+  ezTouch.update();
+  ezSound.update();
 
   e = Event();
 
   Point curr;
-  curr = Touch.point[_finger];
+  curr = ezTouch.point[_finger];
 
   Point& prev = _previous[_finger];
 
@@ -103,6 +100,4 @@ void ezRoot::update() {
   _finger = !_finger;
 }
 
-ezRoot ez;
-ezTheme Theme;
-ezWindow Screen;
+ezClass& ez = ezClass::instance();

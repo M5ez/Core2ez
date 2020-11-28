@@ -1,5 +1,5 @@
 #include "ezButton.h"
-#include <ezRoot.h>
+#include <ez.h>
 
 ezRadiobutton::ezRadiobutton(ezWidget& parentWidget,
                              int16_t x_ /* = EZ_INVALID */,
@@ -28,12 +28,12 @@ void ezRadiobutton::init(ezWidget* pwPtr,
                          ezFont font_) {
   type       = W_RADIOBUTTON;
   set(x_, y_, w_, h_);
-  colors     = Theme.colors(colors_,   Theme.rdb_colors);
+  colors     = ezTheme.colors(colors_,   ezTheme.rdb_colors);
   value      = value_;
-  label.font = font_ ? font_ : Theme.rdb_font;
+  label.font = font_ ? font_ : ezTheme.rdb_font;
   label.text = text_;
   add(label);
-  if (pwPtr) pwPtr->add(*this); else Screen.add(*this);
+  if (pwPtr) pwPtr->add(*this); else ezScreen.add(*this);
 }
 
 

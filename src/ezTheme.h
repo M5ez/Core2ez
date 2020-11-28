@@ -4,7 +4,18 @@
 #include <ezWidget.h>
 #include <ezValues.h>
 
-struct ezTheme {
+class ezThemeClass {
+ public:
+  static ezThemeClass& instance() {
+    static ezThemeClass INSTANCE;
+    return INSTANCE;
+  }
+  ezThemeClass(ezThemeClass const&)    = delete;
+  void operator=(ezThemeClass const&)  = delete;
+ private:
+  ezThemeClass() {}
+
+ public:
 
                  // WidgetColors: fill,       text,      outline
 
@@ -57,5 +68,7 @@ struct ezTheme {
     return r;
   }
 };
+
+extern ezThemeClass& ezTheme;
 
 #endif /* _EZTHEME_H_ */
