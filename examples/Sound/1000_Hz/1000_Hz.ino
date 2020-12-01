@@ -8,12 +8,12 @@ ezButton btn(50, 80, 220, 80, "1000 Hz", THEME_COLORS, THEME_COLORS,  FSSB24);
 
 void setup() {
 	ez.begin();
+  btn.on(E_TOUCH  , doFunction { s.start(); });
+  btn.on(E_RELEASE, doFunction { s.stop();  });
 }
 
 void loop() {
 	ez.update();
 }
 
-ON(btn, E_TOUCH  ) { s.start() ; }
 
-ON(btn, E_RELEASE) { s.stop () ; }

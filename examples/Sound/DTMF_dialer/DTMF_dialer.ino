@@ -25,6 +25,24 @@ void setup() {
   M5.IMU.Init();
   row_gen.gain  = col_gen.gain   = 0.3;
   row_gen.decay = col_gen.decay = 50;   // min tone length
+
+  ez.on(E_TOUCH, doFunction {
+    if (eventWidget(ezButton, b)) {
+      if (!b->userData) return;
+      uint8_t k = b->userData - 1;
+      ezSound.waitForSilence(50);
+      row_gen.freq = rowTones[k / 4];
+      col_gen.freq = colTones[k % 4];
+      row_gen.start();
+      col_gen.start();
+    }
+  });
+
+  ez.on(E_RELEASE, doFunction {
+    row_gen.stop();
+    col_gen.stop();
+  });
+
   doButtons();
 }
 
@@ -59,7 +77,7 @@ void doButtons() {
       key[i].onColors   =  onColors;
       key[i].label.font = FSSB18;
       key[i].label.text = keyLabels[i];
-      key[i].userData = i + 1;
+      key[i].userData   = i + 1;
     }
   }
 
@@ -68,23 +86,6 @@ void doButtons() {
   key[12].label.dy = 8;
 
   ezScreen.focus();
-}
-
-ON(ez, E_TOUCH) {
-  WITH(ezButton, b) {
-    if (!b.userData) return;
-    uint8_t k = b.userData - 1;
-    ezSound.waitForSilence(50);
-    row_gen.freq = rowTones[k / 4];
-    col_gen.freq = colTones[k % 4];
-    row_gen.start();
-    col_gen.start();
-  }
-}
-
-ON(ez, E_RELEASE) {
-  row_gen.stop();
-  col_gen.stop();
 }
 
 bool checkRotation(uint16_t msec) {

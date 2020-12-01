@@ -10,17 +10,19 @@ ezButton playButton(50, 80, 220, 80, "C major");
 
 void setup() {
   ez.begin();
+
+  playButton.on(E_TAPPED + E_PRESSED, doFunction {
+    c5.playFor(5000);
+    ezSound.delay(1000);
+    e5.playFor(4000);
+    ezSound.delay(1000);
+    g5.playFor(3000);
+    ezSound.waitForSilence();
+  });
+
 }
 
 void loop() {
   ez.update();
 }
 
-ON(playButton, E_TAPPED + E_PRESSED) {
-  c5.playFor(5000);
-  ezSound.delay(1000);
-  e5.playFor(4000);
-  ezSound.delay(1000);
-  g5.playFor(3000);
-  ezSound.waitForSilence();
-}

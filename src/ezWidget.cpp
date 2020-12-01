@@ -46,10 +46,10 @@ bool ezWidget::inVirtual(Point& p) {
 }
 
 const char* ezWidget::typeName() {
-  const char* typeNames[11] = { "ezWidget", "ez", "ezWindow", "ezButton",
+  const char* typeNames[12] = { "ezWidget", "ez", "ezWindow", "ezButton",
                                 "ezLabel", "ezCheckBox", "ezRadiobutton",
                                 "ezInput", "ezLayout", "ezListBox",
-                                "ezListItem" };
+                                "ezListItem", "ezMenu" };
   return typeNames[type];
 }
 
@@ -200,8 +200,8 @@ void ezWidget::event() {
     fireEvent();
   } else if ((!!ez.e.widget) + (!!ez.e.gesture) > claims) {
     // Something added a widget or gesture pointer and it's not us, so
-    // one of the descendants must have claimed this event.
-    // So we fire it as a descendant event.
+    // one of our offspring must have claimed this event.
+    // So we fire it as an offspring event.
     fireEvent(true);
   }
 
@@ -331,6 +331,7 @@ void ezWidget::_eventProcess() {
 }
 
 /* virtual */ void ezWidget::draw() {
+  // Serial.println("ezWidget.draw(), type: " + (String)type + ", ptr: " + (String)(long)this);
   if (colors.fill    != NODRAW) clear();
   drawChildren();
   if (colors.outline != NODRAW && !sprite) drawRect(colors.outline);
@@ -348,17 +349,17 @@ void ezWidget::drawChildren() {
   uint8_t count_w           = 0;
   uint8_t count_h           = 0;
 
-  for (auto wdgtPtr : _widgets) {
-    ezWidget& wdgt = *wdgtPtr;
 
-    if (wdgt.setPos.x == EZ_AUTO) {
-      if (wdgt.setPos.w > 0) pixels_w += wdgt.setPos.w;
-      if (wdgt.setPos.w < 0 && wdgt.setPos.w > -100)  shares_w += abs(wdgt.setPos.w);
+  for (auto wdgt : _widgets) {
+
+    if (wdgt->setPos.x == EZ_AUTO) {
+      if (wdgt->setPos.w > 0) pixels_w += wdgt->setPos.w;
+      if (wdgt->setPos.w < 0 && wdgt->setPos.w > -100)  shares_w += abs(wdgt->setPos.w);
       count_w++;
     }
-    if (wdgt.setPos.y == EZ_AUTO) {
-      if (wdgt.setPos.h > 0) pixels_h += wdgt.setPos.h;
-      if (wdgt.setPos.h < 0 && wdgt.setPos.h > -100)  shares_h += abs(wdgt.setPos.h);
+    if (wdgt->setPos.y == EZ_AUTO) {
+      if (wdgt->setPos.h > 0) pixels_h += wdgt->setPos.h;
+      if (wdgt->setPos.h < 0 && wdgt->setPos.h > -100)  shares_h += abs(wdgt->setPos.h);
       count_h++;
     }
   }
@@ -380,31 +381,30 @@ void ezWidget::drawChildren() {
   uint16_t current_x = 0;
   uint16_t current_y = 0;
 
-  for (auto wdgtPtr : _widgets) {
-    ezWidget& wdgt = *wdgtPtr;
+  for (auto wdgt : _widgets) {
 
-    if (wdgt.setPos.w == EZ_PARENT) wdgt.w = w;
-    if (wdgt.setPos.w < 0 && wdgt.setPos.w > -100) {
-      wdgt.w = abs(wdgt.setPos.w) * per_share_w;
+    if (wdgt->setPos.w == EZ_PARENT) wdgt->w = w;
+    if (wdgt->setPos.w < 0 && wdgt->setPos.w > -100) {
+      wdgt->w = abs(wdgt->setPos.w) * per_share_w;
     }
-    if (wdgt.setPos.x == EZ_AUTO) {
-      wdgt.x = current_x;
-      current_x += wdgt.w + gutter;
+    if (wdgt->setPos.x == EZ_AUTO) {
+      wdgt->x = current_x;
+      current_x += wdgt->w + gutter;
     }
 
-    if (wdgt.setPos.h == EZ_PARENT) wdgt.h = h;
-    if (wdgt.setPos.h < 0 && wdgt.setPos.h > -100) {
-      wdgt.h = abs(wdgt.setPos.h) * per_share_h;
+    if (wdgt->setPos.h == EZ_PARENT) wdgt->h = h;
+    if (wdgt->setPos.h < 0 && wdgt->setPos.h > -100) {
+      wdgt->h = abs(wdgt->setPos.h) * per_share_h;
     }
-    if (wdgt.setPos.y == EZ_AUTO) {
-      wdgt.y = current_y;
-      current_y += wdgt.h + gutter;
+    if (wdgt->setPos.y == EZ_AUTO) {
+      wdgt->y = current_y;
+      current_y += wdgt->h + gutter;
     }
   }
 
-  for (auto wdgtPtr : _widgets) {
-    ezWidget& wdgt = *wdgtPtr;
-    wdgt.draw();
+  for (auto wdgt : _widgets) {
+    // Serial.println("Drawing child: " + (String)(long)wdgt);
+    wdgt->draw();
   }
 }
 

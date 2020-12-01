@@ -33,18 +33,18 @@ void ezClass::add   (ezGesture& g) { ezWidget::add   (g); }
 void ezClass::remove(ezGesture& g) { ezWidget::remove(g); }
 
 // Only windows not other widgets can be added to the root.
-void ezClass::add(ezWidget& w) { }
+void ezClass::add   (ezWidget& w) { }
 void ezClass::remove(ezWidget& w) { }
 
 void ezClass::draw() {
 
   // root is special in that it only draws the top widget
   if (_widgets.size()) {
-    ezWidget& wdgt = *_widgets.back();
-    if (wdgt.setPos.w == EZ_PARENT) wdgt.w = w;
-    if (wdgt.setPos.h == EZ_PARENT) wdgt.h = h;
-    wdgt.draw();
-    wdgt.push();
+    ezWidget* wdgt = _widgets.back();
+    if (wdgt->setPos.w == EZ_PARENT) wdgt->w = w;
+    if (wdgt->setPos.h == EZ_PARENT) wdgt->h = h;
+    wdgt->draw();
+    wdgt->push();
   }
 }
 

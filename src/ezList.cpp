@@ -2,6 +2,7 @@
 
 #include <ezWindow.h>
 #include <ezTheme.h>
+#include <ez.h>
 
 ezListBox::ezListBox(ezWidget& parentWidget,
                      int16_t x_ /* = EZ_INVALID */,
@@ -72,6 +73,7 @@ void ezListItem::eventPost() {
 }
 
 void ezListItem::draw() {
+  // Serial.println("ezListItem.draw(): " + text);
   if (parent() && parent()->type == W_LISTBOX) {
     ezListBox& p = *static_cast<ezListBox*>(parent());
     if (!p.multi && selected) {

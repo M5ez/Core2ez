@@ -4,12 +4,11 @@
 
 // Eventful class
 
-void Eventful::fireEvent(bool descendant /* = false */) {
+void Eventful::fireEvent(bool offspring /* = false */) {
   e = ez.e;
   if (e) {
     for (auto h : _eventHandlers) {
-      if (descendant && !h.includeDescendants) return;
-      if (h.eventMask & e.type) {
+      if (h.eventMask & e.type && offspring == h.offspring) {
         h.fn();
       }
     }
@@ -17,12 +16,20 @@ void Eventful::fireEvent(bool descendant /* = false */) {
 }
 
 void Eventful::addHandler(void (*fn)(), uint16_t eventMask /* = E_ALL */,
-                          bool includeDescendants_ /* = false */) {
+                          bool offspring /* = false */) {
   ezEventHandler handler;
   handler.fn = fn;
-  handler.includeDescendants = includeDescendants_;
+  handler.offspring = offspring;
   handler.eventMask = eventMask;
   _eventHandlers.push_back(handler);
+}
+
+void Eventful::on(uint16_t eventMask, void (*fn)()) {
+  addHandler(fn, eventMask, false);
+}
+
+void Eventful::onOffspring(uint16_t eventMask, void (*fn)()) {
+  addHandler(fn, eventMask, true);
 }
 
 void Eventful::delHandlers(void (*fn)() /* = nullptr */) {
@@ -68,17 +75,4 @@ char* Event::c_str() {
                 widget, widget ? widget->typeName() : "", typeName(), finger,
                 (char*)from, (char*)to, duration);
   return r;
-}
-
-
-// ezEventAdd class
-
-ezEventAdd::ezEventAdd(void(*func)(), ezWidget&  widget,
-                       uint16_t event /* = E_ALL */) {
-  widget.addHandler(func, event);
-}
-
-ezEventAdd::ezEventAdd(void(*func)(), ezGesture& gesture,
-                       uint16_t event /* = E_ALL */) {
-  gesture.addHandler(func, event);
 }

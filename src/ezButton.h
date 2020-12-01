@@ -3,6 +3,7 @@
 
 #include <ezWidget.h>
 #include <ezLabel.h>
+#include <ezTheme.h>
 
 class ezButton : public ezWidget {
  public:

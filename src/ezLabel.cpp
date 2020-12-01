@@ -51,6 +51,8 @@ void ezLabel::eventPost() { };
 
 void ezLabel::draw() {
 
+  // Serial.println("ezLabel.draw(): " + text);
+
   if (colors.fill    != NODRAW) clear();
 
   if (colors.outline != NODRAW) drawRect(colors.outline);
@@ -98,6 +100,7 @@ void ezLabel::draw() {
       direct();
     } else {
       drawString(text, tx + dx, ty + dy);
+      push();
     }
 
   }

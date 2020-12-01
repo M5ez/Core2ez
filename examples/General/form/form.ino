@@ -36,50 +36,52 @@ void setup() {
   ez.begin();
   ezScreen.spriteBuffer(320, 500);
   ezScreen.colors.fill = LIGHTYELLOW;
+
+  reset.on(E_TAPPED | E_PRESSED, doFunction {
+    ezScreen.clear();
+    ESP.restart();
+  });
+
+  submit.on(E_TAPPED | E_PRESSED, doFunction {
+    bool incomplete = false;
+    name.colors.fill = address.colors.fill = zip.colors.fill = WHITE;
+    city.colors.fill = terms.colors.fill = WHITE;
+    if (name.text    == "") { name   .colors.fill = PINK; incomplete = true; }
+    if (address.text == "") { address.colors.fill = PINK; incomplete = true; }
+    if (zip.text     == "") { zip    .colors.fill = PINK; incomplete = true; }
+    if (city.text    == "") { city   .colors.fill = PINK; incomplete = true; }
+    if (!terms)             { terms  .colors.fill = PINK; incomplete = true; }
+    if (incomplete) {
+      ezScreen.draw();
+      ezScreen.push();
+    } else {
+      thankyou.focus();
+      Serial.println("\nYou submitted:\n");
+      Serial.print((ms) ? "Ms " : "Mr. ");
+      Serial.println(name.text);
+      Serial.println(address.text);
+      Serial.print(zip.text); Serial.print("  ");Serial.println(city.text);
+      if (newsletter) Serial.println("(wants newsletter)");
+    }
+  });
+
+  thankyou.on(E_TAPPED | E_PRESSED, doFunction {
+    ESP.restart();
+  });
+
+  ez.on(E_CHANGED, doFunction {
+    if (eventWidget(ezInput, i)) {
+      if (i->text != "") {
+        i->colors.fill = WHITE;
+        i->draw();
+        i->refresh();
+      }
+    }
+  });
+
 }
 
 void loop() {
   ez.update();
 }
 
-ON(reset, E_TAPPED | E_PRESSED) {
-  ezScreen.clear();
-  ESP.restart();
-}
-
-ON(submit, E_TAPPED | E_PRESSED) {
-  bool incomplete = false;
-  name.colors.fill = address.colors.fill = zip.colors.fill = WHITE;
-  city.colors.fill = terms.colors.fill = WHITE;
-  if (name.text    == "") { name   .colors.fill = PINK; incomplete = true; }
-  if (address.text == "") { address.colors.fill = PINK; incomplete = true; }
-  if (zip.text     == "") { zip    .colors.fill = PINK; incomplete = true; }
-  if (city.text    == "") { city   .colors.fill = PINK; incomplete = true; }
-  if (!terms)             { terms  .colors.fill = PINK; incomplete = true; }
-  if (incomplete) {
-    ezScreen.draw();
-    ezScreen.push();
-  } else {
-    thankyou.focus();
-    Serial.println("\nYou submitted:\n");
-    Serial.print((ms) ? "Ms " : "Mr. ");
-    Serial.println(name.text);
-    Serial.println(address.text);
-    Serial.print(zip.text); Serial.print("  ");Serial.println(city.text);
-    if (newsletter) Serial.println("(wants newsletter)");
-  }
-}
-
-ON(thankyou, E_TAPPED | E_PRESSED) {
-  ESP.restart();
-}
-
-ON(ez, E_CHANGED) {
-  WITH(ezInput, i) {
-    if (i.text != "") {
-      i.colors.fill = WHITE;
-      i.draw();
-      i.refresh();
-    }
-  }
-}

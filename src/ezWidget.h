@@ -3,6 +3,7 @@
 
 #include <ezEvents.h>
 #include <ezDisplayZone.h>
+#include <WiFi.h>
 
 
 // Special color value, meaning we don't draw anything
@@ -19,7 +20,8 @@ enum widget_t {
   W_INPUT,
   W_LAYOUT,
   W_LISTBOX,
-  W_LISTITEM
+  W_LISTITEM,
+  W_MENU
 };
 
 

@@ -61,20 +61,21 @@ void setup() {
                               NOTE_D5,  NOTE_E5,  NOTE_F5,  NOTE_Gb4, NOTE_Ab4,
                               NOTE_Bb4, NOTE_Db5, NOTE_Eb5, NOTE_Gb5 };
   for (uint8_t n = 0; n < 14; n++) synth[n].freq = notes[n];
+
+  ez.on(E_TOUCH, doFunction {
+    if(eventWidget(ezButton, b)) {
+      synth[b->userData].start();
+    }
+  });
+
+  ez.on(E_RELEASE, doFunction {
+    if (eventWidget(ezButton, b)) {
+      synth[b->userData].stop();
+    }
+  });
+
 }
 
 void loop() {
   ez.update();
-}
-
-ON(ez, E_TOUCH) {
-  WITH(ezButton, b) {
-    synth[b.userData].start();
-  }
-}
-
-ON(ez, E_RELEASE) {
-  WITH(ezButton, b) {
-    synth[b.userData].stop();
-  }
 }

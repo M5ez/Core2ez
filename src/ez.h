@@ -2,6 +2,10 @@
 #define _EZ_H_
 
 #include <Core2ez.h>
+// #include <ezWidget.h>
+// #include <ezWindow.h>
+// #include <ezGesture.h>
+
 
 #define MAX_WINDOWSTACK       15
 

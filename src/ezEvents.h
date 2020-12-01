@@ -4,20 +4,29 @@
 #include <Arduino.h>
 #include <ezPointAndZone.h>
 
+// doFunction just hides a 'lambda' a.k.a. anonyous function
+#define doFunction         []()
 
-// The preprocessor magic for ON and WITH. Uses ezEventAdd class below.
 
-// The multiple EXP rounds are necessary to correctly expand __LINE__
-#define EXP3(x, y) x ## y
-#define EXP2(x, y) EXP3(x, y)
-#define EXP(x) EXP2(x, __LINE__)
-#define ON(widget, ...) \
-  ezEventAdd EXP(eventAdd) (EXP(ezHandler), widget, ##__VA_ARGS__); \
-  void EXP(ezHandler)()
+/*
+The below deserves a longer comment because otherwise I myself will not get
+what is going on here pretty soon. This, ladies and gentlemen, is a dirty
+but hopefully clever hack. It turns:
 
-#define WITH(widget_type, variable) \
-  if (!ez.e.widget || ez.e.widget->typeName() != #widget_type) return; \
-  widget_type& variable = *static_cast<widget_type*>(ez.e.widget);
+  if (eventWidget(ezButton, b)) {
+
+into
+
+  if (ez.e.widget && ez.e.widget->typeName() == "ezButton") \
+  if (ezButton* b = static_cast<widget_type*>(ez.e.widget)) {
+
+Note that the second if has an assignent in there, and the brackets inside the
+macro do not match, it closes the one the user opened and opens another one
+after the assignemnt which the user then closes.
+*/
+#define eventWidget(widget_type, variable) \
+  ez.e.widget && ez.e.widget->typeName() == #widget_type) \
+  if (widget_type* variable = static_cast<widget_type*>(ez.e.widget)
 
 
 class ezWidget;
@@ -60,26 +69,20 @@ class Event {
 struct ezEventHandler {
   uint16_t      eventMask;
   void          (*fn)();
-  bool          includeDescendants;
+  bool          offspring;
 };
 
 class Eventful {
  public:
   void          addHandler(void (*fn)(), uint16_t eventMask = E_ALL,
-                bool includeDescendants_ = false);
+                bool offspring = false);
+  void          on(uint16_t eventMask, void (*fn)());
+  void          onOffspring(uint16_t eventMask, void (*fn)());
   void          delHandlers(void (*fn)());
   Event         e = Event();
  protected:
-  void          fireEvent(bool descendant = false);
+  void          fireEvent(bool offspring = false);
   std::vector<ezEventHandler> _eventHandlers;
-};
-
-// This is a dummy class that only uses its constructor to set up events
-// so that event handlers can be set up from outside functions with ON.
-class ezEventAdd {
- public:
-  ezEventAdd(void(*func)(), ezWidget&  widget,  uint16_t event = E_ALL);
-  ezEventAdd(void(*func)(), ezGesture& gesture, uint16_t event = E_ALL);
 };
 
 

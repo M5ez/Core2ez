@@ -52,6 +52,8 @@ class ezThemeClass {
   WidgetColors    kb_special    = {LIGHTGREY, TFT_BLACK, TFT_BLACK};
   WidgetColors    kb_topBar     = {LIGHTGREY, TFT_BLACK, NODRAW};
 
+  WidgetColors    mnu_colors    = {NODRAW,    TFT_BLACK, NODRAW};
+
   uint8_t         arrowLength   = 15;
   uint8_t         arrowWidth    = 15;
   uint8_t         arrowPadding  = 5;

@@ -17,6 +17,7 @@
 #include <ezWindow.h>
 #include <ezList.h>
 #include <ezLayout.h>
+#include <ezMenu.h>
 #include <ez.h>
 
 
