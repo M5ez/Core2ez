@@ -51,8 +51,8 @@ ezWifiClass::ezWifiClass() {  };
 void ezWifiClass::begin() {
   log_d("Initialising");
   WiFi.mode(WIFI_MODE_STA);
-  WiFi.setAutoConnect(false);		// We have our own multi-AP version of this
-  WiFi.setAutoReconnect(false);	// So we turn off the ESP32's versions
+  WiFi.setAutoConnect(false);    // We have our own multi-AP version of this
+  WiFi.setAutoReconnect(false);  // So we turn off the ESP32's versions
   WiFi.setHostname("M5Stack");
   readFlash();
   _state = EZWIFI_IDLE;
@@ -168,7 +168,7 @@ int8_t ezWifiClass::indexForSSID(String ssid) {
 void ezWifiClass::readFlash() {
   Preferences prefs;
   networks.clear();
-  prefs.begin("M5ez", true);	// true: read-only
+  prefs.begin("M5ez", true);  // true: read-only
   autoConnect = prefs.getBool("autoconnect_on", true);
   log_d("EZWIFI readFlash: Autoconnect is %s", autoConnect ? "ON" : "OFF");
   WifiNetwork_t new_net;

@@ -9,20 +9,20 @@
 
 // Special fake font pointers to access the older non FreeFonts
 // in a unified way. Only valid if passed to ezFont
-#define MONO6x8				  (GFXfont*) 1
-#define SANS16				  (GFXfont*) 2
-#define SANS26				  (GFXfont*) 4
-#define NUMONLY48			  (GFXfont*) 6
-#define NUMONLY7SEG48		(GFXfont*) 7
-#define NUMONLY75			  (GFXfont*) 8
+#define MONO6x8          (GFXfont*) 1
+#define SANS16          (GFXfont*) 2
+#define SANS26          (GFXfont*) 4
+#define NUMONLY48        (GFXfont*) 6
+#define NUMONLY7SEG48    (GFXfont*) 7
+#define NUMONLY75        (GFXfont*) 8
 // The following fonts are just scaled up from previous ones (textSize 2)
 // But they might still be useful.
-#define mono12x16			  (GFXfont*) 9
-#define SANS32				  (GFXfont*) 10
-#define SANS52				  (GFXfont*) 12
-#define NUMONLY96			  (GFXfont*) 14
-#define NUMONLY7SEG96		(GFXfont*) 15
-#define NUMONLY150			(GFXfont*) 16
+#define mono12x16        (GFXfont*) 9
+#define SANS32          (GFXfont*) 10
+#define SANS52          (GFXfont*) 12
+#define NUMONLY96        (GFXfont*) 14
+#define NUMONLY7SEG96    (GFXfont*) 15
+#define NUMONLY150      (GFXfont*) 16
 
 #include <Free_Fonts.h>
 

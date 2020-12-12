@@ -7,13 +7,13 @@ ezSynth s(SINE, 1000);
 ezButton btn(50, 80, 220, 80, "1000 Hz", THEME_COLORS, THEME_COLORS,  FSSB24);
 
 void setup() {
-	ez.begin();
+  ez.begin();
   btn.on(E_TOUCH  , doFunction { s.start(); });
   btn.on(E_RELEASE, doFunction { s.stop();  });
 }
 
 void loop() {
-	ez.update();
+  ez.update();
 }
 
 

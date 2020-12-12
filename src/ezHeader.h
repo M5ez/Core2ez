@@ -16,20 +16,20 @@ class ezHeaderClass : public ezWidget {
 
  public:
   virtual void  draw();
-  void			    settings();
+  void          settings();
   bool          displayed();
-  ezLabel       title     	= ezLabel(EZ_AUTO, 0, -1, EZ_PARENT, "",
-                            	      ezTheme.hdr_colors, ezTheme.hdr_font,
-                                	  EZ_LEFT, EZ_CENTER);
+  ezLabel       title       = ezLabel(EZ_AUTO, 0, -1, EZ_PARENT, "",
+                                    ezTheme.hdr_colors, ezTheme.hdr_font,
+                                    EZ_LEFT, EZ_CENTER);
 
 #ifdef _EZWIFI_H_
   WifiBars      wifi        = WifiBars(EZ_AUTO, 0, 35, EZ_PARENT);
 #endif
 
-  ezGesture		swipeDown 	= ezGesture(100, EZ_DOWN);
+  ezGesture      swipeDown   = ezGesture(100, EZ_DOWN);
 
  private:
-  bool 			_inSettings = false;
+  bool           _inSettings = false;
 
 };
 

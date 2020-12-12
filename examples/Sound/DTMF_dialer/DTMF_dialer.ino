@@ -19,9 +19,9 @@ uint32_t      rotationLastChecked = 0;
 uint8_t       columns = 4;
 
 void setup() {
-	ez.begin();
+  ez.begin();
   ezScreen.colors.fill = BLACK;
-	ezScreen.glissando = true;
+  ezScreen.glissando = true;
   M5.IMU.Init();
   row_gen.gain  = col_gen.gain   = 0.3;
   row_gen.decay = col_gen.decay = 50;   // min tone length
@@ -47,7 +47,7 @@ void setup() {
 }
 
 void loop() {
-	ez.update();
+  ez.update();
   if (checkRotation(1000)) doButtons();
 }
 

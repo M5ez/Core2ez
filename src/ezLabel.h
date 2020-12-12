@@ -6,8 +6,8 @@
 #include <ezTheme.h>
 
 struct line_t {
-	int16_t position;
-	String line;
+  int16_t position;
+  String line;
 };
 
 class ezLabel : public ezWidget {

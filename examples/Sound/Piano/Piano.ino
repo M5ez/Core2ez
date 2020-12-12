@@ -5,6 +5,11 @@ are played. If you place one finger high on the screen and another low, you
 can even play two notes at the same time. As you can see you can have many
 synths going at the same time.
 
+Note that sounds get broken up if you set the Core Debug Level to DEBUG or
+VERBOSE, since the ESP32 has to wait for the serial port to be done 
+transmitting each line in the (rather verbose) debug data stream before
+continuing, which intereferes with the updates needed to do the sound.
+
 */
 
 #include <M5Core2.h>

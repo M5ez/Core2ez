@@ -157,7 +157,7 @@
 #define CST_INT 39
 
 // Strangely, the value 13 leads to slightly more frequent updates than 10
-#define DEFAULT_INTERVAL	13
+#define DEFAULT_INTERVAL  13
 
 class ezTouchClass {
  public:

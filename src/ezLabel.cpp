@@ -127,82 +127,82 @@ void ezLabel::draw() {
 
 void ezLabel::_fitLines(String text, uint16_t max_width, uint16_t min_width,
                         std::vector<line_t>& lines) {
-	uint8_t	prev_num_lines = 100;
-	for (int16_t n = max_width; n > min_width; n -= 10) {
-		_wrapLines(text, n, lines);
-		if (lines.size() > prev_num_lines) {
-			_wrapLines(text, n + 10, lines);
-			return;
-		}
-		prev_num_lines = lines.size();
-	}
+  uint8_t  prev_num_lines = 100;
+  for (int16_t n = max_width; n > min_width; n -= 10) {
+    _wrapLines(text, n, lines);
+    if (lines.size() > prev_num_lines) {
+      _wrapLines(text, n + 10, lines);
+      return;
+    }
+    prev_num_lines = lines.size();
+  }
 }
 
 void ezLabel::_wrapLines(String text, uint16_t width,
                          std::vector<line_t>& lines) {
-	lines.clear();
-	int16_t offset = 0;
-	int16_t last_space = 0;
-	int16_t cur_space = 0;
-	int16_t newline = 0;
-	bool all_done = false;
-	line_t new_line;
+  lines.clear();
+  int16_t offset = 0;
+  int16_t last_space = 0;
+  int16_t cur_space = 0;
+  int16_t newline = 0;
+  bool all_done = false;
+  line_t new_line;
 
-	//If there are no return chars, it's either a single line,
-	//Or it's using linux/mac line endings which are a single char
-	char nlchar = 13;
-	if (text.indexOf(13)==-1) nlchar = 10;
+  //If there are no return chars, it's either a single line,
+  //Or it's using linux/mac line endings which are a single char
+  char nlchar = 13;
+  if (text.indexOf(13)==-1) nlchar = 10;
 
-	while (!all_done) {
-		cur_space = text.indexOf(" ", last_space + 1);
-		if (cur_space == -1) {
-			cur_space = text.length();
-			all_done = true;
-		}
-		newline = text.indexOf(char(nlchar), last_space + 1);
-		if (newline != -1 && newline < cur_space) cur_space = newline;
-		if (textWidth(text.substring(offset, cur_space)) > width ||
-		    text.substring(last_space, last_space + 1) == (String)char(nlchar)) {
-			if (textWidth(text.substring(offset, last_space)) <= width) {
-				new_line.position = offset;
-				new_line.line = text.substring(offset, last_space);
-				lines.push_back(new_line);
-				offset = last_space + 1;
-				last_space = cur_space;
-			} else {
-				for (uint16_t n = offset; n < text.length(); n++) {
-					if (textWidth(text.substring(offset, n + 1)) > width) {
-						new_line.position = offset;
-						new_line.line = text.substring(offset, n);
-						lines.push_back(new_line);
-						offset = n;
-						break;
-					}
-				}
-			}
-		} else {
-			last_space = cur_space;
-		}
+  while (!all_done) {
+    cur_space = text.indexOf(" ", last_space + 1);
+    if (cur_space == -1) {
+      cur_space = text.length();
+      all_done = true;
+    }
+    newline = text.indexOf(char(nlchar), last_space + 1);
+    if (newline != -1 && newline < cur_space) cur_space = newline;
+    if (textWidth(text.substring(offset, cur_space)) > width ||
+        text.substring(last_space, last_space + 1) == (String)char(nlchar)) {
+      if (textWidth(text.substring(offset, last_space)) <= width) {
+        new_line.position = offset;
+        new_line.line = text.substring(offset, last_space);
+        lines.push_back(new_line);
+        offset = last_space + 1;
+        last_space = cur_space;
+      } else {
+        for (uint16_t n = offset; n < text.length(); n++) {
+          if (textWidth(text.substring(offset, n + 1)) > width) {
+            new_line.position = offset;
+            new_line.line = text.substring(offset, n);
+            lines.push_back(new_line);
+            offset = n;
+            break;
+          }
+        }
+      }
+    } else {
+      last_space = cur_space;
+    }
 
-		//Special case handle the last line
-		if (all_done && offset < text.length()) {
-			while(text.indexOf(char(nlchar), offset) > offset) {
-				if(offset < text.length()) {
-					new_line.line = text.substring(offset, text.indexOf(char(nlchar),
-					                               offset));
-					new_line.position = offset;
-					offset = text.indexOf(char(nlchar), offset);
-					lines.push_back(new_line);
-				} else {
-					break;
-				}
-			}
-		}
+    //Special case handle the last line
+    if (all_done && offset < text.length()) {
+      while(text.indexOf(char(nlchar), offset) > offset) {
+        if(offset < text.length()) {
+          new_line.line = text.substring(offset, text.indexOf(char(nlchar),
+                                         offset));
+          new_line.position = offset;
+          offset = text.indexOf(char(nlchar), offset);
+          lines.push_back(new_line);
+        } else {
+          break;
+        }
+      }
+    }
 
-		if (all_done && offset < text.length()) {
-			new_line.position = offset;
-			new_line.line = text.substring(offset);
-			lines.push_back(new_line);
-		}
-	}
+    if (all_done && offset < text.length()) {
+      new_line.position = offset;
+      new_line.line = text.substring(offset);
+      lines.push_back(new_line);
+    }
+  }
 }
