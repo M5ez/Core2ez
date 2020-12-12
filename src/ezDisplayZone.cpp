@@ -43,12 +43,15 @@ ezFont& ezFont::operator=(uint8_t font_) {
 }
 
 void ezFont::set(ezDisplayZone& dz) {
+  dz.setTextSize(textsize);
   if (_gfxFont) {
     dz.setFreeFont(_gfxFont);
-  } else {
+  } else if (_font) {
     dz.setTextFont(_font);
+  } else {
+    dz.setFreeFont(FSS9);
+    log_e("Invalid font, replaced by FSS9");
   }
-  dz.setTextSize(textsize);
 }
 
 int16_t ezFont::height() {
@@ -134,19 +137,19 @@ void ezDisplayZone::fillRoundRect(int32_t radius, uint32_t color) {
   fillRoundRect(0, 0, w, h, radius, color);
 }
 
-void ezDisplayZone::drawCircle(Point p, int32_t r, uint32_t color) {
+void ezDisplayZone::drawCircle(ezPoint p, int32_t r, uint32_t color) {
   if (p) drawCircle(p.x, p.y, r, color);
 }
 
-void ezDisplayZone::fillCircle(Point p, int32_t r, uint32_t color) {
+void ezDisplayZone::fillCircle(ezPoint p, int32_t r, uint32_t color) {
   if (p) fillCircle(p.x, p.y, r, color);
 }
 
-void ezDisplayZone::drawTriangle(Point p0, Point p1, Point p2, uint32_t color) {
+void ezDisplayZone::drawTriangle(ezPoint p0, ezPoint p1, ezPoint p2, uint32_t color) {
   if (p0 && p1 && p2) drawTriangle(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, color);
 }
 
-void ezDisplayZone::fillTriangle(Point p0, Point p1, Point p2, uint32_t color) {
+void ezDisplayZone::fillTriangle(ezPoint p0, ezPoint p1, ezPoint p2, uint32_t color) {
   if (p0 && p1 && p2) fillTriangle(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, color);
 }
 

@@ -10,7 +10,7 @@ ezGesture::ezGesture(uint16_t minDistance_,
   direction = direction_;
   plusminus = plusminus_;
   maxTime = maxTime_;
-  ez.add(*this);
+  // ez.add(*this);
 }
 
 ezGesture::operator bool() { return (e); }

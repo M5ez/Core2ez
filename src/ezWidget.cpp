@@ -2,9 +2,11 @@
 #include <ez.h>
 #include <ezGesture.h>
 #include <ezValues.h>
+#include <ezWindow.h>
 #include <Arduino.h>
 
-ezWidget& ezWidget::operator=(Zone& z) {
+
+ezWidget& ezWidget::operator=(ezZone& z) {
   x = z.x;
   y = z.y;
   w = z.w;
@@ -16,7 +18,7 @@ ezWidget& ezWidget::operator=(Zone& z) {
 void ezWidget::set(int16_t x_ /* = EZ_INVALID */,
                    int16_t y_ /* = EZ_INVALID */,
                    int16_t w_ /* = 0 */, int16_t h_ /* = 0 */) {
-  Zone::set(x_, y_, w_, h_);
+  ezZone::set(x_, y_, w_, h_);
   setPos.set(x_, y_, w_, h_);
   if (w == EZ_PARENT) w = 320;
   if (h == EZ_PARENT) h = 240;
@@ -30,13 +32,14 @@ ezWidget* ezWidget::parent() {
 bool ezWidget::isMyDescendant(ezWidget& w) {
   ezWidget* current = &w;
   while (current->parent()) {
+    log_v("Comparing: %d / %d", (uint32_t)current->parent(), (uint32_t)this);
     if (current->parent() == this) return true;
     current = current->parent();
   }
   return false;
 }
 
-bool ezWidget::inVirtual(Point& p) {
+bool ezWidget::inVirtual(ezPoint& p) {
   if (sprite) {
     return (p.y >= 0 && p.y < sprite->height() &&
             p.x >= 0 && p.x < sprite->width() );
@@ -46,15 +49,16 @@ bool ezWidget::inVirtual(Point& p) {
 }
 
 const char* ezWidget::typeName() {
-  const char* typeNames[12] = { "ezWidget", "ez", "ezWindow", "ezButton",
+  const char* typeNames[14] = { "ezWidget", "ez", "ezWindow", "ezButton",
                                 "ezLabel", "ezCheckBox", "ezRadiobutton",
                                 "ezInput", "ezLayout", "ezListBox",
-                                "ezListItem", "ezMenu" };
+                                "ezListItem", "ezMenu", "ezHeader",
+                                "ezMsgBox" };
   return typeNames[type];
 }
 
 /* virtual */ void ezWidget::add(ezWidget& w) {
-  if (w.parent()) w.parent()->remove(w);
+  ezScreen.remove(w);
   _widgets.push_back(&w);
   w._parent = this;
 }
@@ -112,7 +116,7 @@ void ezWidget::_updateBox() {
 
 void ezWidget::_drawArrow(int16_t direction) {
   if (!parent()) return;
-  Point tip, tail1, tail2;
+  ezPoint tip, tail1, tail2;
 
   if        (ezTheme.arrowValign == EZ_TOP   ) {
     tip.y = y + ezTheme.arrowPadding + (ezTheme.arrowWidth / 2);
@@ -160,7 +164,7 @@ void ezWidget::event() {
   _posRelParent = ez.e.to;
 
   // Translate parent coordinates to widget origin
-  Point origin(x, y);
+  ezPoint origin(x, y);
   origin -= offset;
 
   ez.e.from -= origin;
@@ -178,7 +182,7 @@ void ezWidget::event() {
   // Scroll if set
   if (ez.e.widget && sprite && scroll && ez.e == E_MOVE &&
     (ez.e.widget == this || isMyDescendant(*ez.e.widget))) {
-    Point moveBy;
+    ezPoint moveBy;
     moveBy = ez.e.from - ez.e.to;
     if (offset.x + moveBy.x < 0) moveBy.x = -offset.x;
     if (offset.y + moveBy.y < 0) moveBy.y = -offset.y;
@@ -187,7 +191,7 @@ void ezWidget::event() {
     if (offset.y + moveBy.y > sprite->height() - h)
       moveBy.y = sprite->height() - h - offset.y;
 
-    if (moveBy != Point(0,0)) {
+    if (moveBy != ezPoint(0,0)) {
       offset  += moveBy;
       ez.e.to -= moveBy;
       refresh();
@@ -195,7 +199,7 @@ void ezWidget::event() {
   }
 
   eventPost();
-  e = Event();
+  e = ezEvent();
   if (ez.e.widget == this) {
     fireEvent();
   } else if ((!!ez.e.widget) + (!!ez.e.gesture) > claims) {
@@ -214,7 +218,7 @@ void ezWidget::event() {
 void ezWidget::_eventProcess() {
 
   // Reset last event for this widget
-  e = Event();
+  e = ezEvent();
 
   // If E_NONE, check if we have anything that could ride in here
   if (!ez.e) {
@@ -349,8 +353,15 @@ void ezWidget::drawChildren() {
   uint8_t count_w           = 0;
   uint8_t count_h           = 0;
 
+  if (lmargin < 0) shares_w += abs(lmargin); else pixels_w += lmargin;
+  if (rmargin < 0) shares_w += abs(rmargin); else pixels_w += rmargin;
+  if (tmargin < 0) shares_h += abs(tmargin); else pixels_h += tmargin;
+  if (bmargin < 0) shares_h += abs(bmargin); else pixels_h += bmargin;
 
   for (auto wdgt : _widgets) {
+
+    // adopt widgets that may have multiple parents (ezHeader e.g.)
+    wdgt->_parent = this;
 
     if (wdgt->setPos.x == EZ_AUTO) {
       if (wdgt->setPos.w > 0) pixels_w += wdgt->setPos.w;
@@ -364,8 +375,13 @@ void ezWidget::drawChildren() {
     }
   }
 
-  if (count_w) pixels_w += --count_w * gutter;
-  if (count_h) pixels_h += --count_h * gutter;
+  if (gutter >= 0) {
+    if (count_w) pixels_w += --count_w * gutter;
+    if (count_h) pixels_h += --count_h * gutter;
+  } else {
+    if (count_w) shares_w += --count_w * abs(gutter);
+    if (count_h) shares_h += --count_h * abs(gutter);
+  }
 
   if (autoSize) {
     if (pixels_w > w || pixels_h > h) {
@@ -378,32 +394,42 @@ void ezWidget::drawChildren() {
     if (shares_h && h - pixels_h > 0) per_share_h = (h - pixels_h) / shares_h;
   }
 
-  uint16_t current_x = 0;
-  uint16_t current_y = 0;
+  uint16_t gutter_w = gutter;
+  uint16_t gutter_h = gutter;
+  if (gutter < 0) {
+    gutter_w = abs(gutter) * per_share_w;
+    gutter_h = abs(gutter) * per_share_h;
+  }
+
+  uint16_t current_x;
+  if (lmargin >= 0) current_x = lmargin;
+    else current_x = abs(lmargin) * per_share_w;
+
+  uint16_t current_y;
+  if (tmargin >= 0) current_y = tmargin;
+    else current_y = abs(tmargin) * per_share_h;
 
   for (auto wdgt : _widgets) {
-
-    if (wdgt->setPos.w == EZ_PARENT) wdgt->w = w;
+    if (wdgt->setPos.w == EZ_PARENT) wdgt->w = w - current_x - rmargin;
     if (wdgt->setPos.w < 0 && wdgt->setPos.w > -100) {
       wdgt->w = abs(wdgt->setPos.w) * per_share_w;
     }
     if (wdgt->setPos.x == EZ_AUTO) {
       wdgt->x = current_x;
-      current_x += wdgt->w + gutter;
+      current_x += wdgt->w + gutter_w;
     }
 
-    if (wdgt->setPos.h == EZ_PARENT) wdgt->h = h;
+    if (wdgt->setPos.h == EZ_PARENT) wdgt->h = h - current_y - bmargin;
     if (wdgt->setPos.h < 0 && wdgt->setPos.h > -100) {
       wdgt->h = abs(wdgt->setPos.h) * per_share_h;
     }
     if (wdgt->setPos.y == EZ_AUTO) {
       wdgt->y = current_y;
-      current_y += wdgt->h + gutter;
+      current_y += wdgt->h + gutter_h;
     }
   }
 
   for (auto wdgt : _widgets) {
-    // Serial.println("Drawing child: " + (String)(long)wdgt);
     wdgt->draw();
   }
 }
@@ -432,4 +458,11 @@ bool ezWidget::isReleased() { return !_state; }
 bool ezWidget::wasPressed() { return _state && _changed; }
 
 bool ezWidget::wasReleased() { return (!_state && _changed); }
+
+void ezWidget::margins(uint8_t margin) {
+  lmargin = margin;
+  rmargin = margin;
+  tmargin = margin;
+  bmargin = margin;
+}
 

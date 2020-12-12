@@ -13,6 +13,8 @@
 #define EZ_MIDDLE             EZ_CENTER
 #define EZ_PARENT             -32760
 #define EZ_AUTO               -32759
+#define EZ_BREAK              -32758
+#define EZ_BACK               -32757
 
 #define EZ_THEME              4537
 

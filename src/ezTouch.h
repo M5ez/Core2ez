@@ -181,11 +181,11 @@ class ezTouchClass {
   bool read();
   bool ispressed();
   void dump();
-  Point getPressPoint();
+  ezPoint getPressPoint();
   uint8_t points;
   bool changed, wasRead;
   bool pchanged[2];
-  Point point[2];
+  ezPoint point[2];
  protected:
   uint8_t _interval;
   uint32_t _lastRead;

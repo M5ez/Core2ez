@@ -9,8 +9,16 @@ ezClass::ezClass() {
 
 void ezClass::begin() {
   M5.begin();         // Never hurts: just returns on subsequent calls
-  ezSound.begin();
   ezTouch.begin();
+
+  #ifdef _EZSOUND_H_
+    ezSound.begin();
+  #endif
+
+  #ifdef _EZWIFI_H_
+    ezWifi.begin();
+  #endif
+
 }
 
 void ezClass::add(ezWindow& w) {
@@ -37,7 +45,6 @@ void ezClass::add   (ezWidget& w) { }
 void ezClass::remove(ezWidget& w) { }
 
 void ezClass::draw() {
-
   // root is special in that it only draws the top widget
   if (_widgets.size()) {
     ezWidget* wdgt = _widgets.back();
@@ -53,14 +60,21 @@ void ezClass::update() {
   if (!_widgets.size()) ezScreen.focus();
 
   ezTouch.update();
+
+#ifdef _EZSOUND_H_
   ezSound.update();
+#endif
 
-  e = Event();
+#ifdef _EZWIFI_H_
+  ezWifi.update();
+#endif
 
-  Point curr;
+  e = ezEvent();
+
+  ezPoint curr;
   curr = ezTouch.point[_finger];
 
-  Point& prev = _previous[_finger];
+  ezPoint& prev = _previous[_finger];
 
   if (curr == prev) {
     e.type = E_NONE;
@@ -91,7 +105,7 @@ void ezClass::update() {
 
   // In case one of the widgets changed E_MOVE into E_RELEASE (glissando)
   // So we interpret next coordinate as an E_TOUCH again.
-  if (e == E_RELEASE) _previous[_finger] = Point();
+  if (e == E_RELEASE) _previous[_finger] = ezPoint();
 
   fireEvent();
 

@@ -23,6 +23,10 @@ class ezThemeClass {
 
   WidgetColors    wdw_colors    = {TFT_WHITE, TFT_BLACK, NODRAW};
 
+  WidgetColors    hdr_colors    = {TFT_BLUE,  TFT_WHITE, NODRAW};
+  ezFont          hdr_font      = FSSB9;
+  int16_t         hdr_height    = 23;
+
   WidgetColors    btn_colors    = {TFT_BLUE,  TFT_WHITE, TFT_BLACK};
   WidgetColors    btn_onColors  = {TFT_CYAN,  TFT_BLACK, TFT_BLACK};
   ezFont          btn_font      = FSSB12;
@@ -52,7 +56,12 @@ class ezThemeClass {
   WidgetColors    kb_special    = {LIGHTGREY, TFT_BLACK, TFT_BLACK};
   WidgetColors    kb_topBar     = {LIGHTGREY, TFT_BLACK, NODRAW};
 
-  WidgetColors    mnu_colors    = {NODRAW,    TFT_BLACK, NODRAW};
+  WidgetColors    mnu_colors    = {TFT_LIGHTGREY, TFT_BLACK, NODRAW};
+  WidgetColors    mnu_onColors  = {TFT_DARKGREY, TFT_WHITE, NODRAW};
+  ezFont          mnu_font      = FSS12;
+
+  WidgetColors    msg_colors    = {NODRAW,    TFT_BLACK, NODRAW};
+  ezFont          msg_font      = FSSB12;
 
   uint8_t         arrowLength   = 15;
   uint8_t         arrowWidth    = 15;

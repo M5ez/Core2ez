@@ -81,7 +81,7 @@ bool ezTouchClass::read() {
   if (millis() - _lastRead < _interval) return false;
   _lastRead = millis();
 
-  Point p[2];
+  ezPoint p[2];
   uint8_t pts = 0;
   uint8_t p0f = 0;
   if (ispressed()) {

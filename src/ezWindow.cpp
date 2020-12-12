@@ -3,6 +3,12 @@
 #include <ezTheme.h>
 #include <ez.h>
 
+/* static */ uint8_t ezWindow::_quitting = 0;
+
+/* static */ void ezWindow::quit(uint8_t count /* = 1 */) {
+  _quitting = count;
+}
+
 ezWindow::ezWindow(ezWidget& parentWidget,
                    int16_t x_ /* = 0 */, int16_t y_ /* = 0 */,
                    int16_t w_ /* = EZ_PARENT */, int16_t h_ /* = EZ_PARENT */,
@@ -33,12 +39,20 @@ void ezWindow::focus() {
 
 void ezWindow::blur() {
   ez.remove(*this);
-  ez.draw();
 }
 
 
 bool ezWindow::hasFocus() {
   return (ez._widgets.back() == this);
+}
+
+void ezWindow::run() {
+  log_v("entering run()");
+  if    (!_quitting) focus();
+  while (!_quitting) loop();
+  _quitting--;
+  log_v("quitting run()");
+  blur();
 }
 
 ezWindow ezScreen;

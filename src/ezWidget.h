@@ -3,7 +3,6 @@
 
 #include <ezEvents.h>
 #include <ezDisplayZone.h>
-#include <WiFi.h>
 
 
 // Special color value, meaning we don't draw anything
@@ -21,7 +20,9 @@ enum widget_t {
   W_LAYOUT,
   W_LISTBOX,
   W_LISTITEM,
-  W_MENU
+  W_MENU,
+  W_HEADER,
+  W_MSGBOX
 };
 
 
@@ -42,12 +43,12 @@ struct WidgetColors {
 
 class ezWidget : public ezDisplayZone, public Eventful {
  public:
-  ezWidget&               operator=(Zone&);
+  ezWidget&               operator=(ezZone&);
   virtual void            set(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID,
                           int16_t w_ = 0 , int16_t h_ = 0);
   ezWidget*               parent();
   bool                    isMyDescendant(ezWidget& w);
-  bool                    inVirtual(Point& p);
+  bool                    inVirtual(ezPoint& p);
   const char*             typeName();
   virtual void            add(ezWidget& w);
   virtual void            remove(ezWidget& w);
@@ -68,12 +69,17 @@ class ezWidget : public ezDisplayZone, public Eventful {
   bool                    isReleased();
   bool                    wasPressed();
   bool                    wasReleased();
+  void                    margins(uint8_t margin);
 
   widget_t                type            = W_WIDGET;
-  Zone                    setPos          = Zone();
+  ezZone                    setPos          = ezZone();
   bool                    autoSize        = false;
   WidgetColors            colors          = {NODRAW, NODRAW, NODRAW};
   int16_t                 gutter          = 0;
+  int16_t                 lmargin         = 0;
+  int16_t                 rmargin         = 0;
+  int16_t                 tmargin         = 0;
+  int16_t                 bmargin         = 0;
   bool                    numb            = false;
   uint16_t                tapTime         = 200;
   uint16_t                dbltapTime      = 200;
@@ -87,6 +93,7 @@ class ezWidget : public ezDisplayZone, public Eventful {
 
  protected:
   friend class ezWindow;
+  friend class ezHeaderClass;
   void                    _eventProcess();
   void                    _updateBox();
   void                    _drawArrow(int16_t direction);
@@ -99,12 +106,12 @@ class ezWidget : public ezDisplayZone, public Eventful {
   bool                    _longPressing   = false;
   bool                    _cancelled      = false;
   bool                    _touched[2]     = {false, false};
-  Point                   _posRelParent   = Point();
+  ezPoint                   _posRelParent   = ezPoint();
   uint32_t                _lastRepeat     = 0;
   uint32_t                _lastOnTime     = 0;
   uint32_t                _lastOffTime    = 0;
-  Event                   _lastOnEvent    = Event();
-  Event                   _lastOffEvent   = Event();
+  ezEvent                   _lastOnEvent    = ezEvent();
+  ezEvent                   _lastOffEvent   = ezEvent();
 };
 
 #endif /* _EZWIDGET_H_ */

@@ -22,7 +22,7 @@ into
 
 Note that the second if has an assignent in there, and the brackets inside the
 macro do not match, it closes the one the user opened and opens another one
-after the assignemnt which the user then closes.
+after the assignment which the user then closes.
 */
 #define eventWidget(widget_type, variable) \
   ez.e.widget && ez.e.widget->typeName() == #widget_type) \
@@ -49,7 +49,7 @@ class ezGesture;
 
 #define E_ALL           0xFFFF
 
-class Event {
+class ezEvent {
  public:
                 operator uint16_t();
   const char*   typeName();
@@ -59,8 +59,8 @@ class Event {
   uint16_t      distance();
   uint16_t      type            = E_NONE;
   uint8_t       finger          = 0;
-  Point         from            = Point();
-  Point         to              = Point();
+  ezPoint         from            = ezPoint();
+  ezPoint         to              = ezPoint();
   uint16_t      duration        = 0;
   ezWidget*     widget          = nullptr;
   ezGesture*    gesture         = nullptr;
@@ -79,7 +79,7 @@ class Eventful {
   void          on(uint16_t eventMask, void (*fn)());
   void          onOffspring(uint16_t eventMask, void (*fn)());
   void          delHandlers(void (*fn)());
-  Event         e = Event();
+  ezEvent         e = ezEvent();
  protected:
   void          fireEvent(bool offspring = false);
   std::vector<ezEventHandler> _eventHandlers;

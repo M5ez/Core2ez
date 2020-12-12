@@ -41,11 +41,11 @@ void Eventful::delHandlers(void (*fn)() /* = nullptr */) {
 
 
 
-// Event class
+// ezEvent class
 
-Event::operator uint16_t() { return type; }
+ezEvent::operator uint16_t() { return type; }
 
-const char* Event::typeName() {
+const char* ezEvent::typeName() {
   const char* unknown = "E_UNKNOWN";
   const char* none = "E_NONE";
   const char* eventNames[NUMEVENTS] = {
@@ -59,17 +59,17 @@ const char* Event::typeName() {
   return unknown;
 }
 
-uint16_t Event::direction() {
+uint16_t ezEvent::direction() {
   return from.directionTo(to);
 }
 
-bool Event::isDirection(int16_t wanted, uint8_t plusminus /* = PLUSMINUS */) {
+bool ezEvent::isDirection(int16_t wanted, uint8_t plusminus /* = PLUSMINUS */) {
   return from.isDirectionTo(to, wanted, plusminus);
 }
 
-uint16_t Event::distance() { return from.distanceTo(to); }
+uint16_t ezEvent::distance() { return from.distanceTo(to); }
 
-char* Event::c_str() {
+char* ezEvent::c_str() {
   static char r[80];
   sprintf(r, "%-10d %-13s %-14s finger%d  %s .. %s %4d ms",
                 widget, widget ? widget->typeName() : "", typeName(), finger,

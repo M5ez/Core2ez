@@ -34,7 +34,7 @@ void ezListBox::init(ezWidget* pwPtr,
   colors              = ezTheme.colors(colors_, ezTheme.lst_colors);
   itemNormal          = colors;
   itemNormal.outline  = NODRAW;
-  itemSelected        = ezTheme.colors(itemSelected_, ezTheme.lsl_colors);
+  itemSelected        = ezTheme.colors(itemSelected_, colors);
   font                = font_ ? font_ : ezTheme.lst_font;
   spacing             = spacing_;
   autoSize            = true;
@@ -65,8 +65,24 @@ void ezListItem::init(ezListBox* prnt, String text_) {
 ezListItem::operator bool() { return selected; }
 
 void ezListItem::eventPost() {
-  if (ez.e.widget == this && ez.e == E_TAPPED) {
-    selected = !selected;
+  if (ez.e.widget != this || ez.e != E_TAPPED) return;
+  selected = !selected;
+  if (!parent() || parent()->type != W_LISTBOX) return;
+  ezListBox& p = *static_cast<ezListBox*>(parent());
+  if (!p.multi && selected) {
+    for (auto item : p._widgets) {
+      if (item->type != W_LISTITEM) continue;
+      ezListItem& i = *static_cast<ezListItem*>(item);
+      if (i.selected && &i != this) {
+        i.selected = false;
+        if (p.itemNormal != p.itemSelected) {
+          i.draw();
+          i.refresh();
+        }
+      }
+    }
+  }
+  if (p.itemNormal != p.itemSelected) {
     draw();
     refresh();
   }
@@ -76,17 +92,6 @@ void ezListItem::draw() {
   // Serial.println("ezListItem.draw(): " + text);
   if (parent() && parent()->type == W_LISTBOX) {
     ezListBox& p = *static_cast<ezListBox*>(parent());
-    if (!p.multi && selected) {
-      for (auto item : p._widgets) {
-        if (item->type != W_LISTITEM) continue;
-        ezListItem& i = *static_cast<ezListItem*>(item);
-        if (i.selected && &i != this) {
-          i.selected = false;
-          i.draw();
-          i.refresh();
-        }
-      }
-    }
     colors = selected ? p.itemSelected : p.itemNormal;
   }
   ezLabel::draw();

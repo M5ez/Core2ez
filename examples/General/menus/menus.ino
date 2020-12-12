@@ -9,20 +9,24 @@
 void setup() {
   ez.begin();
   ezMenu main("Main menu");
-  main.addItem("Item 1");
+  main.addItem("Wifi Settings", doFunction {
+    ezWifi.menu();
+  });
   main.addItem("Item 2");
   main.addItem("Item 3");
-  main.addItem("subMenu", doFunction {
+
+  main.addItem("Submenu", doFunction {
     ezMenu sub("Submenu");
     sub.addItem("SubItem 1", doFunction {
-      Serial.println("SubItem 1");
+      if (msgBox("ezMessageBox Title", "This is an ezMessageBox message.\nIs this cool?", "Yes", "No") == "Yes") {
+        msgBox ("Yup...", "Damn right!");
+      }
     });
     sub.addItem("SubItem 2");
-    sub.addItem("SubItem 3");
-    sub.addItem("SubItem 4");
-    sub.addItem("back to main", doFunction {
-      exitMenu(); 
+    sub.addItem("Wifi Settings", doFunction {
+      ezWifi.menu();
     });
+    sub.addItem("back to main");
     sub.run();
   });
   main.run();

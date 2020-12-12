@@ -4,7 +4,15 @@
 #include <ezWidget.h>
 #include <ezValues.h>
 
+#define ezQuit(...)      ezWindow::quit(__VA_ARGS__)
+
 class ezWindow : public ezWidget {
+
+ public:
+  static void              quit(uint8_t count = 1);
+ protected:
+  static uint8_t           _quitting;
+
  public:
   ezWindow(ezWidget& parentWidget,
            int16_t x_ = 0, int16_t y_ = 0,
@@ -21,7 +29,10 @@ class ezWindow : public ezWidget {
 
   void            focus();
   void            blur();
+  void            run();
   bool            hasFocus();
+
+  String          title;
 
 };
 

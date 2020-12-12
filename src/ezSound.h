@@ -1,5 +1,5 @@
-#ifndef _M5SOUND_H_
-#define _M5SOUND_H_
+#ifndef _EZSOUND_H_
+#define _EZSOUND_H_
 
 #include <Arduino.h>
 

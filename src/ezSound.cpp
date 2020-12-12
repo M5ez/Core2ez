@@ -91,7 +91,7 @@ void ezSoundClass::update() {
   if (!silent || !AMP_STANDBY) {
     _silentSince = 0;
     if (!_amp_on) {
-      log_d("%s", "Audio amplifier on");
+      log_d("Audio amplifier on");
       M5.Axp.SetSpkEnable(true);
       _amp_on = true;
     }
@@ -99,7 +99,7 @@ void ezSoundClass::update() {
   if ( silent && !_silentSince) _silentSince = millis();
   if (_amp_on && AMP_STANDBY && _silentSince &&
       millis() - _silentSince > AMP_STANDBY) {
-    log_d("%s", "Audio amplifier off");
+    log_d("Audio amplifier off");
     M5.Axp.SetSpkEnable(false);
     _amp_on = false;
   }
