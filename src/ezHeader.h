@@ -26,7 +26,7 @@ class ezHeaderClass : public ezWidget {
   WifiBars      wifi        = WifiBars(EZ_AUTO, 0, 35, EZ_PARENT);
 #endif
 
-//  ezGesture		swipeDown 	= ezGesture(100, EZ_DOWN);
+  ezGesture		swipeDown 	= ezGesture(100, EZ_DOWN);
 
  private:
   bool 			_inSettings = false;

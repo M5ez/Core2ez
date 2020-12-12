@@ -1,7 +1,3 @@
-/*
- * Rough cut: there's no header and hence no visbile menu title and things could be prettier. Soon...
- */
-
 #include <M5Core2.h>
 #include <Core2ez.h>
 
