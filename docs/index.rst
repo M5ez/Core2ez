@@ -3,12 +3,13 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Introducing Core2ez
-===================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+
+Introducing Core2ez
+===================
 
 Core2ez is a widget-based library to create graphical programs for the M5Stack Core2 device. It is written in C++ and can be used from the Arduino and PlatformIO programming environments. It comes with a large collection of sample programs that demonstrate how to use the various functions. A multi-waveform polyphonic sound library that supports attack-decay-sustain-release envelopes is also included.
 
@@ -25,12 +26,34 @@ The M5Stack Core2 device is a little tinker-computer based on an ESP32 SoC that 
 Previous versions of the device came with three buttons underneath the screen instead of a touch screen. We wrote a library for that one too, it is called M5ez. Even though both M5ez and Core2ez are made by the same group, they are very different. M5ez was based on menus and linear code flows, while Core2ez is a widget based system where actions are usually triggered by events. We'll explain what that means further along.
 
 
+Getting Started with Core2ez
+============================
+
+You can buy the Core2 device from M5Stack directly, but it's quite popular and lots of distributors and online vendors also have it `in stock <https://www.google.com/search?q=m5stack+core2+buy>`_. Assuming you have the device, follow M5Stack's `instructions <https://docs.m5stack.com/#/en/arduino/arduino_core2_development>`_ for downloading and configuring the Arduino environment for it.
+
+.. note::
+
+    This library is made for the Arduino Integrated Development Environment (IDE) but should also work with the PlatformIO IDE/debugger. If there are specific things to document about getting set up to work with PlatformIO we will do so in a later stage. For now this documentation focusses on the Arduino IDE.
+    
+Test by compiling one of the examples that come with the 'M5Core2' library to see that everything works as intended before continuing.
+
+Once that works, install this library. At this point in development, this is done by downloading the library directly into the Arduino libraries directory. To do this, go to the Arduino libraries directory using ``cd ~/Documents/Arduino/libraries`` on MacOS, or go to the 'libraries' subdirectory of wherever your Arduino sketches are on other systems. Once there, enter ``git clone https://github.com/m5ez/Core2ez`` to install the library. Alternatively, you can `download the ZIP file <https://github.com/M5ez/Core2ez/archive/master.zip>`_ and unzip it in the Arduino libraries directory.
+
+To upgrade to the latest development version, cd into to the 'libraries/Core2ez' directory and enter ``git pull`` if you used git to download, or repeat the ZIP download from above.
+
+.. note::
+
+    Once we have officially released, you'll be able to use the Arduino library manager to install the release version of Core2ez and keep it up to date.
+
+Once Core2ez is downloaded, you should be able to compile and run the examples provided. To test, try compiling `File / Examples / Core2ez / General / circles` and move your fingers across the touch screen. If you see a red circle following your finger, Core2ez is correctly set up.
+
+
 Writing documentation
 =====================
 
-You'll notice that the documentation for Core2ez is diaplayed through readthedocs.org. They compile the version they display from the docs directory in our library. The source for the documentation is written in `reStructuredText`. To get started with that, check out `this primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_. 
+You'll notice that the documentation for Core2ez is displayed with the help of `Read the Docs <readthedocs.org>`_. They compile the version they display from the 'docs' directory in our library. The source for the documentation is written in `reStructuredText` (.rst) format. To get started with that, check out `this primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_. 
 
-Once you've made changes to the documentation, you'll probably want to know what your changes look like in the form that Read The Docs renders to. For this you will need to install python and then install the necessary packages with pip.
+While you are making changes to the source of the documentation, you'll want to know what your changes look like in the format that Read the Docs renders to. For this you will need to install python and then install the necessary packages with pip.
 
   ``pip install Sphinx sphinx-rtd-theme``
 
