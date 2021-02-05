@@ -35,7 +35,7 @@ You can buy the Core2 device from M5Stack directly, but it's quite popular and l
 
     This library is made for the Arduino Integrated Development Environment (IDE) but should also work with the PlatformIO IDE/debugger. If there are specific things to document about getting set up to work with PlatformIO we will do so in a later stage. For now this documentation focusses on the Arduino IDE.
     
-Test by compiling one of the examples that come with the 'M5Core2' library to see that everything works as intended before continuing.
+Test by compiling one of the examples that come with the 'M5Core2' library (`File / Examples / M5Core2` in the Arduino IDE) to see that everything works as intended before continuing.
 
 Once that works, install this library. At this point in development, this is done by downloading the library directly into the Arduino libraries directory. To do this, go to the Arduino libraries directory using ``cd ~/Documents/Arduino/libraries`` on MacOS, or go to the 'libraries' subdirectory of wherever your Arduino sketches are on other systems. Once there, enter ``git clone https://github.com/m5ez/Core2ez`` to install the library. Alternatively, you can `download the ZIP file <https://github.com/M5ez/Core2ez/archive/master.zip>`_ and unzip it in the Arduino libraries directory.
 
