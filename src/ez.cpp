@@ -47,6 +47,7 @@ void ezClass::remove(ezWidget& w) { }
 void ezClass::draw() {
   // root is special in that it only draws the top widget
   if (_widgets.size()) {
+    log_v("Widget on top: %d (%s)", (long)_widgets.back(), _widgets.back()->typeName());
     ezWidget* wdgt = _widgets.back();
     if (wdgt->setPos.w == EZ_PARENT) wdgt->w = w;
     if (wdgt->setPos.h == EZ_PARENT) wdgt->h = h;

@@ -223,17 +223,20 @@ void ezWifiClass::writeFlash() {
 }
 
 void ezWifiClass::menu() {
+  _state = EZWIFI_AUTOCONNECT_DISABLED;
+  log_d("Disabling autoconnect while in Wifi menu.");
   while (true) {
     if (_menuInner() == EZ_BACK) break;
   }
-  _state = EZWIFI_IDLE;
-  log_d("Enabling autoconnect exiting Wifi menu.");
+  if (_state == EZWIFI_AUTOCONNECT_DISABLED) {
+    _state = EZWIFI_IDLE;
+    log_d("Enabling autoconnect exiting Wifi menu.");
+  }
 }
 
 int16_t ezWifiClass::_menuInner() {
-  _state = EZWIFI_AUTOCONNECT_DISABLED;
-  log_d("Disabling autoconnect while in Wifi menu.");
-  ezMenu wifimain ("Wifi settings");
+
+  ezMenu& wifimain = *new ezMenu("Wifi settings");
   wifimain.addItem("Autoconnect (" +
                    (String)(EZWIFI.autoConnect ? "On)" : "Off)"), doFunction {
     EZWIFI.autoConnect = !EZWIFI.autoConnect;
@@ -276,7 +279,7 @@ int16_t ezWifiClass::_menuInner() {
   } else {
     wifimain.addItem("Join a network", doFunction {
 
-      ezMenu joinmenu("Joining a network");
+      ezMenu& joinmenu = *new ezMenu("Joining a network");
 
       joinmenu.addItem("Scan and join", doFunction {
         ezMsgBox scanning("WiFi setup menu", "scanning");
@@ -290,7 +293,7 @@ int16_t ezWifiClass::_menuInner() {
         if (n == 0) {
           msgBox("WiFi setup menu", "No networks found", "OK");
         } else {
-          ezMenu networks("Select your netork");
+          ezMenu& networks = *new ezMenu("Select your netork");
           for (uint16_t i = 0; i < n; ++i) {
             // No duplicates (multiple BSSIDs on same SSID)
             // because we're only picking an SSID here
@@ -298,13 +301,20 @@ int16_t ezWifiClass::_menuInner() {
             for (auto item : networks.items) {
               if (item.text == WiFi.SSID(i)) haveAlready = true;
             }
-            if (!haveAlready && networks.items.size() < 4) {
+            if (!haveAlready && networks.items.size() < 15) {
               networks.addItem(WiFi.SSID(i));
             }
           }
-          networks.addItem("Back");
+          log_d("%d unique networks", networks.items.size());
+          networks.addItem("Back", EZ_BACK);
+          networks.itemsPerRow    = 1;
+          networks.rowsPerScreen  = 4;
+          networks.font           = FSS9;
+          networks.spriteBPP      = 16;
+          networks.colors         = { TFT_WHITE, TFT_BLACK, TFT_BLACK };
+          networks.onColors       = networks.colors;
 
-          int16_t selected = networks.run();
+          int16_t selected = networks.runOnce();
 
           if (selected < networks.items.size() - 1) {
 
@@ -317,6 +327,7 @@ int16_t ezWifiClass::_menuInner() {
               WiFi.begin(WiFi.SSID(selected).c_str(), key.c_str());
             }
             ezMsgBox connecting("WiFi setup menu", "Connecting ...", "Abort");
+            connecting.focus();
             int16_t status;
             while (!connecting.somethingPressed()) {
               status = WiFi.status();
@@ -324,7 +335,7 @@ int16_t ezWifiClass::_menuInner() {
                 ezBack();
                 break;
               }
-              if (status == WL_CONNECT_FAILED || status == WL_NO_SSID_AVAIL) {
+              if (status != WL_IDLE_STATUS) {
                 msgBox("WiFi setup menu", "Connect failed.\n\n(Wrong password?)", "OK");
                 ezBack();
                 break;
@@ -332,6 +343,7 @@ int16_t ezWifiClass::_menuInner() {
               loop();
             }
           }
+          delete &networks;
           WiFi.scanDelete();
         }
       });
@@ -355,7 +367,7 @@ int16_t ezWifiClass::_menuInner() {
 
       joinmenu.addItem("WPS", doFunction { EZWIFI._wps(); });
 
-      joinmenu.addItem("Back");
+      joinmenu.addItem("Back", EZ_BACK);
 
       joinmenu.run();
 
@@ -373,6 +385,8 @@ int16_t ezWifiClass::_menuInner() {
         }
       }
 
+      delete joinmenu;
+
     });
   }
 
@@ -381,7 +395,7 @@ int16_t ezWifiClass::_menuInner() {
     for (uint8_t n = 0; n < EZWIFI.networks.size(); n++) {
       autoconnect.addItem(EZWIFI.networks[n].SSID);
     }
-    autoconnect.addItem("Back");
+    autoconnect.addItem("Back", EZ_BACK);
     int16_t selected = autoconnect.run();
 
     if (selected < autoconnect.items.size() - 1) {
@@ -395,9 +409,11 @@ int16_t ezWifiClass::_menuInner() {
     }
   });
 
-  wifimain.addItem("Back");
+  wifimain.addItem("Back", EZ_BACK);
 
-  return wifimain.runOnce();
+  int16_t r = wifimain.runOnce();
+  delete &wifimain;
+  return r;
 }
 
 void ezWifiClass::_wps() {

@@ -7,11 +7,12 @@
 #include <ezValues.h>
 
 struct ezMenuItem {
-  String                  text;
-  void                    (*func)();
+  String                  text        = "";
+  void                    (*func)()   = nullptr;
+  int16_t                 retval      = EZ_INVALID;
 };
 
-class ezMenu {
+class ezMenu : public ezWindow {
 
  public:
   static int16_t            retval;
@@ -20,6 +21,7 @@ class ezMenu {
   WidgetColors              colors;
   WidgetColors              onColors;
   ezFont                    font;
+  uint8_t                   spriteBPP       = 16;
 
   int16_t                   itemsPerRow     = EZ_AUTO;
   int16_t                   rowsPerScreen   = EZ_AUTO;
@@ -32,11 +34,11 @@ class ezMenu {
                                    ezFont font_           = THEME_FONT);
   void                      addItem(String text_);
   void                      addItem(String text_, void (*func_)());
+  void                      addItem(String text_, int16_t retval_);
   int16_t                   doMenu();
   int16_t                   run(bool noBreak = false);
   int16_t                   runOnce();
   int16_t                   selected = EZ_INVALID;
-  String                    title;
   std::vector<ezMenuItem>   items;
 
 };

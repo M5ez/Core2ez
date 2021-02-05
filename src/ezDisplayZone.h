@@ -133,7 +133,8 @@ class ezDisplayZone : public ezZone {
   size_t   write(uint8_t utf8);
 
   TFT_eSprite*      sprite     = nullptr;
-  ezPoint             offset     = ezPoint(0, 0);
+  uint8_t           spriteBPP  = 16;
+  ezPoint           offset     = ezPoint(0, 0);
   ezDisplayZone*    _parent    = nullptr;
 };
 

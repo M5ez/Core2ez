@@ -5,11 +5,29 @@
 void setup() {
   ez.begin();
   ezMenu main("Main menu");
+  main.itemsPerRow = 1;
+  main.rowsPerScreen = 2;
   main.addItem("Wifi Settings", doFunction {
     ezWifi.menu();
   });
   main.addItem("Item 2");
   main.addItem("Item 3");
+  main.addItem("Item 4");
+  main.addItem("Item 5");
+  main.addItem("Item 6");
+  main.addItem("Item 7");
+  main.addItem("Item 8");
+  main.addItem("Item 9");
+  main.addItem("Item 10");
+  main.addItem("Item 11");
+  main.addItem("Item 12");
+  main.addItem("Item 13");
+  main.addItem("Item 14");
+  main.addItem("Item 15");
+  main.addItem("Item 16");
+  main.addItem("Item 17");
+  main.addItem("Item 18");
+  main.addItem("Item 19");
 
   main.addItem("Submenu", doFunction {
     ezMenu sub("Submenu");
@@ -25,7 +43,7 @@ void setup() {
     sub.addItem("back to main");
     sub.run();
   });
-  main.run();
+  main.run(true);
 }
 
 void loop() {

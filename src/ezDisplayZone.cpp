@@ -97,6 +97,7 @@ void ezDisplayZone::spriteToDisplay(TFT_eSprite* s, int16_t ox, int16_t oy, int1
 void ezDisplayZone::spriteBuffer(int16_t w_ /* = -1 */, int16_t h_ /* = -1 */) {
   direct();
   sprite = new TFT_eSprite(&DISPLAY);
+  sprite->setColorDepth(spriteBPP);
   sprite->createSprite(w_ == -1 ? w : w_, h_ == -1 ? h : h_);
   offset.x = 0;
   offset.y = 0;

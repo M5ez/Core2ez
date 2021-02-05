@@ -38,7 +38,7 @@ void ezHeaderClass::settings() {
     settingsMenu.addItem("Wifi", doFunction { ezWifi.menu(); });
   #endif
 
-  settingsMenu.addItem("Exit");
+  settingsMenu.addItem("Exit", EZ_BACK);
   settingsMenu.run();
   _inSettings = false;
   ez.draw();

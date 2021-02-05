@@ -71,8 +71,8 @@ uint16_t ezEvent::distance() { return from.distanceTo(to); }
 
 char* ezEvent::c_str() {
   static char r[80];
-  sprintf(r, "%-10d %-13s %-14s finger%d  %s .. %s %4d ms",
-                widget, widget ? widget->typeName() : "", typeName(), finger,
+  sprintf(r, "%-25s %-14s finger%d  %s .. %s %4d ms",
+                widget ? widget->ident() : "", typeName(), finger,
                 (char*)from, (char*)to, duration);
   return r;
 }

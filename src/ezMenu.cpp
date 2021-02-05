@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <ezList.h>
 
-int16_t ezMenu::retval = -1;
+int16_t ezMenu::retval = EZ_INVALID;
 
 ezMenu* ezMenu::caller = nullptr;
 
@@ -11,6 +11,8 @@ ezMenu::ezMenu(String title_,
                WidgetColors colors_   /* = THEME_COLORS */,
                WidgetColors onColors_ /* = THEME_COLORS */,
                ezFont font_           /* = THEME_FONT */) {
+  set(0, 0, EZ_PARENT, EZ_PARENT);
+  add(ezHeader);
   title         = title_;
   colors        = ezTheme.colors(colors_,   ezTheme.mnu_colors);
   onColors      = ezTheme.colors(onColors_, ezTheme.mnu_onColors);
@@ -31,11 +33,18 @@ void ezMenu::addItem(String text_, void (*func_)()) {
   items.push_back(mi);
 }
 
+void ezMenu::addItem(String text_, int16_t retval_) {
+  ezMenuItem mi;
+  mi.text = text_;
+  mi.retval = retval_;
+  items.push_back(mi);
+}
+
 int16_t ezMenu::run(bool noBreak /* = false */) {
   while (true) {
     int16_t r = runOnce();
     if (r == EZ_BREAK && !noBreak) return EZ_BREAK;
-    if (r == EZ_BACK)              return EZ_INVALID;
+    if (r == EZ_BACK  && !noBreak) return EZ_INVALID;
   }
 }
 
@@ -48,20 +57,15 @@ int16_t ezMenu::runOnce() {
   if (item.func) {
     caller = this;
     item.func();
-    return retval;
-  } else {
-    return EZ_BACK;
   }
+  return (item.retval != EZ_INVALID) ? item.retval : selected;
 }
 
 int16_t ezMenu::doMenu() {
 
-  ezWindow win        = ezWindow(0, 0, EZ_PARENT, EZ_PARENT);
-  win.title           = title;
-  win.add(ezHeader);
-
-  ezLayout canvas(win, 0, EZ_AUTO, EZ_PARENT, -1);
+  ezLayout canvas(*this, 0, EZ_AUTO, EZ_PARENT, -1);
   canvas.autoSize     = true;
+  canvas.spriteBPP    = spriteBPP;
   canvas.tmargin      = margin;
   canvas.gutter       = margin;
 
@@ -70,6 +74,7 @@ int16_t ezMenu::doMenu() {
     else if (items.size() <= 6) itemsPerRow = 2;
     else                        itemsPerRow = 3;
   }
+
   log_v("itemsPerRow: %d", itemsPerRow);
 
   uint8_t numRows     = ((items.size() + 1) / itemsPerRow);
@@ -106,35 +111,39 @@ int16_t ezMenu::doMenu() {
     rows[r]->add(*btns[i]);
   }
 
+  bool scrolling = (numRows > rowsPerScreen);
+
   // Only E_TAPPED if the menu scrolls, so options are not selected when
   // moving the menu up or down.
-  win.onOffspring(canvas.sprite ? E_TAPPED : E_TAPPED + E_PRESSED, doFunction {
+  canvas.onOffspring(scrolling ? E_TAPPED : E_TAPPED + E_PRESSED, doFunction {
     if (eventWidget(ezButton, b)) {
       ezMenu::retval = b->userData;
     }
   });
 
-  if (!canvas.sprite) {
-    win.spriteBuffer();
-    win.focus();
-    win.direct();
+  if (!scrolling) {
+    spriteBuffer();
+    focus();
+    direct();
   } else {
-    win.focus();
+    focus();
   }
 
+  uint16_t loopnum = 0;
   retval = EZ_INVALID;
   while (retval == EZ_INVALID) {
     loop();
   }
 
-  win.blur();
-
   for (auto row: rows) delete row;
   for (auto btn: btns) delete btn;
+  remove(canvas);
 
   return retval;
 
 }
+
+
 
 void ezBreak() { ezMenu::retval = EZ_BREAK; }
 

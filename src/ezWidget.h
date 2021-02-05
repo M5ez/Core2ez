@@ -50,6 +50,7 @@ class ezWidget : public ezDisplayZone, public Eventful {
   bool                    isMyDescendant(ezWidget& w);
   bool                    inVirtual(ezPoint& p);
   const char*             typeName();
+  const char*             ident();
   virtual void            add(ezWidget& w);
   virtual void            remove(ezWidget& w);
   virtual void            add(ezGesture& g);
@@ -72,7 +73,7 @@ class ezWidget : public ezDisplayZone, public Eventful {
   void                    margins(uint8_t margin);
 
   widget_t                type            = W_WIDGET;
-  ezZone                    setPos          = ezZone();
+  ezZone                  setPos          = ezZone();
   bool                    autoSize        = false;
   WidgetColors            colors          = {NODRAW, NODRAW, NODRAW};
   int16_t                 gutter          = 0;
@@ -106,12 +107,12 @@ class ezWidget : public ezDisplayZone, public Eventful {
   bool                    _longPressing   = false;
   bool                    _cancelled      = false;
   bool                    _touched[2]     = {false, false};
-  ezPoint                   _posRelParent   = ezPoint();
+  ezPoint                 _posRelParent   = ezPoint();
   uint32_t                _lastRepeat     = 0;
   uint32_t                _lastOnTime     = 0;
   uint32_t                _lastOffTime    = 0;
-  ezEvent                   _lastOnEvent    = ezEvent();
-  ezEvent                   _lastOffEvent   = ezEvent();
+  ezEvent                 _lastOnEvent    = ezEvent();
+  ezEvent                 _lastOffEvent   = ezEvent();
 };
 
 #endif /* _EZWIDGET_H_ */

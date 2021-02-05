@@ -22,6 +22,10 @@ ezWindow::ezWindow(int16_t x_ /* = 0 */, int16_t y_ /* = 0 */,
   init(nullptr, x_, y_, w_, h_, colors_);
 }
 
+ezWindow::~ezWindow() {
+  blur();
+}
+
 void ezWindow::init(ezWidget* pwPtr,
                     int16_t x_, int16_t y_, int16_t w_, int16_t h_,
                     WidgetColors colors_) {
@@ -47,11 +51,9 @@ bool ezWindow::hasFocus() {
 }
 
 void ezWindow::run() {
-  log_v("entering run()");
   if    (!_quitting) focus();
   while (!_quitting) loop();
   _quitting--;
-  log_v("quitting run()");
   blur();
 }
 

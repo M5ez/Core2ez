@@ -33,8 +33,8 @@ class ezClass : public ezWidget {
 
  protected:
   uint8_t                     _finger         = 0;
-  ezPoint                       _previous  [2]  = {ezPoint(), ezPoint()};
-  ezPoint                       _startPoint[2]  = {ezPoint(), ezPoint()};
+  ezPoint                     _previous  [2]  = {ezPoint(), ezPoint()};
+  ezPoint                     _startPoint[2]  = {ezPoint(), ezPoint()};
   uint32_t                    _startTime [2]  = {0, 0};
 
 };

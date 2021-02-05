@@ -31,10 +31,12 @@ ezWidget* ezWidget::parent() {
 
 bool ezWidget::isMyDescendant(ezWidget& w) {
   ezWidget* current = &w;
-  while (current->parent()) {
-    log_v("Comparing: %d / %d", (uint32_t)current->parent(), (uint32_t)this);
-    if (current->parent() == this) return true;
-    current = current->parent();
+  ezWidget* parent;
+  while (true) {
+    parent = current->parent();
+    if (!parent) return false;
+    if (parent == this) return true;
+    current = parent;
   }
   return false;
 }
@@ -55,6 +57,17 @@ const char* ezWidget::typeName() {
                                 "ezListItem", "ezMenu", "ezHeader",
                                 "ezMsgBox" };
   return typeNames[type];
+}
+
+const char* ezWidget::ident() {
+  String r = typeName();
+//   if      (r == "ezWindow" || r == "ezMsgBox" || r == "ezMenu")
+//     r = r + ":" + static_cast<ezWindow*>(this)->title;
+//   else if (r == "ezButton")
+//     r = r + ":" + static_cast<ezButton*>(this)->label.text;
+//   else
+  r = r + ":" + String((long)this);
+  return r.substring(0,24).c_str();
 }
 
 /* virtual */ void ezWidget::add(ezWidget& w) {

@@ -354,9 +354,10 @@ String keyboardInput(String prompt_ /* = "" */, String text_ /* = "" */) {
   ez.delHandlers(keyHandler);
   kb->window.blur();
   String r = kb->text;
-  delete kb;
 
   ez.draw();
+
+  delete kb;
 
   return r;
 }

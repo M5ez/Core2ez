@@ -23,6 +23,8 @@ class ezWindow : public ezWidget {
            int16_t w_ = EZ_PARENT, int16_t h_ = EZ_PARENT,
            WidgetColors colors_   = THEME_COLORS );
 
+  ~ezWindow();
+
   void init(ezWidget* pwPtr,
             int16_t x_, int16_t y_, int16_t w_, int16_t h_,
             WidgetColors colors_ );
@@ -31,7 +33,6 @@ class ezWindow : public ezWidget {
   void            blur();
   void            run();
   bool            hasFocus();
-
   String          title;
 
 };
