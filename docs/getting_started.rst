@@ -66,7 +66,7 @@ The ``ez.update()`` makes sure the all the event stuff that Core2ez does behind 
 C_major
 -------
 
-.. image:: images/examples/C_Major.jpg
+.. image:: images/examples/C_major.jpg
 
 ``examples/Sound/C_major/C_major.ino``
 
