@@ -385,7 +385,7 @@ int16_t ezWifiClass::_menuInner() {
         }
       }
 
-      delete joinmenu;
+      delete &joinmenu;
 
     });
   }
