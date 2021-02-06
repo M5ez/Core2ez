@@ -54,10 +54,54 @@ circles
    :language: c++
    :linenos:
 
-This shows how little code is needed to do a lot with Core2ez. As you see, the library is started with ``ez.begin()``. The ``ezScreen.spriteBuffer()`` sets up a buffer for the entire screen, so that the circles do not flicker when the fingers move. You can set up any screen or part of the screen to have such a buffer, we'll explain that in much detail further on.
+This shows how little code is needed to do a lot with Core2ez. As you see, the library is started with ``ez.begin()``. The ``ezScreen.spriteBuffer()`` sets up a buffer for the entire screen. The ``ezScreen.push()`` tells the system to draw the buffer only after the circles are complete, avoiding flicker when the fingers move. You can set up any screen or part of the screen to have such a buffer, we'll explain that in much detail further on.
 
-The ``ez.update()`` makes sure the all the event stuff that Core2ez does behind the screens is done, and then the code checks whether anything changed with regard to the touch sensor, and draws circles if the touches are present. The ``ezScreen.push()`` tells the system to draw the buffer only after the circles are complete, avoiding flicker.
+The ``ez.update()`` makes sure the all the event stuff that Core2ez does behind the screens is done, and then the code checks whether anything changed with regard to the touch sensor, and draws circles if touches are detected.
 
 .. note::
 
     Note that the touch sensor on the Core2 can handle two touches simultaneously, but only if the fingers are vertically separated. What that means is that two touches next to eachother blend into one touch between the fingers. This is a hardware limitation of the way the sensor is wired up.
+
+
+C_major
+-------
+
+.. image:: images/examples/C_Major.jpg
+
+``examples/Sound/C_major/C_major.ino``
+
+.. literalinclude:: ../examples/Sound/C_major/C_major.ino
+   :language: c++
+   :linenos:
+   
+This example will play a C major chord and shows how easy it is to define a widget – a button in this case – to show up on the screen. It also shows the code that will run after the button has been pressed or tapped. (You can also attach events to double-tapping, press-and-hold or dragging of widgets.)
+
+You can also see the three synthesizers being set up to play the three notes that make up the chord, and how the code adds each note and waits a second before adding the next note.
+
+Lastly this shows how events can control everything in Core2ez code: once everything is set up, all the code needs to do is to keep calling ``ez.update()``.
+
+
+form
+----
+
+.. image:: images/examples/form_1.jpg
+
+.. image:: images/examples/form_2.jpg
+
+.. image:: images/examples/form_3.jpg
+
+``examples/General/form/form.ino``
+
+.. literalinclude:: ../examples/General/form/form.ino
+   :language: c++
+   :linenos:
+
+This is a more complex example. It shows many things: first and foremost it shows that there are many kinds of widgets. Very much like other widget libraries, Core2ez provides text labels, input fields, check boxes and radio buttons next to the buttons as seen in the C_majore example above.
+
+As you can see there are many more fields defined than fit on the display. The ``ezScreen.spriteBuffer(320, 500)`` statement sets up a virtual display that is as wide as the physical display (320 pixels), but higher (500 vs. 240 pixels). Core2ez will display the screen with a little red arrow showing there is more content that the user can scroll to by sliding a finger across the display.
+
+This also shows the text entry functionality built into Core2ez. Any press in a text entry field pops up a keyboard and a text entry field. The "Enter address" prompt alternates with "Swipe down for help" which shows the help screen in the image.
+
+``ezWindow thankyou`` defines a whole new window that can hold different widgets. ezScreen is just an ezWindow, but you can have a large number of these and select which one you want to display while keeping everything on them in place.
+
+Again, this also shows that once everything is set up, all you need to do is call ``ez.update()`` in the ``loop()`` function and everything will happen when it needs to.
