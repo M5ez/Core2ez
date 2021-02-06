@@ -284,6 +284,7 @@ namespace {
                                   ezTheme.kb, FSS9);
     helpW.on(E_TOUCH, doFunction { ezQuit(); });
     helpW.run();
+    ez.draw();
   }
 
 }
