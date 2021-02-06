@@ -10,7 +10,7 @@ You can buy the Core2 device from M5Stack directly, but it's quite popular and l
 
 .. note::
 
-    This library is made for the Arduino Integrated Development Environment (IDE) but should also work with the PlatformIO IDE/debugger. If there are specific things to document about getting set up to work with PlatformIO we will do so in a later stage. For now this documentation focusses on the Arduino IDE.
+    Core2ez is made to work with the Arduino Integrated Development Environment (IDE) but should also work with the PlatformIO IDE/debugger. If there are specific things to document about getting set up to work with PlatformIO we will do so in a later stage. For now this documentation focusses on the Arduino IDE.
     
 Test by compiling one of the examples that come with the 'M5Core2' library (`File / Examples / M5Core2` in the Arduino IDE) to see that everything works as intended before continuing.
 
@@ -98,10 +98,10 @@ form
 
 This is a more complex example. It shows many things: first and foremost it shows that there are many kinds of widgets. Very much like other widget libraries, Core2ez provides text labels, input fields, check boxes and radio buttons next to the buttons as seen in the C_major example above.
 
-As you can see there are many more fields defined than fit on the display. The ``ezScreen.spriteBuffer(320, 500)`` statement sets up a virtual display that is as wide as the physical display (320 pixels), but higher (500 vs. 240 pixels). Core2ez will display the screen with a little red arrow showing there is more content that the user can scroll to by sliding a finger across the display.
+As you can see there are many more fields defined than fit on the display. The ``ezScreen.spriteBuffer(320, 500)`` statement sets up a virtual display that is as wide as the physical display (320 pixels), but higher (500 vs. 240 pixels). Core2ez will display the top part of that screen with a little red arrow showing there is more content that the user can scroll to by sliding a finger across the display.
 
 This also shows the text entry functionality built into Core2ez. Any press in a text entry field pops up a keyboard and a text entry field. The "Enter address" prompt alternates with "Swipe down for help" which shows the help screen in the image.
 
-``ezWindow thankyou`` defines a whole new window that can hold different widgets. ezScreen is just an ezWindow, but you can have a large number of these and select which one you want to display while keeping everything on them in place.
+``ezWindow thankyou`` defines a whole new window that can hold different widgets. The ezScreen you've seen a few times now is just an ezWindow that is always set up and that comes up automatically. You can have any number of these and select which one you want to display at any given time while keeping everything on the others in place.
 
 Again, this also shows that once everything is set up, all you need to do is call ``ez.update()`` in the ``loop()`` function and everything will happen when it needs to.
