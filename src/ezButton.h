@@ -30,7 +30,7 @@ class ezButton : public ezWidget {
 
                   operator bool();
   void            draw(WidgetColors wc);
-  virtual void    draw();
+  virtual void    draw();             /**< (re)draws the button */
   virtual void    eventPost();
 
   WidgetColors    onColors        = { NODRAW, NODRAW, NODRAW };

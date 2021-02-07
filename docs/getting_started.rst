@@ -96,7 +96,7 @@ form
    :language: c++
    :linenos:
 
-This is a more complex example. It shows many things: first and foremost it shows that there are many kinds of widgets. Very much like other widget libraries, Core2ez provides text labels, input fields, check boxes and radio buttons next to the buttons as seen in the C_major example above.
+This is a more complex example. There's a lot going on here: You can see there are many kinds of widgets. Very much like other widget libraries, Core2ez provides text labels, input fields, check boxes and radio buttons next to the buttons as seen in the C_major example above.
 
 As you can see there are many more fields defined than fit on the display. The ``ezScreen.spriteBuffer(320, 500)`` statement sets up a virtual display that is as wide as the physical display (320 pixels), but higher (500 vs. 240 pixels). Core2ez will display the top part of that screen with a little red arrow showing there is more content that the user can scroll to by sliding a finger across the display.
 

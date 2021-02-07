@@ -2,4 +2,5 @@
 .DS_Store
 .development
 src/ezWifi.cpp
-docs/_build/*
+docs/_build
+docs/_doxygen
