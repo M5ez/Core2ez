@@ -3,7 +3,7 @@ Core2ez Documentation
 #####################
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
    
    01_intro
    02_getting_started
