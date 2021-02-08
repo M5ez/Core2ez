@@ -8,24 +8,16 @@ The reference manual, once created, will have detailed information on all the di
 Ignore below here for now
 -------------------------
 
-We're just testing how Read the Docs renders things.
+We're just testing how Read the Docs renders things. Click `here <_static/doxygen_html/inherits.html>`_ for the Doxygen HTML version.
+
+.. doxygenclass:: ezPoint
 
 .. doxygenclass:: ezZone
-   :members:
-   :undoc-members:
    
 .. doxygenclass:: ezDisplayZone
-   :members:
-   :undoc-members:
 
 .. doxygenclass:: Eventful
-   :members:
-   :undoc-members:
    
 .. doxygenclass:: ezWidget
-   :members:
-   :undoc-members:
 
 .. doxygenclass:: ezButton
-   :members:
-   :undoc-members:

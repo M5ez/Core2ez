@@ -88,11 +88,20 @@
 #define HIGHEST_X 319         // Can't trust TFT_WIDTH, driver is portrait
 #define HIGHEST_Y 239
 
-
 class ezZone;
 
+
+/// Stores a point on the screen.
+/**
+  Holds the coordinates of a point on the screen. Has methods to do various
+  determinations and calculations.
+*/
 class ezPoint {
  public:
+  /**
+    As you declare a point, you can provide x and y coordinates. If you don't
+    specify, the point will be invalid.
+  */
   ezPoint(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID);
   bool operator==(const ezPoint& p);
   bool operator!=(const ezPoint& p);
@@ -102,16 +111,41 @@ class ezPoint {
   ezPoint& operator-=(const ezPoint& p);
   explicit operator bool();
   operator char*();
+  /**
+    Allows you to change both coordinates of an existing point. `.set()` will
+    set the point invalid.
+  */
   void set(int16_t x_ = EZ_INVALID, int16_t y_ = EZ_INVALID);
-  bool valid();
-  bool in(ezZone& z);
-  bool Equals(const ezPoint& p);
+  bool valid();         ///< `True` if this point is valid.
+  bool in(ezZone& z);   ///< `True` if this point lies inside ezZone `z`.
+  bool Equals(const ezPoint& p);  ///< `True` if this point equals point `p`.
+  /**
+    Returns the distance from here to point `p`, in whole pixels using
+    pythagoras.
+    \param p the point towards which we are calculating distance
+  */
   uint16_t distanceTo(const ezPoint& p);
+  /**
+    Returns the compass direction from here to point `p`, in whole degrees.
+    \param p the point towards which we are calculating direction
+  */
   uint16_t directionTo(const ezPoint& p);
+  /**
+    `True` if the compass direction from here to point `p` equals `wanted`,
+    plus or minus `plusminus`.
+    \param p the point towards which we are calculating direction
+    \param wanted the compass direction we'd like to test for
+    \param plusminus how much deviation the test still accepts. Defaults to 45 degrees.
+  */
   bool isDirectionTo(const ezPoint& p, int16_t wanted,
                      uint8_t plusminus = PLUSMINUS);
+  /**
+    Rewrites the coordinates to the screen rotation indicated.
+    \param m Screen rotation (0-7)
+  */
   void rotate(uint8_t m);
-  int16_t x, y;
+  int16_t x;      ///< x-coordinate of point, or EZ_INVALID
+  int16_t y;      ///< y-coordinate of point, or EZ_INVALID
 
  private:
   char _text[12];

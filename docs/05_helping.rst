@@ -21,12 +21,18 @@ Writing documentation
 
 You'll notice that the documentation for Core2ez is displayed with the help of `Read the Docs <readthedocs.org>`_. They compile the version they display from the 'docs' directory in our library. The source for the documentation is written in `reStructuredText` (.rst) format. To get started with that, check out `this primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_. 
 
-While you are making changes to the source of the documentation, you'll want to know what your changes look like in the format that Read the Docs renders to. For this you will need to install python and then install the necessary packages with pip.
+While you are making changes to the source of the documentation, you'll probably want to know what your changes look like in the format that Read the Docs renders to from time to time.
 
-  ``pip install Sphinx sphinx-rtd-theme``
+For this you will need to:
 
-After doing this, go the docs directory and type ``make html``. If no errors are reported, your modified documentation can be viewed by opening ``_build/html/index.html`` with a browser.
+* install python and then install the necessary packages: ``pip install Sphinx sphinx-rtd-theme breathe``
+  
+* install `Doxygen <https://www.doxygen.nl/download.html>`_ and make sure the ``doxygen`` command line utility is a directory in your PATH.
 
 .. note::
 
-    We've added a 'display' target to the Makefile for the documentation. It opens the documentation in a new window in Chrome on MacOS. If you use a Mac and Chrome, you can simply type ``make html display`` if you want to see your changes.
+    On a Mac you can use the DMG from the downloads page. I then used ``ln -s /Applications/Doxygen.app/Contents/Resources/doxygen doxygen`` in my 'bin' directory to make sure the command line utility was on my path.
+
+* install `Graphviz <http://www.graphviz.org/download/>`_ and make sure its ``dot`` utility is in a directory in your PATH.
+
+After doing this, go the docs directory and type ``make clean html``. If no errors are reported, your modified documentation can be viewed by opening ``_build/html/index.html`` with a browser.
