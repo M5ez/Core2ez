@@ -44,7 +44,7 @@ For later updates, do:
 Linux
 -----
 
-Same as above, but replace ``~/Documents/Arduino/libraries`` with ``~arduino/libraries``. If you can't find the Arduino sketchbook directory try "File > Preferences > Sketchbook location" in the Arduino IDE menu.
+Same as above, but replace ``~/Documents/Arduino/libraries`` with ``~/arduino/libraries``. If you can't find the Arduino sketchbook directory try "File > Preferences > Sketchbook location" in the Arduino IDE menu.
 
 Windows
 -------

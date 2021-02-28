@@ -19,14 +19,16 @@ This project lives in its GitHub repository. The best way to talk to us about pr
 Writing documentation
 =====================
 
-You'll notice that the documentation for Core2ez is displayed with the help of `Read the Docs <readthedocs.org>`_. They compile the version they display from the 'docs' directory in our library. The source for the documentation is written in `reStructuredText` (.rst) format. To get started with that, check out `this primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_. 
+You'll notice that the documentation for Core2ez is displayed with the help of `Read the Docs <readthedocs.org>`_. They compile the version they display from the 'documentation' directory in our library. The source for the documentation is written in `reStructuredText` (.rst) format. To get started with that, check out `this primer <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`_. 
 
-While you are making changes to the source of the documentation, you'll probably want to know what your changes look like in the format that Read the Docs renders to from time to time.
+While you are making changes to the source of the documentation, you'll probably want to know what your changes look like in the format that ReadTheDocs renders to from time to time.
 
 For this you will need to:
 
-* install python and then install the necessary packages: ``pip install Sphinx sphinx-rtd-theme breathe``
-  
+* install python and then install the necessary packages: ``pip install Sphinx sphinx-rtd-theme``
+
+* install Rop's fork of breathe: ``python -m pip install git+https://github.com/ropg/breathe@membergroups``
+
 * install `Doxygen <https://www.doxygen.nl/download.html>`_ and make sure the ``doxygen`` command line utility is a directory in your PATH.
 
   .. note::
@@ -35,4 +37,4 @@ For this you will need to:
 
 * install `Graphviz <http://www.graphviz.org/download/>`_ and make sure its ``dot`` utility is in a directory in your PATH.
 
-After doing this, go the docs directory and type ``make clean html``. If no errors are reported, your modified documentation can be viewed by opening ``_build/html/index.html`` with a browser.
+After doing this, go the `documentation` directory and type ``make clean html && open _build/html/index.html``.
