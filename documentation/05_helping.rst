@@ -29,7 +29,7 @@ For this you will need to:
   
 * install `Doxygen <https://www.doxygen.nl/download.html>`_ and make sure the ``doxygen`` command line utility is a directory in your PATH.
 
-.. note::
+  .. note::
 
     On a Mac you can use the DMG from the downloads page. I then used ``ln -s /Applications/Doxygen.app/Contents/Resources/doxygen doxygen`` in my 'bin' directory to make sure the command line utility was on my path.
 

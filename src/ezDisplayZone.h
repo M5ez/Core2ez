@@ -45,6 +45,7 @@ class ezFont {
 };
 
 
+
 class ezDisplayZone : public ezZone {
  public:
   ezDisplayZone* parent();
@@ -64,12 +65,17 @@ class ezDisplayZone : public ezZone {
   void     drawTriangle(ezPoint p0, ezPoint p1, ezPoint p2, uint32_t color);
   void     fillTriangle(ezPoint p0, ezPoint p1, ezPoint p2, uint32_t color);
 
+  ///@{   @name testgroup
+
   void     drawPixel(int32_t x_, int32_t y_, uint32_t color);
   void     drawChar(int32_t x_, int32_t y_, uint16_t c, uint32_t color, uint32_t bg, uint8_t size);
   void     drawLine(int32_t x0, int32_t y0, int32_t x1, int32_t y1, uint32_t color);
   void     drawFastVLine(int32_t x_, int32_t y_, int32_t h_, uint32_t color);
   void     drawFastHLine(int32_t x_, int32_t y_, int32_t w_, uint32_t color);
   void     fillRect(int32_t x_, int32_t y_, int32_t w_, int32_t h_, uint32_t color);
+
+  ///@}
+
   int16_t  drawChar(uint16_t uniCode, int32_t x_, int32_t y_, uint8_t font);
   int16_t  drawChar(uint16_t uniCode, int32_t x_, int32_t y_);
   int16_t  height(void);

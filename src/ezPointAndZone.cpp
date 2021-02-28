@@ -41,15 +41,18 @@ ezPoint& ezPoint::operator-=(const ezPoint& p) {
 }
 
 ezPoint::operator char*() {
+  char text[12];
   if (valid()) {
-    sprintf(_text, "(%3d, %3d)", x, y);
+    sprintf(text, "(%3d, %3d)", x, y);
   } else {
-    sprintf(_text, "(invalid )");
+    sprintf(text, "(invalid )");
   }
-  return _text;
+  return text;
 }
 
 ezPoint::operator bool() { return valid(); }
+
+///@{   @name testgroup
 
 void ezPoint::set(int16_t x_ /* = EZ_INVALID */,
                 int16_t y_ /* = EZ_INVALID */) {
@@ -88,6 +91,8 @@ bool ezPoint::isDirectionTo(const ezPoint& p, int16_t wanted,
   uint16_t a = directionTo(p);
   return (min(abs(wanted - a), 360 - abs(wanted - a)) <= plusminus);
 }
+
+///@}
 
 void ezPoint::rotate(uint8_t m) {
   if (m == 1 || !valid()) return;

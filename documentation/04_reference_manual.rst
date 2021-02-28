@@ -10,11 +10,13 @@ Ignore below here for now
 
 We're just testing how Read the Docs renders things. Click `here <_static/doxygen_html/inherits.html>`_ for the Doxygen HTML version.
 
-.. doxygenclass:: ezPoint
+
+
+  .. doxygenclass:: ezPoint
+     :membergroups: testgroup
+     :members-only:
 
 .. doxygenclass:: ezZone
-   
-.. doxygenclass:: ezDisplayZone
 
 .. doxygenclass:: Eventful
    

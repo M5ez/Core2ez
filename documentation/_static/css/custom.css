@@ -1,0 +1,8 @@
+/* render as functions not classes when indented (for :members-only:) */
+html.writer-html4 .rst-content blockquote dl:not(.field-list)>dt, html.writer-html5 .rst-content blockquote dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.glossary):not(.simple)>dt {
+    margin-bottom: 6px;
+    border: none;
+    border-left: 3px solid #ccc;
+    background: #f0f0f0;
+    color: #555;
+}

@@ -1,3 +1,5 @@
-# Do not read the documentation here
+# This is the website, not the documentation.
 
-These are source files used to compile much more readable documentation that can be found [here](https://docs.core2ez.m5ez.com/en/latest/).
+* To read the documentation, click [here](https://docs.core2ez.m5ez.com/en/latest/)
+* Source files for the documentation are [here](/documentation)
+* These are the GitHub Pages files that make [core2ez.m5ez.com](core2ez.m5ez.com), which at this moment only redirects to the readable documentation from above. They are only here because GitHub can only serve GitHub Pages sites from `/` or from `/docs` in a repository.

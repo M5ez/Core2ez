@@ -18,21 +18,41 @@ Test by compiling one of the examples that come with the 'M5Core2' library (`Fil
 Installing Core2ez
 ==================
 
-Once that works, install Core2ez. At this point in development, this is done by downloading the library directly into the Arduino 'libraries' directory. To do this, open a terminal window and go to the Arduino libraries directory using
-
-``cd ~/Documents/Arduino/libraries``
-
-on MacOS, ``C:\Users\YourName\My Documents\Arduino\libraries`` on Windows or wherever the 'libraries' subdirectory of your Arduino sketches lives on other systems. Once there, enter
-
-``git clone https://github.com/m5ez/Core2ez``
-
-to install the library. Alternatively, you can `download the ZIP file <https://github.com/M5ez/Core2ez/archive/master.zip>`_ and unzip it in the Arduino libraries directory.
-
-To upgrade to the latest development version, open a terminal window, go to the 'libraries/Core2ez' directory and enter ``git pull`` if you used git to download, or repeat the ZIP download from above.
+Once that works, install Core2ez. At this point in development, this is done by downloading the library directly into the Arduino 'libraries' directory, instructions for different operating systems are found below.
 
 .. note::
 
-    This is only necessary during this phase of development. Once Core2ez has an official release, you'll be able to use the Arduino library manager to install the release version of Core2ez and keep it up to date.
+    This is only necessary during this phase of development. Once Core2ez has an official release, you'll be able to use the Arduino library manager nuilt into the Arduino IDE to install the release version of Core2ez and keep it up to date.
+
+MacOS
+-----
+
+To install Core2ez on a Mac, open a terminal window, go to the Arduino libraries directory and use git to get the latest version of Core2ez.
+
+.. code-block:: console
+
+   cd ~/Documents/Arduino/libraries
+   git clone https://github.com/m5ez/Core2ez
+
+For later updates, do:
+
+.. code-block:: console
+
+   cd ~/Documents/Arduino/libraries/Core2ez
+   git pull
+   
+Linux
+-----
+
+Same as above, but replace ``~/Documents/Arduino/libraries`` with ``~arduino/libraries``. If you can't find the Arduino sketchbook directory try "File > Preferences > Sketchbook location" in the Arduino IDE menu.
+
+Windows
+-------
+
+Windows doesn't come with `git`. Easiest is to `download the ZIP file <https://github.com/M5ez/Core2ez/archive/master.zip>`_ and unpack it such that the Core2ez directory from the zipfile is placed in ``C:\Users\YourName\My Documents\Arduino\libraries``
+
+
+
 
 Once Core2ez is installed, you should be able to compile and run the examples provided. To test, try compiling `File / Examples / Core2ez / General / circles` from the Arduino IDE menu and move your fingers across the touch screen. If you see a red circle following your finger, Core2ez is correctly set up.
 
