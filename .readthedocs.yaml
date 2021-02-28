@@ -13,7 +13,7 @@ submodules:
 python:
    version: 3.7
    install:
-    - method: setuptools
+    - method: pip
       path: documentation/_dependencies/breathe
       
 # Build documentation in the documentation/ directory with Sphinx
