@@ -1,4 +1,0 @@
-[submodule "documentation/_dependencies/breathe"]
-	path = documentation/_dependencies/breathe
-	url = https://github.com/ropg/breathe
-	branch = membergroups
