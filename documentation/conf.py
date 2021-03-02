@@ -65,7 +65,7 @@ html_css_files = ['css/custom.css']
 import subprocess
 import os
 if os.environ.get('READTHEDOCS') == 'True':
-    subprocess.call('/home/docs/checkouts/readthedocs.org/user_builds/core2ez/envs/latest/bin/python -m pip install git+https://github.com/ropg/breathe@membergroups')
+    subprocess.call('pip install git+https://github.com/ropg/breathe@membergroups', shell=True)
 
 # This should work both locally and on ReadTheDocs
 subprocess.call('doxygen doxygen.conf', shell=True)
