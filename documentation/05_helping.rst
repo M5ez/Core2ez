@@ -25,7 +25,9 @@ While you are making changes to the source of the documentation, you'll probably
 
 For this you will need to:
 
-* install python and then install the necessary packages: ``pip install Sphinx sphinx-rtd-theme``
+* install Python
+
+* install the necessary packages: ``python -m pip install Sphinx sphinx-rtd-theme``
 
 * install Rop's fork of breathe: ``python -m pip install git+https://github.com/ropg/breathe@membergroups``
 
@@ -33,7 +35,7 @@ For this you will need to:
 
   .. note::
 
-    On a Mac you can use the DMG from the downloads page. I then used ``ln -s /Applications/Doxygen.app/Contents/Resources/doxygen doxygen`` in my 'bin' directory to make sure the command line utility was on my path.
+    On a Mac you can use the DMG from the Doxygen downloads page. I then used ``ln -s /Applications/Doxygen.app/Contents/Resources/doxygen doxygen`` in my 'bin' directory to make sure the command line utility was on my path.
 
 * install `Graphviz <http://www.graphviz.org/download/>`_ and make sure its ``dot`` utility is in a directory in your PATH.
 

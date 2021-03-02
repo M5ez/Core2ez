@@ -5,16 +5,9 @@
 # Required
 version: 2
 
-submodules:
-  include:
-    - documentation/_dependencies/breathe
-
 # Optionally set the version of Python and requirements required to build your docs
 python:
-   version: 3.7
-   install:
-    - method: pip
-      path: documentation/_dependencies/breathe
+   version: 3.9
       
 # Build documentation in the documentation/ directory with Sphinx
 sphinx:
