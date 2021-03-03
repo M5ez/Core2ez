@@ -6,3 +6,21 @@ html.writer-html4 .rst-content blockquote dl:not(.field-list)>dt, html.writer-ht
     background: #f0f0f0;
     color: #555;
 }
+
+dt>span.pre::after, dt>a::after, dt>em.property>span.pre::after {
+    content: " ";
+}
+
+dt>span.pre, dt>em.property>span.pre {
+    color: lightseagreen;
+}
+
+dt>span.pre, dt>em.property>span.pre, dt>a {
+    font-size: 90%;
+}
+
+dt em:not(.property)>span.pre {font-family: monospace;font-style: normal;}
+
+dt>em.property {
+    padding-right:3px !important;
+}

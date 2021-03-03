@@ -15,6 +15,9 @@ We're just testing how Read the Docs renders things. Click `here <_static/doxyge
   .. doxygenclass:: ezPoint
      :membergroups: testgroup
      :members-only:
+     :no-link:
+     
+.. doxygenclass:: ezPoint
 
 .. doxygenclass:: ezZone
 
