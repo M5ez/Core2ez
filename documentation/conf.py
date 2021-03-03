@@ -67,7 +67,7 @@ import os
 
 # On readthedocs we have to install the breathe fork every time.
 if os.environ.get('READTHEDOCS') == 'True':
-    subprocess.call('pip install git+https://github.com/ropg/breathe@membergroups', shell=True)
+    subprocess.call('pip install six git+https://github.com/ropg/breathe@membergroups', shell=True)
 
 # Both locally and on ReadTheDocs
 subprocess.call('doxygen doxygen.conf', shell=True)
