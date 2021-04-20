@@ -25,7 +25,7 @@ macro do not match, it closes the one the user opened and opens another one
 after the assignment which the user then closes.
 */
 #define eventWidget(widget_type, variable) \
-  ez.e.widget && ez.e.widget->typeName() == #widget_type) \
+  ez.e.widget && strcmp(ez.e.widget->typeName(), #widget_type) == 0 ) \
   if (widget_type* variable = static_cast<widget_type*>(ez.e.widget)
 
 

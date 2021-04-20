@@ -274,7 +274,7 @@ void ezWidget::_eventProcess() {
           _longPressing = false;
           _tapWait = false;
         } else if (_state) {
-          if (!_pressing && duration > tapTime ||
+          if ((!_pressing && duration > tapTime) ||
               (repeatDelay && duration > repeatDelay &&
               millis() - _lastRepeat > repeatInterval)) {
             ez.e = _lastOnEvent;
