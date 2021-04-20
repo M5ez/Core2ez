@@ -41,13 +41,7 @@ ezPoint& ezPoint::operator-=(const ezPoint& p) {
 }
 
 ezPoint::operator char*() {
-  char text[12];
-  if (valid()) {
-    sprintf(text, "(%3d, %3d)", x, y);
-  } else {
-    sprintf(text, "(invalid )");
-  }
-  return text;
+  return c_str();
 }
 
 ezPoint::operator bool() { return valid(); }
@@ -67,6 +61,15 @@ bool ezPoint::in(ezZone& z) {
 }
 
 bool ezPoint::valid() { return !(x == EZ_INVALID || y == EZ_INVALID); }
+
+char* ezPoint::c_str() {
+  if (valid()) {
+    sprintf(_text, "(%3d, %3d)", x, y);
+  } else {
+    sprintf(_text, "(invalid )");
+  }
+  return _text;
+}
 
 uint16_t ezPoint::distanceTo(const ezPoint& p) {
   int16_t dx = x - p.x;

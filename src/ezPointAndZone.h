@@ -133,17 +133,19 @@ class ezPoint {
   bool valid();         ///< `True` if this point is valid.
 
   /**
+    returns a character representation of the point, such as `( 10, 200)` or
+    `(invalid )`. Note that the coordinates are left-padded with spaces such
+    that the returned string is always 10 characters in size.
+  */
+  char* c_str();
+
+  /**
     Allows you to say `if (somePoint) ...` to test if a point is valid.
     Equivalent to `if (somePoint.valid() ...`
   */
   explicit operator bool();
 
-  /**
-    returns a character representation of the point, such as `( 10, 200)` or
-    `(invalid )`. Note that the coordinates are left-padded with spaces such
-    that the returned string is always 10 characters in size.
-  */
-  operator char*();
+  operator char*(); ///< Converting a point to a string calls c_str().
 
   /**
     Allows you to change the coordinates of an existing point. `.set()` will
@@ -181,6 +183,9 @@ class ezPoint {
 
   int16_t x;      ///< x-coordinate of point, or EZ_INVALID
   int16_t y;      ///< y-coordinate of point, or EZ_INVALID
+
+ protected:
+  char _text[12];
 };
 
 class ezZone {

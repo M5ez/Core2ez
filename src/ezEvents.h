@@ -59,8 +59,8 @@ class ezEvent {
   uint16_t      distance();
   uint16_t      type            = E_NONE;
   uint8_t       finger          = 0;
-  ezPoint         from            = ezPoint();
-  ezPoint         to              = ezPoint();
+  ezPoint       from            = ezPoint();
+  ezPoint       to              = ezPoint();
   uint16_t      duration        = 0;
   ezWidget*     widget          = nullptr;
   ezGesture*    gesture         = nullptr;
@@ -79,7 +79,7 @@ class Eventful {
   void          on(uint16_t eventMask, void (*fn)());
   void          onOffspring(uint16_t eventMask, void (*fn)());
   void          delHandlers(void (*fn)());
-  ezEvent         e = ezEvent();
+  ezEvent       e = ezEvent();
  protected:
   void          fireEvent(bool offspring = false);
   std::vector<ezEventHandler> _eventHandlers;

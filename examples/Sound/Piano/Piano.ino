@@ -5,11 +5,6 @@ are played. If you place one finger high on the screen and another low, you
 can even play two notes at the same time. As you can see you can have many
 synths going at the same time.
 
-Note that sounds get broken up if you set the Core Debug Level to DEBUG or
-VERBOSE, since the ESP32 has to wait for the serial port to be done 
-transmitting each line in the (rather verbose) debug data stream before
-continuing, which intereferes with the updates needed to do the sound.
-
 */
 
 #include <M5Core2.h>
@@ -21,8 +16,8 @@ continuing, which intereferes with the updates needed to do the sound.
 #define WHITE_KEY_HEIGHT   240
 #define BLACK_KEY_WIDTH     30
 #define BLACK_KEY_HEIGHT   160
-#define WHITE_KEY_COLORS    {WHITE, NODRAW, BLACK}
-#define BLACK_KEY_COLORS    {BLACK, NODRAW, NODRAW}
+#define WHITE_KEY_COLORS    {TFT_WHITE, NODRAW, TFT_BLACK}
+#define BLACK_KEY_COLORS    {TFT_BLACK, NODRAW, NODRAW}
 
 ezButton keys[KEYS];
 
@@ -35,7 +30,7 @@ ezSynth synth[KEYS] = ezSynth(TRIANGLE, 0, 50, 300, 0.6, 1000, 0.4);
 void setup() {
   ez.begin();
 
-  ezScreen.colors.fill = BLACK;
+  ezScreen.colors.fill = TFT_BLACK;
   ezScreen.spriteBuffer();      // Prevents flicker, buffer until push()
   ezScreen.glissando = true;
 
@@ -58,7 +53,7 @@ void setup() {
   }
 
   ezScreen.focus();
-  ezScreen.fillRect(0, 0, 320, 5, BLACK);   // top of keys as straight line
+  ezScreen.fillRect(0, 0, 320, 5, TFT_BLACK);   // top of keys as straight line
   ezScreen.push();
 
   // Set up synths with their notes
